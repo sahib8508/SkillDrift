@@ -1,1 +1,795 @@
-role,company,skills_required,experience_level,city 
+role,company,skills_required,experience_level,city
+Data Analyst,E4 Softwares,"Python, Data Analysis, Data Mining, Predictive Analytics, SAS, NLP",0-3 Yrs,Mumbai
+Data Analyst,Fortuna Retail,"Power BI, Power Query, SQL, Advanced Excel, VBA, Python",0-2 Yrs,Gurugram
+Data Analyst,Eduport,"SQL, Machine Learning, Forecasting, Data Processing, Power BI",0-1 Yrs,Kozhikode
+Data Analyst,ADA Global,"Python, Dashboards, Business Intelligence, SQL, Power BI",0-1 Yrs,Bengaluru
+Data Analyst,Brain Insight,"Metadata, Data Validation, Python, Data Management",0-1 Yrs,Atpadi
+Data Scientist,Indium Software,"Machine Learning, Deep Learning, Transformers, SQL",0-5 Yrs,Hyderabad
+Data Scientist,Kintellect Partners,"Machine Learning, Big Data, SQL, Research",0-2 Yrs,Bengaluru
+Data Engineer,APM Terminals,"Automation, Networking, Monitoring, SQL",0-2 Yrs,Pune
+Data Engineer,We Shine Academy,"Python, Scala, Hive, Data Warehousing",0-3 Yrs,Chennai
+ML Engineer,Pace Digitek Limited,"Python, Scikit-Learn, TensorFlow, Data Processing",0-1 Yrs,Bengaluru
+ML Engineer,Chingari,"Deep Learning, C, Data Structures, Programming",0-2 Yrs,Bengaluru
+Web Developer,Matrix Web Infotech,"HTML, CSS, AJAX, jQuery, Bootstrap, SQL",0-1 Yrs,Udaipur
+Web Developer,Aptimist Techno Solutions,"JavaScript, CSS, Spring Boot, SQL",0-4 Yrs,Chennai
+DevOps Cloud,Giit Solutions,"AWS, Terraform, Kubernetes, Jenkins, CI/CD",0-2 Yrs,Gurugram
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Ansible",0-4 Yrs,Jaipur
+Cybersecurity,Sattrix Information Security,"SIEM, SOC, Linux, Threat Analysis, Vulnerability Management",0-1 Yrs,Ahmedabad
+Cybersecurity,Softcell Technologies,"MDR, SIEM Tools, SentinelOne, CrowdStrike",0-2 Yrs,Mumbai
+Software Dev,Thoughtnidea Software Solutions,"Java, C++, SQL, Spring, jQuery",0-1 Yrs,Bengaluru
+Software Dev,Amazon,"Java, Backend Development, Python",0-2 Yrs,Hyderabad
+Software Dev,Techsoft,"HTML, Python, Full Stack Development",0 Yrs,Hyderabad
+Data Analyst,Legistify,"Metadata, Python, Data Validation, Data Mining",0-2 Yrs,Gurugram
+Data Analyst,Ebizneeds,"Metadata, Python, Data Validation, Data Management",0-3 Yrs,Jaipur
+Data Analyst,Inginit,"Metadata, Python, Data Validation, Data Management",0-3 Yrs,Mumbai
+Data Analyst,eClerx,"Excel, Data Validation, Verbal Communication, Analytical",0-2 Yrs,Coimbatore
+Data Analyst,Clustor Computing,"Power BI, Data Visualization, Digital Transformation",0-2 Yrs,Nagpur
+Data Analyst,Maven Marketing,"Python, SQL, Dashboards, Data Management",0-7 Yrs,Chennai
+Data Analyst,IQVIA,"Python Programming, PySpark, NumPy, Python Scripting",0-1 Yrs,Bengaluru
+Data Analyst,Log9 Materials,"SAS, Big Data Analytics, Macros, Business Intelligence",0-6 Yrs,Bengaluru
+Data Analyst,We Shine Academy,"Hive, Python, Scala, Data Mining, Oracle",0-3 Yrs,Chennai
+Data Analyst,Foundation Ai,"Metadata, Python, Data Validation, Data Mining",0-5 Yrs,Hyderabad
+Data Analyst,eClerx,"Python, VLOOKUP, DBMS, Pivot Table",0-2 Yrs,Coimbatore
+Data Analyst,Jindal Aluminium,"SQL, Excel, Power BI, Tableau, Python",0-2 Yrs,Bengaluru
+Data Analyst,Digital Glyde,"Excel, Power BI, Statistical Analysis, Data Visualization",0-3 Yrs,Bengaluru
+Data Analyst,Great Place to Work,"Power BI, Excel, SQL, Data Visualization",0-2 Yrs,Mumbai
+Data Analyst,Eduport,"Excel, Automation, Data Processing, SQL",0-1 Yrs,Kozhikode
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau, Machine Learning",0-4 Yrs,Thane
+Data Analyst,Proclink,"Excel, SQL, Data Visualization, Analytics",0-3 Yrs,Ahmedabad
+Data Analyst,Mantras2success Consultants,"Automation, Data Analysis, Forecasting, Data Management",0-4 Yrs,Bengaluru
+Data Analyst,RR Groups,"Power BI, Modeling, Documentation, Dashboards",0-1 Yrs,Bengaluru
+Data Analyst,Fireblaze Ai School,"Machine Learning, SQL, Data Modeling, Macros",0-2 Yrs,Ahmedabad
+Data Analyst,Right Step Consulting,"PHP, SQL, Data Mining, ERP",0-5 Yrs,Gurugram
+Data Analyst,Bombay Play,"C++, Machine Learning, JavaScript, Statistics",0-3 Yrs,Bengaluru
+Data Analyst,Grid Dynamics,"SQL, Data Modeling, Analytics, Performance Optimization",0-3 Yrs,Hyderabad
+Data Analyst,Teplar Solutions,"MS Office, Workflow, Customer Support",0-4 Yrs,Coimbatore
+Data Analyst,Augie,"Excel, Data Visualization, Database, Troubleshooting",0-3 Yrs,Bengaluru
+Data Analyst,Qube Research And Technologies,"C#, C++, Python, Mathematics, Bloomberg",0-3 Yrs,Mumbai
+Data Analyst,Recruitrix Technologies,"Excel, Data Management, Statistics",0-2 Yrs,Hyderabad
+Data Analyst,eClerx,"Excel, Logistics, Operations, Analysis",0-4 Yrs,Coimbatore
+Data Analyst,Winfra Buildtech,"Power BI, Google Sheets, Data Validation, Countif",0-2 Yrs,Gurugram
+Data Analyst,Wyzmindz Solutions,"Power BI, Tableau, BI Tools, Analytics",0-1 Yrs,Bengaluru
+Data Analyst,Mantras2success Consultants,"MongoDB, Excel, SQL, Risk Analytics",0-6 Yrs,Ahmedabad
+Data Analyst,Barclays,"Advanced Analytics, Machine Learning, Service Excellence",0-7 Yrs,Bengaluru
+Data Analyst,Barclays,"Advanced Analytics, Machine Learning, Service Excellence",0-7 Yrs,Pune
+Data Analyst,Barclays,"Automation, Data Quality, Change Management, Financial Services",0-7 Yrs,Pune
+Data Analyst,Maximatexprocessmill,"MS Office, ERP, Data Analysis",0-1 Yrs,Karur
+Data Analyst,Elegant Technologies,"Data Entry, Operations, Business Development",0-3 Yrs,Faridabad
+Data Analyst,Clifyx Technology,"Data Structures, Business Process Mapping, Windows",0-5 Yrs,Bengaluru
+Data Analyst,eAspire Technolabs,"Power BI, Tableau, BI Tools",0-1 Yrs,Gurugram
+Data Analyst,I-tech Infonet,"Adobe Acrobat, XML, HTML, Epub",0-2 Yrs,Rajkot
+Data Analyst,Aroha Technologies,"Data Mining, Data Cleansing",0-3 Yrs,Bengaluru
+Data Analyst,Zero Gravity Photography,"Business Reporting, Management, Analysis",0-2 Yrs,Chennai
+Data Analyst,Claight Corporation,"Data Analysis, Analysis",0-1 Yrs,Noida
+Data Analyst,Mr Technical Veer,"Data Analysis",0-3 Yrs,Lalitpur
+Data Analyst,Primohunt Corporate,"Google Analytics, Coding, Database, Webtrends",0-3 Yrs,Pune
+Data Analyst,Arcgate,"Data Analysis",0-5 Yrs,Udaipur
+Data Analyst,Anutech Solutions,"Data Analysis",0-3 Yrs,Vijayawada
+Data Analyst,Kaleesuwari Refinery,"Tableau, Data Analysis",0-3 Yrs,Chennai
+Data Analyst,Diensten Tech,"Data Analysis",0-1 Yrs,Gurugram
+Data Analyst,Snware Research Services,"SPSS, Data Validation, Debugging, Quality Check",0-3 Yrs,Gurugram
+Data Analyst,Innover Digital,"Supply Chain, Trade Operations, Project Management",0-5 Yrs,Bengaluru
+Data Analyst,Barclays,"Data Cleansing, Data Quality, Risk Management, Stakeholder Management",0-8 Yrs,Pune
+Data Analyst,eClerx,"Python, Adobe Analytics, Google AdWords, CSS",0-2 Yrs,Navi Mumbai
+Data Analyst,eClerx,"Python, Informatica PowerCenter, DBMS, Data Warehousing",0-2 Yrs,Navi Mumbai
+Data Analyst,Tele Tnfotech,"Power BI, SQL, Data Analytics",0 Yrs,Pune
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,eClerx,"Python, Power BI, Oracle, Investment Banking",0-2 Yrs,Pune
+Data Analyst,Ace Software Exports,"Adobe Acrobat, XML, HTML, Epub",0-4 Yrs,Rajkot
+Data Analyst,Intent Amplify,"Hive, Python, Data Warehousing, DBMS",0-2 Yrs,Pune
+Data Analyst,Career Club Consultancy,"HLOOKUP, Macros, Pivot Table, MIS Reporting",0-2 Yrs,Nashik
+Data Analyst,Biocube,"Python, NLP, Machine Learning, Predictive Modeling",0-3 Yrs,Noida
+Data Analyst,Securens Systems,"HLOOKUP, Macros, MIS Reporting, Data Validation",0-4 Yrs,Chennai
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,MNC,"Google Sheets, Power BI, Google Data Studio, MS Office, SQL",0-2 Yrs,Pune
+Data Analyst,Helios Spectra,"Computer Science, Business Intelligence, PDF, Data Management",0-2 Yrs,Coimbatore
+Data Analyst,Apex Engineering Solutions,"Tableau, Power BI, Advanced Excel, Data Cleansing",0-1 Yrs,Chennai
+Data Analyst,Apex Engineering Solutions,"Tableau, Power BI, Advanced Excel, Data Cleansing",0-1 Yrs,Bengaluru
+Data Analyst,Peroptyx,"English, Kannada, Data Mapping, Data Collection",0-5 Yrs,Remote
+Data Analyst,Peroptyx,"English, Marathi, Data Analysis, Mapping",0-5 Yrs,Remote
+Data Analyst,Peroptyx,"English, Gujarati, Data Analytics, Mapping",0-5 Yrs,Remote
+Data Analyst,Purnartha Investment Advisors,"Financial Modelling, CFA Level 1, Cash Flow Analysis",0-2 Yrs,Pune
+Data Analyst,eClerx,"HVAC, Data Quality, Product Data Management",0-1 Yrs,Coimbatore
+Data Scientist,360DigiTMG,"DuckDB, Cloud Storage, FMCG Domain",0-3 Yrs,Gurugram
+Data Scientist,Newton School,"Computer Vision, Machine Learning, GIT, AI",0-5 Yrs,Sonipat
+Data Scientist,Mastercard,"SQL, Data Cleansing, Data Visualization, Trend Analysis",0-5 Yrs,Gurugram
+Data Scientist,eAspire Technolabs,"Python, Statistical Modeling, Predictive Modeling",0-1 Yrs,Noida
+Data Scientist,Abex,"Deep Learning, Data Analysis, Machine Learning",0-1 Yrs,Chennai
+Data Scientist,Apple,"Python, Statistical Analysis, Predictive Modeling",0-8 Yrs,Hyderabad
+Data Scientist,Mern Plus Technologies,"Python, Machine Learning Algorithms, Deep Learning, SQL",0-5 Yrs,Jodhpur
+Data Scientist,We Shine Academy,"Python, Scala, Hive, Data Warehousing",0-3 Yrs,Chennai
+Data Scientist,Castrol,"Data Cleansing, Data Structures, Data Modeling",0-5 Yrs,Pune
+Data Scientist,Sparta Systems,"Coding, GCP, SQL, Machine Learning, Python",0-2 Yrs,Bengaluru
+Data Scientist,Dzylo,"QA, JavaScript, Machine Learning, UI Automation",0-3 Yrs,Gurugram
+Data Scientist,Amazon,"German Language, Annotation, B2 Certification",0-3 Yrs,Hyderabad
+Data Scientist,Genpact,"Customer Service, Voice Process, Collections",0-2 Yrs,Noida
+Data Scientist,Jidoka Technologies,"Python, Neural Networks, NLP, Data Pipeline",0-2 Yrs,Chennai
+Data Scientist,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Scientist,Shivalik Projects,"Playwright, Puppeteer, Selenium, Python",0-5 Yrs,Mohali
+Data Scientist,Aganitha Cognitive Solutions,"PyTorch, OpenCV, Python, Microscopy",0-3 Yrs,Hyderabad
+Data Scientist,Delibo,"Data Analysis, Agile, Business Analyst",0-3 Yrs,Chennai
+Data Scientist,Qube Research And Technologies,"C#, C++, Python, Mathematics, Bloomberg",0-3 Yrs,Mumbai
+Data Scientist,Wealth Zone Technologies,"AI, NLP, Machine Learning, REST API",0-5 Yrs,Hyderabad
+Data Scientist,Indium Software,"Machine Learning, Deep Learning, Transformers, SQL",0-5 Yrs,Hyderabad
+Data Scientist,Kintellect Partners,"Machine Learning, Big Data, SQL, Research",0-2 Yrs,Bengaluru
+Data Scientist,Coface India,"Machine Learning, GIT, NoSQL, Linux",0-3 Yrs,Mumbai
+Data Scientist,Daydreamsoft,"C++, Data Mining, Machine Learning, BI",0-4 Yrs,Surat
+Data Scientist,Jash Data Sciences,"Machine Learning, GIT, PostgreSQL, Django",0-5 Yrs,Pune
+Data Scientist,360DigiTMG,"Deep Learning, Data Science, Model Development",0-4 Yrs,Chennai
+Data Scientist,Data Collection Infotech,"SQL, Python, Data Mining, Trend Analysis",0-4 Yrs,Bengaluru
+Data Scientist,Han Digital Solution,"SAS, Machine Learning, Oracle, Microsoft",0-3 Yrs,Bengaluru
+Data Scientist,360DigiTMG,"Deep Learning, Spark, Big Data, SQL",0-2 Yrs,Bengaluru
+Data Scientist,Biocube,"Python, NLP, Machine Learning, Predictive Modeling",0-3 Yrs,Noida
+Data Scientist,Scimitar Research,"Python, Data Manipulation, Programming",0-1 Yrs,Pune
+Data Scientist,Growth Jockey,"SAS, Machine Learning, Data Structures",0-1 Yrs,Gurugram
+Data Scientist,Maddisoft Solutions,"Power BI, Excel, Python, Clustering",0-5 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, Python, AI, Data Collection",0-2 Yrs,Hyderabad
+Data Scientist,Simreka,"Python, NLP, Scikit-learn, Neural Networks",0-3 Yrs,Bengaluru
+Data Scientist,Citriot,"Python, C++, NLP, Azure, ML Deployment",0-2 Yrs,Bengaluru
+Data Scientist,LLP S3bglobal Technologies,"Oracle, MySQL, Predictive Modeling, Econometrics",0-3 Yrs,Bengaluru
+Data Scientist,Akaike Technologies,"Deep Learning, Machine Learning, GIT, MySQL",0-6 Yrs,Bengaluru
+Data Scientist,Western Digital,"Automation, Machine Learning, System Design",0-8 Yrs,Bengaluru
+Data Scientist,PayU,"Data Mining, Statistical Analysis, Analytics",0-3 Yrs,Gurugram
+Data Engineer,enGen Global,"Python, GCP, Databricks, PySpark",0-1 Yrs,Chennai
+Data Engineer,Intent Amplify,"Hive, Python, Data Warehousing, DBMS",0-2 Yrs,Pune
+Data Engineer,Accordion Partners,"Python, SQL, Data Engineering",0-2 Yrs,Hyderabad
+Data Engineer,PSRTEK,"Python, Data Pipelines, Software Design",0-2 Yrs,Hyderabad
+Data Engineer,Proclink,"Agile, JSON, Apache, JIRA",0-3 Yrs,Ahmedabad
+Data Engineer,Arroact,"Performance Tuning, Data Modeling, Informatica",0-3 Yrs,Ahmedabad
+Data Engineer,Proclink,"GCP, Agile, JSON, Apache, SQL",0-2 Yrs,Hyderabad
+Data Engineer,ADA Global,"CI/CD, PySpark, EMR, SQL, GIT",0-1 Yrs,Bengaluru
+Data Engineer,Billions United,"Python, Data Mining, Data Pipeline",0-2 Yrs,Bengaluru
+Data Engineer,Thoucentric,"SQL Queries, Data Modeling, Stored Procedures",0-5 Yrs,Bengaluru
+Data Engineer,Lixil,"Python, Java, CI/CD, SQL",0-4 Yrs,Gurugram
+Data Engineer,Kobie Marketing,"Apache, Python, SQL, SDLC",0-5 Yrs,Bengaluru
+Data Engineer,Conneqt,"NoSQL, Web Analytics, Adobe, AI",0-4 Yrs,Bengaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Engineer,InfoObjects Inc,"Python, C++, Azure, Machine Learning",0-4 Yrs,Jaipur
+Data Engineer,Platformatory,"Linux, GCP, Kafka, Scala",0-1 Yrs,Bengaluru
+Data Engineer,WTW Global,"Machine Learning, Advanced Analytics, Data Engineering",0 Yrs,Gurugram
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL, GIT",0-3 Yrs,Pune
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Predictive Modeling",0-2 Yrs,Patna
+Data Engineer,Google,"Data Structures, Data Mining, Machine Learning",0 Yrs,Hyderabad
+Data Engineer,Wizz Technology,"Data Engineering",0-2 Yrs,Noida
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Data Engineer,Castrol,"Data Cleansing, Data Modeling, Unit Testing",0-5 Yrs,Pune
+Data Engineer,Mercer,"Kubernetes, SQL, TensorFlow, Docker, PostgreSQL",0-5 Yrs,Gurugram
+Data Engineer,Ness Digital Engineering,"SQL, PySpark, Data Pipeline, BI",0 Yrs,Bengaluru
+Data Engineer,Knowledgesprint Technologies,"PostgreSQL, MongoDB, Apache, SQL, JSON",0-5 Yrs,Hyderabad
+Data Engineer,Shivalik Projects,"Playwright, Puppeteer, Selenium, Python",0-5 Yrs,Mohali
+Data Engineer,Nearobjects India,"SQL, MS Office, Database Management",0-1 Yrs,Remote
+Data Engineer,Dhurin,"SQL Database, GCP, Predictive Modeling",0-2 Yrs,Mumbai
+Data Engineer,Primestar Consulting,"NetBackup, DNS, Data Domain",0-4 Yrs,Mumbai
+Data Engineer,Trinity Consulting,"ETL, Python, SQL",0-2 Yrs,Bengaluru
+Data Engineer,Cybernetics Controls,"Scala, SQL, PySpark, Spark, GIT",0-2 Yrs,Mumbai
+Data Engineer,Xencia Technology,"PySpark, Azure Cloud, Spark, SQL, Python",0-1 Yrs,Chennai
+Data Engineer,Midland Credit Management,"Hive, Scala, SQL, PLSQL, Java",0 Yrs,Gurugram
+Data Engineer,Lixil,"Python, GIT, CI/CD, SQL",0-2 Yrs,Gurugram
+Data Engineer,360DigiTMG,"GIT, Data Structures, Machine Learning, GCP",0-1 Yrs,Chennai
+Data Engineer,360DigiTMG,"Data Analytics, Cloud Services, Big Data",0-1 Yrs,Jaipur
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning, Data Processing",0-1 Yrs,Mumbai
+ML Engineer,Pace Digitek Limited,"Python, Scikit-learn, TensorFlow, Data Processing",0-1 Yrs,Bengaluru
+Software Dev,Thoughtnidea Software Solutions,"Java, C++, SQL, Spring, jQuery",0-1 Yrs,Bengaluru
+DevOps Cloud,Giit Solutions,"AWS, Terraform, Kubernetes, Jenkins, CI/CD",0-2 Yrs,Gurugram
+Web Developer,Matrix Web Infotech,"HTML, CSS, AJAX, jQuery, Bootstrap, SQL",0-1 Yrs,Udaipur
+Cybersecurity,Sattrix Information Security,"SIEM, SOC, Linux, Threat Analysis, Vulnerability Management",0-1 Yrs,Ahmedabad
+Data Scientist,Apple,"Python, Statistical Analysis, Predictive Modeling",0-8 Yrs,Hyderabad
+Data Engineer,Google,"Data Structures, Data Mining, Machine Learning",0 Yrs,Hyderabad
+Software Dev,Amazon,"Java, Backend Development, Python",0-2 Yrs,Hyderabad
+Web Developer,Aptimist Techno Solutions,"JavaScript, CSS, Spring Boot, SQL",0-4 Yrs,Chennai
+ML Engineer,Chingari,"Deep Learning, C, Data Structures, Programming",0-2 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"MDR, SIEM Tools, SentinelOne, CrowdStrike",0-2 Yrs,Mumbai
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Ansible",0-4 Yrs,Jaipur
+Data Analyst,Barclays,"Advanced Analytics, Machine Learning, Service Excellence",0-7 Yrs,Bengaluru
+Software Dev,Techsoft,"HTML, Python, Full Stack Development",0 Yrs,Hyderabad
+Web Developer,Idaksh,"WordPress, MySQL, JavaScript, PHP, CMS",0-1 Yrs,Mangaluru
+ML Engineer,Prodigal,"Machine Learning, SQL, Python, Data Visualization",0-5 Yrs,Mumbai
+Cybersecurity,Artex Risk Solutions,"Incident Management, SIEM, Risk Management, Information Security",0-2 Yrs,Pune
+DevOps Cloud,Stackgenie,"Linux, GCP, Version Control, Automation",0-5 Yrs,Thiruvananthapuram
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL, GIT",0-3 Yrs,Pune
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL, MVC",0 Yrs,Noida
+Data Scientist,Western Digital,"Automation, Machine Learning, System Design",0-8 Yrs,Bengaluru
+Web Developer,Cybell Technosys,"PHP, WordPress, AJAX, Bootstrap, jQuery",0-2 Yrs,Hyderabad
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker, Monitoring Tools",0-3 Yrs,Hyderabad
+Data Analyst,MNC,"Google Sheets, Power BI, SQL, Data Analytics",0-2 Yrs,Pune
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow",0-7 Yrs,Bengaluru
+Cybersecurity,Goldman Sachs,"Risk Management, Investment Banking, Compliance",0-4 Yrs,Bengaluru
+Software Dev,Quantbox Research,"C++, Unix, Object Oriented Design, Linux",0-4 Yrs,Bengaluru
+Web Developer,Blueline Computers,"C#, CSS, Bootstrap, UI Development",0-1 Yrs,Mangaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python, Predictive Analytics",0-2 Yrs,Tirupati
+DevOps Cloud,Reizend Private Limited,"CI/CD, Kubernetes, Cloud, DevOps",0-3 Yrs,Thiruvananthapuram
+Data Scientist,Simreka,"Python, NLP, Neural Networks, Scikit-learn",0-3 Yrs,Bengaluru
+Cybersecurity,DLP Analyst,"SIEM, Incident Management, Risk Management",0-2 Yrs,Pune
+Software Dev,BVM Web Solutions,"Java, Spring, SQL, Hibernate, jQuery",0-3 Yrs,Jaipur
+Web Developer,Greet Labs,"PHP, JavaScript, SEO, HTML, OOPS",0-2 Yrs,Bengaluru
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau",0-4 Yrs,Thane
+ML Engineer,Hbic Solutions,"Deep Learning, AI, Python, Data Analytics",0-2 Yrs,Hyderabad
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux, Networking",0-12 Yrs,Pune
+Cybersecurity,MDR Analyst,"SIEM, SentinelOne, CrowdStrike, Threat Detection",0-2 Yrs,Mumbai
+Software Dev,Right Step Consulting,"PHP, SQL, ERP, Data Mining",0-5 Yrs,Gurugram
+Web Developer,Ficuslot Innovation,"PHP, CSS, GIT, MySQL, JavaScript",0-2 Yrs,Patna
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+ML Engineer,Newton School,"Machine Learning, Computer Vision, GIT, AI",0-5 Yrs,Sonipat
+Cybersecurity,Movate Technology,"SOC, ISO, SIEM, Networking",0-2 Yrs,Chennai
+DevOps Cloud,Flywings Enterprises,"Linux, AWS, Terraform, CI/CD",0 Yrs,Pune
+Software Dev,INFOTROZ SOLUTIONS,"Java, Python, SQL, AngularJS",0-1 Yrs,Chennai
+Web Developer,Yocreativ,"Vue.js, React.js, Docker, CSS, Git",0-3 Yrs,Gurugram
+Data Analyst,IQVIA,"Python, PySpark, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+ML Engineer,Eizen,"Computer Vision, Linux, Debugging, Machine Learning",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, GIT, NoSQL, Linux",0-3 Yrs,Mumbai
+DevOps Cloud,Intlum Technology,"Nginx, Docker, Jenkins, Kubernetes, GIT",0-2 Yrs,Kolkata
+Cybersecurity,Cliantha Research,"Bioanalysis, GLP, Clinical Research",0-2 Yrs,Ahmedabad
+Software Dev,SmartDocs Business Solutions,"Backend, GIT, PostgreSQL, MongoDB",0-2 Yrs,Hyderabad
+Web Developer,Webixy Technologies,"WordPress CMS, Core PHP, AJAX, JavaScript",0-2 Yrs,Kanpur
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+ML Engineer,Amazon,"C++, Machine Learning, RDBMS, Data Warehousing",0-5 Yrs,Bengaluru
+Data Scientist,Kintellect Partners,"Machine Learning, Big Data, SQL, Research",0-2 Yrs,Bengaluru
+DevOps Cloud,Azure DevOps Professional,"GCP, GKE, Kubernetes, Load Balancing",0-5 Yrs,Pune
+Cybersecurity,SG Analytics,"Financial Statements, Risk Assessment, Analysis",0-1 Yrs,Pune
+Software Dev,Meon Technologies,"Software Development, AI Coding Tools",0-1 Yrs,Noida
+Web Developer,Ambion Softwares,"C#, CSS, UI Development, Bootstrap",0-3 Yrs,Erode
+Data Analyst,Great Place to Work,"Power BI, Excel, SQL, Data Visualization",0-2 Yrs,Mumbai
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+Cybersecurity,eClerx,"Root Cause Analysis, Information Security",0-2 Yrs,Mumbai
+DevOps Cloud,Capgemini,"GCP, Python, GitHub, Kubernetes",0-5 Yrs,Pune
+Software Dev,Amazon,"Java, Backend, Software Development",0-2 Yrs,Bengaluru
+Web Developer,Brandwitty,"Web Technologies, Development, Digital Marketing",0-2 Yrs,Mumbai
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning, Data Processing",0-1 Yrs,Mohali
+Web Developer,Matrix Web Infotech,"CSS, jQuery, Bootstrap, SQL, Web Application",0-1 Yrs,Udaipur
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, Python, SQL, Node.js",0-1 Yrs,Chennai
+Cybersecurity,Softcell Technologies,"SIEM, MDR, SentinelOne, Threat Analysis",0-2 Yrs,Mumbai
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow, NumPy",0-7 Yrs,Bengaluru
+DevOps Cloud,Reizend Private Limited,"CI/CD, Kubernetes, Cloud, Continuous Integration",0-2 Yrs,Thiruvananthapuram
+Data Scientist,Hbic Solutions,"AI, Deep Learning, Python, Data Collection",0-2 Yrs,Hyderabad
+Data Analyst,Barclays,"Advanced Analytics, Data Quality, Risk Management",0-7 Yrs,Pune
+Software Dev,Techsoft,"HTML, Full Stack Development, Python",0 Yrs,Vijayawada
+Web Developer,Idaksh,"WordPress, MySQL, JavaScript, PHP",0-1 Yrs,Mangaluru
+Data Engineer,Google,"Data Structures, SQL, Machine Learning",0 Yrs,Bengaluru
+ML Engineer,Prodigal,"Machine Learning, SQL, Data Science, Python",0-5 Yrs,Mumbai
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Linux, Incident Management",0-1 Yrs,Ahmedabad
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Containerization",0-4 Yrs,Jaipur
+Data Scientist,Simreka,"Neural Networks, Python, NLP, ML",0-3 Yrs,Bengaluru
+Software Dev,Amazon,"Java, Backend Development, Python, Software Engineering",0-2 Yrs,Chennai
+Web Developer,Yocreativ,"React.js, Vue.js, Docker, CSS, Git",0-3 Yrs,Gurugram
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau",0-4 Yrs,Thane
+ML Engineer,Sithafal Technologies,"AI, NLP, LLM, Python, Predictive Analytics",0-2 Yrs,Tirupati
+DevOps Cloud,Stackgenie,"Linux, GCP, GitHub, Automation",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,DLP Analyst,"Risk Management, SIEM, Incident Response",0-2 Yrs,Pune
+Software Dev,BVM Web Solutions,"Spring, Java, Hibernate, SQL, jQuery",0-3 Yrs,Jaipur
+Web Developer,Blueline Computers,"Bootstrap, CSS, UI Development, C#",0-1 Yrs,Mangaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+ML Engineer,Eizen,"Computer Vision, Linux, Debugging, ML",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, GIT, Linux, NoSQL",0-3 Yrs,Mumbai
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker, Monitoring",0-3 Yrs,Hyderabad
+Cybersecurity,Goldman Sachs,"Compliance, Risk Management, Financial Services",0-4 Yrs,Bengaluru
+Software Dev,Quantbox Research,"C++, Linux, Unix, Object Oriented Design",0-4 Yrs,Bengaluru
+Web Developer,Ficuslot Innovation,"PHP, MySQL, JavaScript, CSS, GIT",0-2 Yrs,Patna
+Data Analyst,Great Place to Work,"Power BI, SQL, Excel, Data Visualization",0-2 Yrs,Mumbai
+ML Engineer,Newton School,"Machine Learning, Computer Vision, GIT, AI",0-5 Yrs,Sonipat
+DevOps Cloud,Capgemini,"GCP, GKE, Kubernetes, Python, SQL",0-5 Yrs,Pune
+Cybersecurity,Movate Technology,"ISO, SOC, SIEM, Networking",0-2 Yrs,Chennai
+Software Dev,SmartDocs Business Solutions,"PostgreSQL, MongoDB, Backend, GIT",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript, SEO",0-2 Yrs,Bengaluru
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+ML Engineer,Amazon,"C++, RDBMS, Machine Learning, Data Warehousing",0-5 Yrs,Bengaluru
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning",0-2 Yrs,Bengaluru
+DevOps Cloud,Intlum Technology,"Nginx, Docker, Jenkins, Kubernetes",0-2 Yrs,Kolkata
+Cybersecurity,SG Analytics,"Financial Analysis, Risk Assessment",0-1 Yrs,Pune
+Software Dev,Meon Technologies,"Software Development, AI Tools",0-1 Yrs,Noida
+Web Developer,Ambion Softwares,"UI Development, CSS, Bootstrap, C#",0-3 Yrs,Erode
+Data Analyst,IQVIA,"Python, NumPy, PySpark, Data Analytics",0-1 Yrs,Bengaluru
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+DevOps Cloud,Flywings Enterprises,"Linux, AWS, Terraform, CI/CD",0 Yrs,Pune
+Cybersecurity,eClerx,"Root Cause Analysis, Information Security",0-2 Yrs,Mumbai
+Software Dev,Amazon,"Java, Backend, Software Development",0-2 Yrs,Hyderabad
+Web Developer,Brandwitty,"Web Development, Digital Marketing, PHP",0-2 Yrs,Mumbai
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+ML Engineer,Roku,"Python, TensorFlow, NLP, Reinforcement Learning",0-7 Yrs,Bengaluru
+Data Scientist,Western Digital,"Machine Learning, System Design, Automation",0-8 Yrs,Bengaluru
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Networking, Linux",0-12 Yrs,Pune
+Cybersecurity,Artex Risk Solutions,"SIEM, Incident Management, Risk Analysis",0-2 Yrs,Bengaluru
+Software Dev,Right Step Consulting,"PHP, ERP, SQL, Data Mining",0-5 Yrs,Gurugram
+Web Developer,Webixy Technologies,"WordPress CMS, AJAX, Bootstrap, JavaScript",0-2 Yrs,Kanpur
+Data Analyst,MNC,"Power BI, SQL, Google Sheets, Data Analytics",0-2 Yrs,Pune
+ML Engineer,Prodigal,"Data Science, SQL, Python, ML",0-5 Yrs,Mumbai
+DevOps Cloud,Azure DevOps Professional,"GCP, Kubernetes, Load Balancing, GitHub",0-5 Yrs,Pune
+Cybersecurity,Softcell Technologies,"SIEM Tools, Threat Detection, MDR",0-2 Yrs,Mumbai
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL, MVC",0 Yrs,Noida
+Web Developer,Cybell Technosys,"PHP, WordPress, AJAX, Bootstrap",0-2 Yrs,Hyderabad
+Data Engineer,Precision Medicine Group,"AWS, MySQL, Linux, GIT",0-3 Yrs,Pune
+ML Engineer,Sithafal Technologies,"AI, NLP, Machine Learning, Python",0-2 Yrs,Tirupati
+Data Scientist,Apple,"Statistical Analysis, Python, Predictive Modeling",0-8 Yrs,Hyderabad
+DevOps Cloud,Stackgenie,"GCP, Linux, Automation, Version Control",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Threat Analysis, Linux",0-1 Yrs,Ahmedabad
+Software Dev,BVM Web Solutions,"Java, Spring, SQL, Hibernate",0-3 Yrs,Jaipur
+Web Developer,Matrix Web Infotech,"CSS, AJAX, Bootstrap, jQuery",0-1 Yrs,Udaipur
+Software Dev,Amazon,"Java, Backend Development, Software Engineering, Python",0-2 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"SIEM, MDR, Threat Detection, SentinelOne",0-2 Yrs,Mumbai
+ML Engineer,Roku,"Python, Deep Learning, NLP, TensorFlow, NumPy",0-7 Yrs,Bengaluru
+Data Analyst,Barclays,"Data Quality, Risk Management, Advanced Analytics",0-7 Yrs,Pune
+Web Developer,Yocreativ,"Vue.js, React.js, Docker, CSS, Git",0-3 Yrs,Gurugram
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker, Monitoring Tools",0-3 Yrs,Hyderabad
+Data Scientist,Simreka,"Neural Networks, Python, NLP, Machine Learning",0-3 Yrs,Bengaluru
+Data Engineer,Google,"SQL, Data Structures, Machine Learning",0 Yrs,Hyderabad
+Software Dev,Techsoft,"HTML, Python, Full Stack Development",0 Yrs,Hyderabad
+Cybersecurity,Sattrix Information Security,"SOC, Linux, Vulnerability Management, SIEM",0-1 Yrs,Ahmedabad
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python, Predictive Analytics",0-2 Yrs,Tirupati
+Data Analyst,IQVIA,"Python, NumPy, PySpark, Data Analytics",0-1 Yrs,Bengaluru
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, AJAX, jQuery, SQL",0-1 Yrs,Udaipur
+DevOps Cloud,Stackgenie,"Linux, GCP, Version Control, Automation",0-5 Yrs,Thiruvananthapuram
+Data Scientist,Western Digital,"Machine Learning, System Design, Automation",0-8 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Java, Hibernate, SQL, Spring, jQuery",0-3 Yrs,Jaipur
+Cybersecurity,Goldman Sachs,"Compliance, Financial Services, Risk Analysis",0-4 Yrs,Bengaluru
+ML Engineer,Newton School,"Machine Learning, Computer Vision, AI, GIT",0-5 Yrs,Sonipat
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau",0-4 Yrs,Thane
+Web Developer,Blueline Computers,"C#, CSS, Bootstrap, UI Development",0-1 Yrs,Mangaluru
+DevOps Cloud,Flywings Enterprises,"Linux, AWS, Terraform, CI/CD",0 Yrs,Pune
+Data Scientist,Coface India,"Machine Learning, Linux, NoSQL, GIT",0-3 Yrs,Mumbai
+Software Dev,Quantbox Research,"C++, Unix, Object Oriented Design, Linux",0-4 Yrs,Bengaluru
+Cybersecurity,DLP Analyst,"SIEM, Incident Response, Risk Management",0-2 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, Linux, Debugging, ML",0-5 Yrs,Hyderabad
+Data Engineer,Precision Medicine Group,"AWS, MySQL, Linux, GIT",0-3 Yrs,Pune
+Data Analyst,Great Place to Work,"Power BI, SQL, Excel, Data Visualization",0-2 Yrs,Mumbai
+Web Developer,Greet Labs,"PHP, HTML, JavaScript, SEO",0-2 Yrs,Bengaluru
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Load Balancing, GitHub",0-5 Yrs,Pune
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning, Research",0-2 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"PostgreSQL, MongoDB, Backend, GIT",0-2 Yrs,Hyderabad
+Cybersecurity,Movate Technology,"ISO, SOC, Networking, SIEM",0-2 Yrs,Chennai
+ML Engineer,Prodigal,"Machine Learning, SQL, Data Science, Python",0-5 Yrs,Mumbai
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+Web Developer,Brandwitty,"Web Development, PHP, Digital Marketing",0-2 Yrs,Mumbai
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux, Networking",0-12 Yrs,Pune
+Data Scientist,Apple,"Statistical Analysis, Python, Predictive Modeling",0-8 Yrs,Hyderabad
+Software Dev,Amazon,"Java, Backend, Software Development",0-2 Yrs,Hyderabad
+Cybersecurity,SG Analytics,"Risk Assessment, Financial Analysis",0-1 Yrs,Pune
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+Data Analyst,MNC,"Power BI, SQL, Google Sheets, Data Analytics",0-2 Yrs,Pune
+Web Developer,Webixy Technologies,"WordPress CMS, Core PHP, AJAX, JavaScript",0-2 Yrs,Kanpur
+DevOps Cloud,Intlum Technology,"Docker, Kubernetes, Jenkins, GIT",0-2 Yrs,Kolkata
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python, Data Collection",0-2 Yrs,Hyderabad
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, Python, SQL, Node.js",0-1 Yrs,Chennai
+Cybersecurity,eClerx,"Root Cause Analysis, Information Security",0-2 Yrs,Mumbai
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python, TensorFlow",0-7 Yrs,Bengaluru
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Data Analyst,Barclays,"Service Excellence, Data Analytics, Risk Management",0-7 Yrs,Bengaluru
+Web Developer,Cybell Technosys,"PHP, WordPress, Bootstrap, AJAX",0-2 Yrs,Hyderabad
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Containerization",0-4 Yrs,Jaipur
+Data Scientist,Simreka,"NLP, Neural Networks, Python, ML",0-3 Yrs,Bengaluru
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL, MVC",0 Yrs,Noida
+Cybersecurity,Sattrix Information Security,"Threat Analysis, Linux, SIEM, SOC",0-1 Yrs,Ahmedabad
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python",0-2 Yrs,Tirupati
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning, Data Processing",0-1 Yrs,Mohali
+Data Analyst,IQVIA,"Python Programming, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS, JavaScript",0-2 Yrs,Patna
+DevOps Cloud,Stackgenie,"GCP, Automation, Linux, GitHub",0-5 Yrs,Thiruvananthapuram
+Data Scientist,Western Digital,"Automation, ML, System Design",0-8 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Spring, SQL, Hibernate, Java",0-3 Yrs,Jaipur
+Cybersecurity,Softcell Technologies,"MDR, SIEM, CrowdStrike, SentinelOne",0-2 Yrs,Mumbai
+ML Engineer,Newton School,"Computer Vision, AI, Machine Learning",0-5 Yrs,Sonipat
+Data Engineer,Google,"Data Structures, SQL, Machine Learning",0 Yrs,Bengaluru
+Data Analyst,Paramount Health Services,"R, Python, Tableau, SQL",0-4 Yrs,Thane
+Web Developer,Matrix Web Infotech,"CSS, AJAX, Bootstrap, jQuery",0-1 Yrs,Udaipur
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker",0-3 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, GIT, Linux",0-3 Yrs,Mumbai
+Software Dev,Amazon,"Backend Development, Java, Python",0-2 Yrs,Chennai
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment, Finance",0-4 Yrs,Bengaluru
+Data Scientist,Prodigal,"Machine Learning, SQL, Python, Data Visualization",0-5 Yrs,Mumbai
+Web Developer,Webixy Technologies,"WordPress CMS, PHP, AJAX, JavaScript",0-2 Yrs,Kanpur
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Load Balancing, GitHub",0-5 Yrs,Pune
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, Python, SQL, Node.js",0-1 Yrs,Chennai
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Threat Detection, Linux",0-1 Yrs,Ahmedabad
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow",0-7 Yrs,Bengaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Analyst,Great Place to Work,"Power BI, Excel, SQL, Data Visualization",0-2 Yrs,Mumbai
+Software Dev,Amazon,"Java, Backend, Software Engineering",0-2 Yrs,Bengaluru
+Web Developer,Matrix Web Infotech,"CSS, jQuery, Bootstrap, SQL",0-1 Yrs,Udaipur
+DevOps Cloud,Stackgenie,"Linux, GCP, Automation, Version Control",0-5 Yrs,Thiruvananthapuram
+Data Scientist,Western Digital,"Machine Learning, System Design, Automation",0-8 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"MDR, SIEM, SentinelOne, Threat Analysis",0-2 Yrs,Mumbai
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python",0-2 Yrs,Tirupati
+Data Engineer,Precision Medicine Group,"AWS, MySQL, Linux, GIT",0-3 Yrs,Pune
+Software Dev,SmartDocs Business Solutions,"PostgreSQL, MongoDB, Backend, GIT",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, JavaScript, HTML, SEO",0-2 Yrs,Bengaluru
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau",0-4 Yrs,Thane
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker, Monitoring",0-3 Yrs,Hyderabad
+Cybersecurity,DLP Analyst,"Risk Management, SIEM, Incident Response",0-2 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, Linux, Debugging, ML",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, GIT, NoSQL, Linux",0-3 Yrs,Mumbai
+Software Dev,BVM Web Solutions,"Java, Spring, SQL, Hibernate",0-3 Yrs,Jaipur
+Web Developer,Brandwitty,"Web Development, PHP, Digital Marketing",0-2 Yrs,Mumbai
+Data Engineer,Google,"SQL, Data Structures, Machine Learning",0 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, NumPy, Data Analytics, PySpark",0-1 Yrs,Bengaluru
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Containerization",0-4 Yrs,Jaipur
+Cybersecurity,Movate Technology,"ISO, Networking, SIEM, SOC",0-2 Yrs,Chennai
+ML Engineer,Newton School,"Computer Vision, AI, Machine Learning",0-5 Yrs,Sonipat
+Data Scientist,Simreka,"Neural Networks, NLP, Python, ML",0-3 Yrs,Bengaluru
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL",0 Yrs,Noida
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS, JavaScript",0-2 Yrs,Patna
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+Cybersecurity,Goldman Sachs,"Compliance, Financial Services, Risk Analysis",0-4 Yrs,Bengaluru
+DevOps Cloud,Flywings Enterprises,"Linux, AWS, Terraform, CI/CD",0 Yrs,Pune
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+Data Analyst,MNC,"Power BI, SQL, Google Sheets, Data Analytics",0-2 Yrs,Pune
+Software Dev,Quantbox Research,"C++, Unix, Object Oriented Design, Linux",0-4 Yrs,Bengaluru
+Web Developer,Cybell Technosys,"PHP, WordPress, AJAX, Bootstrap",0-2 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python, Data Collection",0-2 Yrs,Hyderabad
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux, Networking",0-12 Yrs,Pune
+Cybersecurity,eClerx,"Root Cause Analysis, Information Security",0-2 Yrs,Mumbai
+ML Engineer,Amazon,"C++, NLP, Machine Learning, Data Warehousing",0-5 Yrs,Bengaluru
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning",0-1 Yrs,Mohali
+Software Dev,INFOTROZ SOLUTIONS,"Java, SQL, AngularJS, Node.js",0-1 Yrs,Chennai
+Web Developer,Blueline Computers,"C#, CSS, UI Development, Bootstrap",0-1 Yrs,Mangaluru
+Data Analyst,Barclays,"Advanced Analytics, Risk Management",0-7 Yrs,Bengaluru
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python, SQL",0-5 Yrs,Pune
+Cybersecurity,Sattrix Information Security,"SOC, Threat Analysis, Linux",0-1 Yrs,Ahmedabad
+ML Engineer,Prodigal,"Data Science, SQL, Python",0-5 Yrs,Mumbai
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning",0-2 Yrs,Bengaluru
+Software Dev,Amazon,"Backend Development, Java, Python",0-2 Yrs,Hyderabad
+Web Developer,Yocreativ,"Vue.js, React.js, Git, Docker",0-3 Yrs,Gurugram
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"SIEM, SentinelOne, CrowdStrike",0-2 Yrs,Mumbai
+DevOps Cloud,Stackgenie,"GCP, Automation, Linux, Version Control",0-5 Yrs,Thiruvananthapuram
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python",0-7 Yrs,Bengaluru
+Data Analyst,Paramount Health Services,"R, SQL, Tableau, Python",0-4 Yrs,Thane
+Software Dev,BVM Web Solutions,"Spring, SQL, Hibernate, Java",0-3 Yrs,Jaipur
+Web Developer,Matrix Web Infotech,"CSS, AJAX, Bootstrap, jQuery",0-1 Yrs,Udaipur
+Data Scientist,Western Digital,"ML, Automation, System Design",0-8 Yrs,Bengaluru
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment, Finance",0-4 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+ML Engineer,Sithafal Technologies,"AI, NLP, LLM, Python",0-2 Yrs,Tirupati
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL, GIT",0-3 Yrs,Pune
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, PostgreSQL, GIT",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript, SEO",0-2 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, NumPy, PySpark",0-1 Yrs,Bengaluru
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure",0-4 Yrs,Jaipur
+Cybersecurity,DLP Analyst,"Incident Management, Risk Analysis, SIEM",0-2 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, Debugging, ML",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, Linux, GIT",0-3 Yrs,Mumbai
+Software Dev,Ozdocs India,"C#, Angular, SQL, MVC",0 Yrs,Noida
+Data Scientist,Prodigal,"Machine Learning, SQL, Python, Data Science",0-5 Yrs,Mumbai
+Software Dev,Amazon,"Java, Backend Development, Software Engineering",0-2 Yrs,Chennai
+Web Developer,Matrix Web Infotech,"CSS, AJAX, Bootstrap, jQuery, SQL",0-1 Yrs,Udaipur
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python, Load Balancing",0-5 Yrs,Pune
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Threat Detection, Linux",0-1 Yrs,Ahmedabad
+ML Engineer,Roku,"Deep Learning, NLP, Python, TensorFlow",0-7 Yrs,Bengaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Analyst,Barclays,"Advanced Analytics, Risk Management, Data Quality",0-7 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Java, Spring, Hibernate, SQL",0-3 Yrs,Jaipur
+Web Developer,Yocreativ,"Vue.js, React.js, Docker, Git",0-3 Yrs,Gurugram
+DevOps Cloud,Stackgenie,"Linux, GCP, Automation, Version Control",0-5 Yrs,Thiruvananthapuram
+Data Scientist,Western Digital,"Machine Learning, System Design, Automation",0-8 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"MDR, SIEM Tools, CrowdStrike, SentinelOne",0-2 Yrs,Mumbai
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python",0-2 Yrs,Tirupati
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL, GIT",0-3 Yrs,Pune
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, PostgreSQL, GIT",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript, SEO",0-2 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, PySpark, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker, Monitoring",0-3 Yrs,Hyderabad
+Cybersecurity,DLP Analyst,"Incident Response, SIEM, Risk Management",0-2 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, Linux, Debugging, ML",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, GIT, Linux, NoSQL",0-3 Yrs,Mumbai
+Software Dev,Quantbox Research,"C++, Unix, Linux, Object Oriented Design",0-4 Yrs,Bengaluru
+Web Developer,Blueline Computers,"C#, CSS, Bootstrap, UI Development",0-1 Yrs,Mangaluru
+Data Engineer,Google,"SQL, Data Structures, Machine Learning",0 Yrs,Bengaluru
+Data Analyst,Paramount Health Services,"R, Python, SQL, Tableau",0-4 Yrs,Thane
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Containerization",0-4 Yrs,Jaipur
+Cybersecurity,Movate Technology,"ISO, SOC, SIEM, Networking",0-2 Yrs,Chennai
+ML Engineer,Newton School,"Machine Learning, Computer Vision, AI",0-5 Yrs,Sonipat
+Data Scientist,Simreka,"Neural Networks, NLP, Python, ML",0-3 Yrs,Bengaluru
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL, MVC",0 Yrs,Noida
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS, JavaScript",0-2 Yrs,Patna
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment, Finance",0-4 Yrs,Bengaluru
+DevOps Cloud,Flywings Enterprises,"Linux, AWS, Terraform, CI/CD",0 Yrs,Pune
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+Data Analyst,MNC,"Power BI, SQL, Google Sheets, Data Analytics",0-2 Yrs,Pune
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, Python, SQL, Node.js",0-1 Yrs,Chennai
+Web Developer,Cybell Technosys,"PHP, WordPress, Bootstrap, AJAX",0-2 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python, Data Collection",0-2 Yrs,Hyderabad
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux, Networking",0-12 Yrs,Pune
+Cybersecurity,eClerx,"Information Security, Root Cause Analysis",0-2 Yrs,Mumbai
+ML Engineer,Amazon,"C++, NLP, Machine Learning, Data Warehousing",0-5 Yrs,Bengaluru
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning",0-1 Yrs,Mohali
+Software Dev,Amazon,"Backend Development, Java, Python",0-2 Yrs,Hyderabad
+Web Developer,Brandwitty,"Web Development, PHP, Digital Marketing",0-2 Yrs,Mumbai
+Data Analyst,Great Place to Work,"Power BI, SQL, Excel",0-2 Yrs,Mumbai
+DevOps Cloud,Intlum Technology,"Docker, Jenkins, Kubernetes, GIT",0-2 Yrs,Kolkata
+Cybersecurity,Sattrix Information Security,"SOC, Threat Analysis, Linux",0-1 Yrs,Ahmedabad
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python",0-7 Yrs,Bengaluru
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning",0-2 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Spring, Hibernate, SQL, Java",0-3 Yrs,Jaipur
+Web Developer,Matrix Web Infotech,"CSS, AJAX, Bootstrap, jQuery",0-1 Yrs,Udaipur
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"SIEM, SentinelOne, CrowdStrike",0-2 Yrs,Mumbai
+DevOps Cloud,Stackgenie,"GCP, Automation, Linux, Version Control",0-5 Yrs,Thiruvananthapuram
+ML Engineer,Sithafal Technologies,"AI, NLP, LLM, Python",0-2 Yrs,Tirupati
+Data Analyst,Barclays,"Data Analytics, Risk Management",0-7 Yrs,Pune
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, GIT",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+Data Scientist,Western Digital,"Automation, ML, System Design",0-8 Yrs,Bengaluru
+Cybersecurity,Goldman Sachs,"Risk Assessment, Compliance, Finance",0-4 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+ML Engineer,Eizen,"Computer Vision, Debugging, ML",0-5 Yrs,Hyderabad
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL",0-3 Yrs,Pune
+Software Dev,Ozdocs India,"C#, Angular, SQL",0 Yrs,Noida
+Web Developer,Ficuslot Innovation,"PHP, CSS, MySQL",0-2 Yrs,Patna
+Web Developer,Ficuslot Innovation,"PHP, CSS, MySQL, JavaScript",0-2 Yrs,Patna
+ML Engineer,Prodigal,"Machine Learning, SQL, Python, Data Science",0-5 Yrs,Mumbai
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, jQuery, SQL, AJAX",0-1 Yrs,Udaipur
+Software Dev,Amazon,"Java, Backend Development, Software Engineering",0-2 Yrs,Bengaluru
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Linux, Threat Detection",0-1 Yrs,Ahmedabad
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python, Load Balancing",0-5 Yrs,Pune
+Data Scientist,Western Digital,"Machine Learning, Automation, System Design",0-8 Yrs,Bengaluru
+Data Engineer,Blend360 India,"Apache, SQL, Automation, Agile",0-3 Yrs,Hyderabad
+Data Analyst,Barclays,"Advanced Analytics, Risk Management",0-7 Yrs,Pune
+Software Dev,BVM Web Solutions,"Java, Spring, Hibernate, SQL",0-3 Yrs,Jaipur
+Web Developer,Yocreativ,"Vue.js, React.js, Git, Docker",0-3 Yrs,Gurugram
+DevOps Cloud,Stackgenie,"Linux, GCP, Automation",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Softcell Technologies,"MDR, SIEM, CrowdStrike",0-2 Yrs,Mumbai
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow",0-7 Yrs,Bengaluru
+Data Scientist,Coface India,"Machine Learning, GIT, Linux",0-3 Yrs,Mumbai
+Data Engineer,Google,"SQL, Data Structures, ML",0 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, PostgreSQL",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Kubernetes, Docker",0-3 Yrs,Hyderabad
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment",0-4 Yrs,Bengaluru
+ML Engineer,Sithafal Technologies,"AI, NLP, LLM, Python",0-2 Yrs,Tirupati
+Data Scientist,Simreka,"Neural Networks, NLP, Python",0-3 Yrs,Bengaluru
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL",0 Yrs,Noida
+Web Developer,Brandwitty,"Web Development, PHP, Marketing",0-2 Yrs,Mumbai
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL",0-3 Yrs,Pune
+Cybersecurity,DLP Analyst,"Incident Response, SIEM, Risk Management",0-2 Yrs,Pune
+DevOps Cloud,Gosotek Technologies,"Docker, Kubernetes, Azure",0-4 Yrs,Jaipur
+Data Analyst,MNC,"Power BI, SQL, Google Sheets",0-2 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, ML, Linux",0-5 Yrs,Hyderabad
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning",0-2 Yrs,Bengaluru
+Software Dev,Amazon,"Java, Backend, Python",0-2 Yrs,Hyderabad
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS",0-2 Yrs,Patna
+Data Engineer,Xenonstack,"Scala, SQL, Data Processing",0-1 Yrs,Mohali
+Cybersecurity,Movate Technology,"ISO, SOC, SIEM",0-2 Yrs,Chennai
+DevOps Cloud,Flywings Enterprises,"AWS, Terraform, CI/CD, Linux",0 Yrs,Pune
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python",0-1 Yrs,Hyderabad
+Data Analyst,Great Place to Work,"Power BI, SQL, Excel",0-2 Yrs,Mumbai
+Software Dev,Quantbox Research,"C++, Unix, Linux",0-4 Yrs,Bengaluru
+Web Developer,Cybell Technosys,"PHP, WordPress, Bootstrap",0-2 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python",0-2 Yrs,Hyderabad
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux",0-12 Yrs,Pune
+Cybersecurity,eClerx,"Information Security, Root Cause Analysis",0-2 Yrs,Mumbai
+ML Engineer,Amazon,"C++, NLP, ML",0-5 Yrs,Bengaluru
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, SQL",0-1 Yrs,Chennai
+Web Developer,Matrix Web Infotech,"CSS, jQuery, AJAX",0-1 Yrs,Udaipur
+Data Analyst,Paramount Health Services,"R, SQL, Tableau",0-4 Yrs,Thane
+DevOps Cloud,Capgemini,"GCP, Kubernetes, SQL",0-5 Yrs,Pune
+Cybersecurity,Sattrix Information Security,"SOC, Linux, Threat Analysis",0-1 Yrs,Ahmedabad
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python",0-7 Yrs,Bengaluru
+Data Scientist,Western Digital,"ML, Automation, System Design",0-8 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Java, SQL, Hibernate",0-3 Yrs,Jaipur
+Web Developer,Blueline Computers,"C#, CSS, Bootstrap",0-1 Yrs,Mangaluru
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP",0-2 Yrs,Patna
+Cybersecurity,Goldman Sachs,"Risk Management, Compliance",0-4 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+ML Engineer,Sithafal Technologies,"AI, NLP, Python",0-2 Yrs,Tirupati
+Data Analyst,Barclays,"Data Analytics, Risk Management",0-7 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"Backend, GIT, MongoDB",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+Data Scientist,Simreka,"NLP, Neural Networks, ML",0-3 Yrs,Bengaluru
+DevOps Cloud,Stackgenie,"Linux, Automation, GCP",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Softcell Technologies,"SIEM, MDR, Threat Detection",0-2 Yrs,Mumbai
+ML Engineer,Eizen,"Computer Vision, Debugging",0-5 Yrs,Hyderabad
+Data Engineer,Precision Medicine Group,"AWS, MySQL, Linux",0-3 Yrs,Pune
+Software Dev,Amazon,"Backend, Java, Python",0-2 Yrs,Chennai
+Web Developer,Yocreativ,"React.js, Vue.js, Git",0-3 Yrs,Gurugram
+Data Analyst,IQVIA,"Python, Data Analytics, NumPy",0-1 Yrs,Bengaluru
+DevOps Cloud,Gosotek Technologies,"Docker, Azure, Kubernetes",0-4 Yrs,Jaipur
+Cybersecurity,DLP Analyst,"SIEM, Incident Response",0-2 Yrs,Pune
+ML Engineer,Prodigal,"Machine Learning, SQL, Python",0-5 Yrs,Mumbai
+Data Scientist,Coface India,"Machine Learning, Linux",0-3 Yrs,Mumbai
+Software Dev,Ozdocs India,"C#, SQL, Angular",0 Yrs,Noida
+Web Developer,Ficuslot Innovation,"PHP, CSS, MySQL",0-2 Yrs,Patna
+Data Engineer,Google,"SQL, ML, Data Structures",0 Yrs,Bengaluru
+Cybersecurity,Sattrix Information Security,"SOC, Threat Detection",0-1 Yrs,Ahmedabad
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python",0-5 Yrs,Pune
+ML Engineer,Roku,"NLP, TensorFlow, Python",0-7 Yrs,Bengaluru
+Data Analyst,MNC,"Power BI, SQL",0-2 Yrs,Pune
+Software Dev,BVM Web Solutions,"Spring, SQL",0-3 Yrs,Jaipur
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, AJAX",0-1 Yrs,Udaipur
+Data Scientist,Prodigal,"Machine Learning, SQL, Python, Data Science",0-5 Yrs,Mumbai
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, jQuery, AJAX, SQL",0-1 Yrs,Udaipur
+Software Dev,Amazon,"Java, Backend Development, Software Engineering",0-2 Yrs,Bengaluru
+Cybersecurity,Sattrix Information Security,"SOC, SIEM, Linux, Threat Detection",0-1 Yrs,Ahmedabad
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python, Load Balancing",0-5 Yrs,Pune
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow",0-7 Yrs,Bengaluru
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+Data Analyst,Barclays,"Advanced Analytics, Risk Management, Data Quality",0-7 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Java, Spring, Hibernate, SQL",0-3 Yrs,Jaipur
+Web Developer,Yocreativ,"Vue.js, React.js, Git, Docker",0-3 Yrs,Gurugram
+DevOps Cloud,Stackgenie,"Linux, GCP, Automation, Version Control",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Softcell Technologies,"MDR, SIEM Tools, CrowdStrike",0-2 Yrs,Mumbai
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python",0-2 Yrs,Tirupati
+Data Scientist,Western Digital,"Machine Learning, System Design, Automation",0-8 Yrs,Bengaluru
+Data Engineer,Google,"SQL, Data Structures, Machine Learning",0 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, PostgreSQL",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment, Finance",0-4 Yrs,Bengaluru
+ML Engineer,Eizen,"Computer Vision, Debugging, Machine Learning",0-5 Yrs,Hyderabad
+Data Scientist,Coface India,"Machine Learning, Linux, GIT",0-3 Yrs,Mumbai
+Software Dev,Amazon,"Backend, Java, Python",0-2 Yrs,Hyderabad
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS, JavaScript",0-2 Yrs,Patna
+Data Engineer,Xenonstack,"Scala, SQL, Data Processing",0-1 Yrs,Mohali
+Cybersecurity,DLP Analyst,"Incident Response, SIEM, Risk Management",0-2 Yrs,Pune
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure",0-4 Yrs,Jaipur
+Data Analyst,MNC,"Power BI, SQL, Google Sheets",0-2 Yrs,Pune
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python",0-1 Yrs,Hyderabad
+Data Scientist,Simreka,"Neural Networks, NLP, ML",0-3 Yrs,Bengaluru
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL",0 Yrs,Noida
+Web Developer,Brandwitty,"Web Development, PHP, Digital Marketing",0-2 Yrs,Mumbai
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL",0-3 Yrs,Pune
+Cybersecurity,Movate Technology,"ISO, SOC, Networking",0-2 Yrs,Chennai
+DevOps Cloud,Flywings Enterprises,"AWS, Terraform, CI/CD",0 Yrs,Pune
+ML Engineer,Newton School,"Machine Learning, AI, Computer Vision",0-5 Yrs,Sonipat
+Data Analyst,Great Place to Work,"Power BI, Excel, SQL",0-2 Yrs,Mumbai
+Software Dev,Quantbox Research,"C++, Unix, Linux",0-4 Yrs,Bengaluru
+Web Developer,Cybell Technosys,"PHP, WordPress, AJAX, Bootstrap",0-2 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python",0-2 Yrs,Hyderabad
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux",0-12 Yrs,Pune
+Cybersecurity,eClerx,"Information Security, Root Cause Analysis",0-2 Yrs,Mumbai
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python",0-7 Yrs,Bengaluru
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, SQL",0-1 Yrs,Chennai
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, AJAX",0-1 Yrs,Udaipur
+Data Analyst,Paramount Health Services,"R, Python, SQL",0-4 Yrs,Thane
+DevOps Cloud,Capgemini,"GCP, Kubernetes, SQL",0-5 Yrs,Pune
+Cybersecurity,Sattrix Information Security,"SOC, Threat Analysis",0-1 Yrs,Ahmedabad
+ML Engineer,Prodigal,"Machine Learning, SQL, Python",0-5 Yrs,Mumbai
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning",0-2 Yrs,Bengaluru
+Software Dev,BVM Web Solutions,"Spring, SQL, Hibernate",0-3 Yrs,Jaipur
+Web Developer,Blueline Computers,"C#, CSS, UI Development",0-1 Yrs,Mangaluru
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP",0-2 Yrs,Patna
+Cybersecurity,Goldman Sachs,"Risk Management, Compliance",0-4 Yrs,Bengaluru
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+ML Engineer,Sithafal Technologies,"AI, NLP, Python",0-2 Yrs,Tirupati
+Data Analyst,Barclays,"Data Analytics, Risk Management",0-7 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"Backend, GIT, MongoDB",0-2 Yrs,Hyderabad
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+Data Scientist,Western Digital,"ML, Automation, System Design",0-8 Yrs,Bengaluru
+Cybersecurity,Softcell Technologies,"SIEM, MDR, Threat Detection",0-2 Yrs,Mumbai
+DevOps Cloud,Stackgenie,"Linux, Automation, GCP",0-5 Yrs,Thiruvananthapuram
+ML Engineer,Eizen,"Computer Vision, ML",0-5 Yrs,Hyderabad
+Data Engineer,Google,"SQL, Data Structures, ML",0 Yrs,Bengaluru
+Software Dev,Amazon,"Backend, Java",0-2 Yrs,Hyderabad
+Web Developer,Yocreativ,"React.js, Git",0-3 Yrs,Gurugram
+Data Analyst,IQVIA,"Python, Data Analytics",0-1 Yrs,Bengaluru
+DevOps Cloud,Gosotek Technologies,"Docker, Kubernetes",0-4 Yrs,Jaipur
+Cybersecurity,DLP Analyst,"SIEM, Incident Response",0-2 Yrs,Pune
+ML Engineer,Roku,"NLP, TensorFlow",0-7 Yrs,Bengaluru
+Data Scientist,Coface India,"Machine Learning, Linux",0-3 Yrs,Mumbai
+Software Dev,Ozdocs India,"C#, SQL",0 Yrs,Noida
+Web Developer,Ficuslot Innovation,"PHP, CSS",0-2 Yrs,Patna
+Data Engineer,Precision Medicine Group,"AWS, MySQL",0-3 Yrs,Pune
+Cybersecurity,Sattrix Information Security,"SOC, SIEM",0-1 Yrs,Ahmedabad
+DevOps Cloud,Capgemini,"Kubernetes, GCP",0-5 Yrs,Pune
+ML Engineer,Prodigal,"Machine Learning, Python",0-5 Yrs,Mumbai
+Data Analyst,MNC,"Power BI, SQL",0-2 Yrs,Pune
+Software Dev,BVM Web Solutions,"Java, SQL",0-3 Yrs,Jaipur
+Web Developer,Matrix Web Infotech,"CSS, AJAX",0-1 Yrs,Udaipur
+Data Analyst,E4 Softwares,"Python, Data Analysis, Data Mining, Predictive Analytics, SAS, NLP",0-3 Yrs,Mumbai
+Data Scientist,Apple,"Python, Statistical Analysis, Predictive Modeling, Data Modeling",0-8 Yrs,Hyderabad
+Data Engineer,Google,"SQL, Data Structures, Data Mining, Machine Learning",0 Yrs,Hyderabad
+ML Engineer,Pace Digitek Limited,"Python, Scikit-learn, TensorFlow, Data Processing",0-1 Yrs,Bengaluru
+Web Developer,Matrix Web Infotech,"HTML, CSS, AJAX, jQuery, Bootstrap, SQL",0-1 Yrs,Udaipur
+DevOps Cloud,Giit Solutions,"AWS, Terraform, Kubernetes, Jenkins, CI/CD",0-2 Yrs,Gurugram
+Cybersecurity,Sattrix Information Security,"SIEM, SOC, Linux, Vulnerability Management",0-1 Yrs,Ahmedabad
+Software Dev,Thoughtnidea Software Solutions,"Java, C++, SQL, Spring, jQuery",0-1 Yrs,Bengaluru
+Data Analyst,Fortuna Retail,"Power BI, Power Query, SQL, Advanced Excel, VBA, Python",0-2 Yrs,Gurugram
+Data Scientist,Newton School,"Computer Vision, Machine Learning, GIT, AI",0-5 Yrs,Sonipat
+Data Engineer,APM Terminals,"Automation, Networking, Monitoring, SQL",0-2 Yrs,Pune
+ML Engineer,Chingari,"Deep Learning, C, Data Structures, Programming",0-2 Yrs,Bengaluru
+Web Developer,Aptimist Techno Solutions,"JavaScript, CSS, Spring Boot, SQL",0-4 Yrs,Chennai
+DevOps Cloud,Gosotek Technologies,"Kubernetes, Docker, Azure, Ansible",0-4 Yrs,Jaipur
+Cybersecurity,Softcell Technologies,"MDR, SIEM Tools, SentinelOne, CrowdStrike",0-2 Yrs,Mumbai
+Software Dev,Amazon,"Java, Backend Development, Python",0-2 Yrs,Hyderabad
+Data Analyst,Eduport,"SQL, Machine Learning, Forecasting, Data Processing, Power BI",0-1 Yrs,Kozhikode
+Data Scientist,Mastercard,"SQL, Data Cleansing, Data Visualization, Trend Analysis",0-5 Yrs,Gurugram
+Data Engineer,We Shine Academy,"Python, Scala, Hive, Data Warehousing",0-3 Yrs,Chennai
+ML Engineer,Prodigal,"Machine Learning, SQL, Python, Data Visualization",0-5 Yrs,Mumbai
+Web Developer,Idaksh,"WordPress, MySQL, JavaScript, PHP, CMS",0-1 Yrs,Mangaluru
+DevOps Cloud,Stackgenie,"Linux, GCP, Version Control, Automation",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Artex Risk Solutions,"Incident Management, SIEM, Risk Management",0-2 Yrs,Pune
+Software Dev,Amazon,"Backend, Java, Python",0-2 Yrs,Chennai
+Data Analyst,ADA Global,"Python, Dashboards, Business Intelligence, SQL, Power BI",0-1 Yrs,Bengaluru
+Data Scientist,360DigiTMG,"DuckDB, Cloud Storage, FMCG Domain",0-3 Yrs,Gurugram
+Data Engineer,Intent Amplify,"Hive, Python, Data Warehousing, DBMS",0-2 Yrs,Pune
+ML Engineer,Sithafal Technologies,"AI, LLM, NLP, Python, Predictive Analytics",0-2 Yrs,Tirupati
+Web Developer,Cybell Technosys,"PHP, WordPress, AJAX, Bootstrap, jQuery",0-2 Yrs,Hyderabad
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes, Monitoring",0-3 Yrs,Hyderabad
+Cybersecurity,Goldman Sachs,"Compliance, Risk Assessment, Finance",0-4 Yrs,Bengaluru
+Software Dev,INFOTROZ SOLUTIONS,"Java, AngularJS, Python, SQL, Node.js",0-1 Yrs,Chennai
+Data Analyst,Brain Insight,"Metadata, Python, Data Validation, Data Management",0-1 Yrs,Atpadi
+Data Scientist,Mastercard,"SQL, Data Cleansing, Data Visualization",0-5 Yrs,Gurugram
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+ML Engineer,Roku,"Python, NLP, Deep Learning, TensorFlow",0-7 Yrs,Bengaluru
+Web Developer,Greet Labs,"PHP, HTML, JavaScript, SEO",0-2 Yrs,Bengaluru
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Load Balancing, GitHub",0-5 Yrs,Pune
+Cybersecurity,Movate Technology,"ISO, SOC, Networking, SIEM",0-2 Yrs,Chennai
+Software Dev,BVM Web Solutions,"Java, Spring, Hibernate, SQL",0-3 Yrs,Jaipur
+Data Analyst,Legistify,"Metadata, Python, Data Validation, Data Mining",0-2 Yrs,Gurugram
+Data Scientist,360DigiTMG,"Deep Learning, Data Science, Model Development",0-4 Yrs,Chennai
+Data Engineer,Precision Medicine Group,"AWS, Linux, MySQL, GIT",0-3 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, Debugging, Machine Learning",0-5 Yrs,Hyderabad
+Web Developer,Yocreativ,"Vue.js, React.js, Git, Docker",0-3 Yrs,Gurugram
+DevOps Cloud,Flywings Enterprises,"AWS, Terraform, CI/CD, Linux",0 Yrs,Pune
+Cybersecurity,DLP Analyst,"SIEM, Incident Response, Risk Management",0-2 Yrs,Pune
+Software Dev,Ozdocs India,"C#, .NET, Angular, SQL, MVC",0 Yrs,Noida
+Data Analyst,eClerx,"Excel, Data Validation, Analytical, Communication",0-2 Yrs,Coimbatore
+Data Scientist,Data Collection Infotech,"SQL, Python, Data Mining, Trend Analysis",0-4 Yrs,Bengaluru
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP, Data Processing",0-2 Yrs,Patna
+ML Engineer,Amazon,"C++, NLP, Machine Learning, Data Warehousing",0-5 Yrs,Bengaluru
+Web Developer,Blueline Computers,"C#, CSS, UI Development, Bootstrap",0-1 Yrs,Mangaluru
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux, Networking",0-12 Yrs,Pune
+Cybersecurity,eClerx,"Information Security, Root Cause Analysis",0-2 Yrs,Mumbai
+Software Dev,SmartDocs Business Solutions,"Backend, MongoDB, PostgreSQL, GIT",0-2 Yrs,Hyderabad
+Data Analyst,Clustor Computing,"Power BI, Data Visualization, Digital Transformation",0-2 Yrs,Nagpur
+Data Scientist,Han Digital Solution,"SAS, Machine Learning, Oracle, Microsoft",0-3 Yrs,Bengaluru
+Data Engineer,Xenonstack,"Scala, SQL, Machine Learning, Data Processing",0-1 Yrs,Mohali
+ML Engineer,Virinchi Technologies,"AI, Deep Learning, Python, ML",0-1 Yrs,Hyderabad
+Web Developer,Brandwitty,"Web Development, PHP, Digital Marketing",0-2 Yrs,Mumbai
+DevOps Cloud,Intlum Technology,"Docker, Jenkins, Kubernetes, GIT",0-2 Yrs,Kolkata
+Cybersecurity,SG Analytics,"Financial Analysis, Risk Assessment",0-1 Yrs,Pune
+Software Dev,Meon Technologies,"Software Development, AI Tools",0-1 Yrs,Noida
+Data Analyst,Maven Marketing,"Python, SQL, Dashboards, Data Management",0-7 Yrs,Chennai
+Data Scientist,Western Digital,"Automation, Machine Learning, System Design",0-8 Yrs,Bengaluru
+Data Engineer,Cloudphysician Healthcare,"Data Engineering, Technology Management",0-4 Yrs,Bengaluru
+ML Engineer,Newton School,"Machine Learning, AI, Computer Vision",0-5 Yrs,Sonipat
+Web Developer,Ficuslot Innovation,"PHP, MySQL, CSS, JavaScript",0-2 Yrs,Patna
+DevOps Cloud,Stackgenie,"Linux, Automation, GCP",0-5 Yrs,Thiruvananthapuram
+Cybersecurity,Movate Technology,"SOC, SIEM, Networking",0-2 Yrs,Chennai
+Software Dev,Quantbox Research,"C++, Unix, Linux, Object Oriented Design",0-4 Yrs,Bengaluru
+Data Analyst,IQVIA,"Python, PySpark, NumPy, Data Analytics",0-1 Yrs,Bengaluru
+Data Scientist,Kintellect Partners,"Big Data, SQL, Machine Learning, Research",0-2 Yrs,Bengaluru
+Data Engineer,Google,"SQL, Data Structures, ML",0 Yrs,Bengaluru
+ML Engineer,Roku,"Reinforcement Learning, NLP, Python",0-7 Yrs,Bengaluru
+Web Developer,Matrix Web Infotech,"CSS, Bootstrap, AJAX, jQuery",0-1 Yrs,Udaipur
+DevOps Cloud,Gosotek Technologies,"Docker, Kubernetes, Azure",0-4 Yrs,Jaipur
+Cybersecurity,Sattrix Information Security,"SOC, Threat Analysis, Linux",0-1 Yrs,Ahmedabad
+Software Dev,Amazon,"Backend Development, Java, Python",0-2 Yrs,Hyderabad
+Data Analyst,Log9 Materials,"SAS, Big Data Analytics, Business Intelligence",0-6 Yrs,Bengaluru
+Data Scientist,Coface India,"Machine Learning, GIT, Linux, NoSQL",0-3 Yrs,Mumbai
+Data Engineer,Blend360 India,"Automation, Apache, SQL, Agile",0-3 Yrs,Hyderabad
+ML Engineer,Sithafal Technologies,"AI, NLP, Python",0-2 Yrs,Tirupati
+Web Developer,Greet Labs,"PHP, HTML, JavaScript",0-2 Yrs,Bengaluru
+DevOps Cloud,Capgemini,"GCP, Kubernetes, Python",0-5 Yrs,Pune
+Cybersecurity,Goldman Sachs,"Risk Management, Compliance",0-4 Yrs,Bengaluru
+Software Dev,SmartDocs Business Solutions,"Backend, GIT, MongoDB",0-2 Yrs,Hyderabad
+Data Analyst,We Shine Academy,"Hive, Python, Scala, Data Mining",0-3 Yrs,Chennai
+Data Scientist,Simreka,"Neural Networks, NLP, ML",0-3 Yrs,Bengaluru
+Data Engineer,Precision Medicine Group,"AWS, MySQL, Linux",0-3 Yrs,Pune
+ML Engineer,Eizen,"Computer Vision, ML",0-5 Yrs,Hyderabad
+Web Developer,Webixy Technologies,"WordPress CMS, Core PHP, AJAX",0-2 Yrs,Kanpur
+DevOps Cloud,Knowledgesprint Technologies,"Azure, Docker, Kubernetes",0-3 Yrs,Hyderabad
+Cybersecurity,DLP Analyst,"SIEM, Incident Response",0-2 Yrs,Pune
+Software Dev,Ozdocs India,"C#, SQL, Angular",0 Yrs,Noida
+Data Analyst,Foundation Ai,"Metadata, Python, Data Validation",0-5 Yrs,Hyderabad
+Data Scientist,Hbic Solutions,"Deep Learning, AI, Python",0-2 Yrs,Hyderabad
+Data Engineer,Xenonstack,"Scala, SQL, Data Processing",0-1 Yrs,Mohali
+ML Engineer,Prodigal,"Machine Learning, SQL, Python",0-5 Yrs,Mumbai
+Web Developer,Cybell Technosys,"PHP, WordPress, Bootstrap",0-2 Yrs,Hyderabad
+DevOps Cloud,Flywings Enterprises,"AWS, Terraform, CI/CD",0 Yrs,Pune
+Cybersecurity,eClerx,"Root Cause Analysis, Information Security",0-2 Yrs,Mumbai
+Software Dev,Amazon,"Java, Backend",0-2 Yrs,Bengaluru
+Data Analyst,eClerx,"Python, VLOOKUP, DBMS, Pivot Table",0-2 Yrs,Coimbatore
+Data Scientist,360DigiTMG,"Deep Learning, Spark, Big Data",0-2 Yrs,Bengaluru
+Data Engineer,Technix India Solutions,"RDBMS, MySQL, OLAP",0-2 Yrs,Patna
+ML Engineer,Roku,"NLP, TensorFlow, Python",0-7 Yrs,Bengaluru
+Web Developer,Blueline Computers,"C#, CSS, UI Development",0-1 Yrs,Mangaluru
+DevOps Cloud,Srinsoft Technologies,"CI/CD, GitHub Actions, Linux",0-12 Yrs,Pune
+Cybersecurity,Softcell Technologies,"SIEM, MDR, Threat Detection",0-2 Yrs,Mumbai
+Software Dev,BVM Web Solutions,"Spring, SQL, Hibernate",0-3 Yrs,Jaipur
