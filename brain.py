@@ -1012,3 +1012,6 @@ def generate_student_report_csv(session_data: dict) -> str:
     writer.writerow(["verified_skills", skills_str])
 
     return output.getvalue()
+
+
+

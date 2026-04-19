@@ -117,7 +117,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
 
     st.markdown("---")
     st.markdown("📊 **Your Dashboard**")
@@ -131,11 +131,11 @@ with st.sidebar:
         ("📄 Final Report",              "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -250,7 +250,7 @@ fig_tracks.update_layout(
     height=400,
 )
 
-st.plotly_chart(fig_tracks, use_container_width=True)
+st.plotly_chart(fig_tracks, width="stretch")
 
 # ── Second and Third Best Matches ─────────────────────────────
 if len(career_matches) >= 3:
@@ -335,8 +335,8 @@ def color_status(val):
         return "color: #E74C3C; font-weight: 700"
     return ""
 
-styled_df = gap_df.style.applymap(color_status, subset=["Status"])
-st.dataframe(styled_df, use_container_width=True, hide_index=True)
+styled_df = gap_df.style.map(color_status, subset=["Status"])
+st.dataframe(styled_df, width="stretch", hide_index=True)
 
 # ── Gap Analysis for Tied Tracks ─────────────────────────────
 if len(tied_matches) > 1:
@@ -361,15 +361,17 @@ if len(tied_matches) > 1:
                     "Skill":          sn,
                     "Appears In JDs": f"{fp:.1f}%",
                 })
-            st.dataframe(pd.DataFrame(rows_t), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(rows_t), width="stretch", hide_index=True)
 
 st.markdown("---")
 
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Urgency Engine", use_container_width=True):
+    if st.button("← Back to Urgency Engine", width="stretch"):
         st.switch_page("pages/04_urgency.py")
 with col_next:
-    if st.button("Next → Next Skill & Readiness 📚", type="primary", use_container_width=True):
+    if st.button("Next → Next Skill & Readiness 📚", type="primary", width="stretch"):
         st.switch_page("pages/06_next_skill.py")
+
+

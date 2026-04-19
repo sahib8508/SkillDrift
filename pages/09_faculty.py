@@ -73,9 +73,9 @@ if not st.session_state.get("faculty_logged_in"):
 
         col_login, col_home = st.columns(2)
         with col_login:
-            login_btn = st.button("🔐 Login", type="primary", use_container_width=True)
+            login_btn = st.button("🔐 Login", type="primary", width="stretch")
         with col_home:
-            if st.button("← Back to Home", use_container_width=True):
+            if st.button("← Back to Home", width="stretch"):
                 st.switch_page("pages/01_home.py")
 
         if login_btn:
@@ -129,11 +129,11 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    if st.button("← Back to Home", use_container_width=True):
+    if st.button("← Back to Home", width="stretch"):
         st.switch_page("pages/01_home.py")
 
     st.markdown("---")
-    if st.button("🚪 Logout Faculty", use_container_width=True):
+    if st.button("🚪 Logout Faculty", width="stretch"):
         st.session_state["faculty_logged_in"] = False
         st.session_state["faculty_name"]       = None
         st.session_state["faculty_login_attempts"] = 0
@@ -192,7 +192,7 @@ if not uploaded_files:
                 "verified_skills": "Java:Advanced,SQL:Intermediate,Docker:Beginner",
             },
         ])
-        st.dataframe(sample, use_container_width=True, hide_index=True)
+        st.dataframe(sample, width="stretch", hide_index=True)
     st.stop()
 
 # =============================================================
@@ -202,7 +202,7 @@ if not uploaded_files:
 process_btn = st.button(
     f"⚙️ Process {len(uploaded_files)} File(s) and Generate Batch Analysis",
     type="primary",
-    use_container_width=True,
+    width="stretch",
 )
 
 if process_btn:
@@ -301,7 +301,7 @@ with col_pie:
         margin=dict(t=20, b=20, l=20, r=20),
         height=280,
     )
-    st.plotly_chart(fig_pie, use_container_width=True)
+    st.plotly_chart(fig_pie, width="stretch")
 
 with col_track:
     st.markdown("#### Best Track Distribution")
@@ -325,7 +325,7 @@ with col_track:
             margin=dict(t=20, b=20, l=10, r=40),
             height=280,
         )
-        st.plotly_chart(fig_track_dist, use_container_width=True)
+        st.plotly_chart(fig_track_dist, width="stretch")
 
 st.markdown("---")
 
@@ -463,7 +463,7 @@ if not heatmap_matrix.empty:
     plt.yticks(fontsize=7)
     plt.tight_layout()
 
-    st.pyplot(fig_heat, use_container_width=True)
+    st.pyplot(fig_heat, width="stretch")
     plt.close(fig_heat)
 
 st.markdown("---")
@@ -489,7 +489,7 @@ display_df.columns = [
     "Next Skill", "Verified Skills Count",
 ]
 
-st.dataframe(display_df, use_container_width=True, hide_index=True)
+st.dataframe(display_df, width="stretch", hide_index=True)
 
 st.markdown("---")
 
@@ -511,7 +511,7 @@ st.download_button(
     data=csv_bytes,
     file_name=filename,
     mime="text/csv",
-    use_container_width=True,
+    width="stretch",
 )
 
 st.caption(
@@ -519,3 +519,5 @@ st.caption(
     "and freshly recalculated scores. Share it with your placement cell "
     "or use it for curriculum planning."
 )
+
+

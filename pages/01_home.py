@@ -72,7 +72,7 @@ st.markdown("""
 # ── Top right Faculty Login button ──────────────────────────
 col_spacer, col_faculty_btn = st.columns([8, 2])
 with col_faculty_btn:
-    if st.button("🔐 Faculty / HOD Login", use_container_width=True):
+    if st.button("🔐 Faculty / HOD Login", width="stretch"):
         st.switch_page("pages/09_faculty.py")
 
 # ── Hero Section ─────────────────────────────────────────────
@@ -227,7 +227,7 @@ with col_cta:
     if st.button(
         "🎯 Analyze My Career Focus",
         type="primary",
-        use_container_width=True,
+        width="stretch",
     ):
         st.switch_page("pages/02_skill_input.py")
 
@@ -242,3 +242,5 @@ st.markdown("""
     Powered by Google Gemini AI
 </div>
 """, unsafe_allow_html=True)
+
+

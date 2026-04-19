@@ -166,7 +166,7 @@ with col_submit:
     submit_skills = st.button(
         "▶ Continue to Skill Verification Quiz",
         type="primary",
-        use_container_width=True,
+        width="stretch",
     )
 
 with col_info:
@@ -289,7 +289,9 @@ elif st.session_state.get("quiz_complete"):
                 "Status": f"{status_icon} {r['status']}",
                 "Score": f"{r['correct_count']}/{r['total_questions']}" if r["total_questions"] > 0 else "N/A",
             })
-        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
 
     if st.button("🎯 Go to Dashboard", type="primary"):
         st.switch_page("pages/03_drift_score.py")
+
+

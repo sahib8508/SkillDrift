@@ -116,7 +116,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
 
     st.markdown("---")
     st.markdown("📊 **Your Dashboard**")
@@ -130,11 +130,11 @@ with st.sidebar:
         ("📄 Final Report",              "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -259,7 +259,7 @@ fig_gauge.update_layout(
 
 col_gauge, col_meaning = st.columns([2, 1])
 with col_gauge:
-    st.plotly_chart(fig_gauge, use_container_width=True)
+    st.plotly_chart(fig_gauge, width="stretch")
 
 with col_meaning:
     st.markdown("<br><br>", unsafe_allow_html=True)
@@ -343,8 +343,10 @@ st.markdown("---")
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Career Track Match", use_container_width=True):
+    if st.button("← Back to Career Track Match", width="stretch"):
         st.switch_page("pages/05_career_match.py")
 with col_next:
-    if st.button("Next → Peer Mirror 👥", type="primary", use_container_width=True):
+    if st.button("Next → Peer Mirror 👥", type="primary", width="stretch"):
         st.switch_page("pages/07_peer_mirror.py")
+
+

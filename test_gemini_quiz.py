@@ -172,3 +172,5 @@ print()
 print("  If all tests show ✅ PASS — gemini_quiz.py logic is ready.")
 print("  The Streamlit UI functions require a running app to test.")
 print()
+
+

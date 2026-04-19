@@ -116,7 +116,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
 
     st.markdown("---")
     st.markdown("📊 **Your Dashboard**")
@@ -130,11 +130,11 @@ with st.sidebar:
         ("📄 Final Report",              "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -269,7 +269,7 @@ with col_chart1:
         height=360,
         showlegend=False,
     )
-    st.plotly_chart(fig_placement, use_container_width=True)
+    st.plotly_chart(fig_placement, width="stretch")
 
 with col_chart2:
     st.subheader("🏁 Survival Rate by Career Track")
@@ -303,7 +303,7 @@ with col_chart2:
         margin=dict(t=20, b=20, l=10, r=50),
         height=360,
     )
-    st.plotly_chart(fig_survival, use_container_width=True)
+    st.plotly_chart(fig_survival, width="stretch")
 
 st.markdown("---")
 
@@ -386,15 +386,17 @@ with st.expander("📖 View Full Placement Rate Lookup Table (All Drift Score Ra
         {"Drift Score Range": "0 – 20",   "Label": "Extremely Scattered",
          "Est. Placement Rate": "18%"},
     ]
-    st.dataframe(pd.DataFrame(lookup_data), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(lookup_data), width="stretch", hide_index=True)
 
 st.markdown("---")
 
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Next Skill", use_container_width=True):
+    if st.button("← Back to Next Skill", width="stretch"):
         st.switch_page("pages/06_next_skill.py")
 with col_next:
-    if st.button("Next → Market Intelligence 🗺️", type="primary", use_container_width=True):
+    if st.button("Next → Market Intelligence 🗺️", type="primary", width="stretch"):
         st.switch_page("pages/08_market_intel.py")
+
+

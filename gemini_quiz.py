@@ -416,7 +416,7 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
     submit_quiz = st.button(
         "✅ Submit Quiz and See My Results",
         type="primary",
-        use_container_width=True,
+        width="stretch",
     )
 
     if not submit_quiz:
@@ -461,3 +461,5 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
     st.session_state["verified_skills"] = verified_skills
 
     return verified_skills
+
+

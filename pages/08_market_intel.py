@@ -118,7 +118,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
 
     st.markdown("---")
     st.markdown("📊 **Your Dashboard**")
@@ -132,11 +132,11 @@ with st.sidebar:
         ("📄 Final Report",              "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -286,7 +286,7 @@ with tab1:
                 ),
             )
 
-            st.plotly_chart(fig_map, use_container_width=True)
+            st.plotly_chart(fig_map, width="stretch")
 
             # City ranking table below map
             st.subheader(f"🏙️ City Rankings — {selected_track}")
@@ -295,7 +295,7 @@ with tab1:
             ).reset_index(drop=True)
             rank_df.index = rank_df.index + 1
             rank_df.columns = ["City", "Job Postings in Dataset"]
-            st.dataframe(rank_df, use_container_width=True)
+            st.dataframe(rank_df, width="stretch")
 
             # Context note
             if selected_track == best_track:
@@ -374,7 +374,7 @@ with tab2:
             ),
         )
 
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, width="stretch")
 
         # Summary
         have_count    = track_skills_df["have_it"].sum()
@@ -398,8 +398,10 @@ st.markdown("---")
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Peer Mirror", use_container_width=True):
+    if st.button("← Back to Peer Mirror", width="stretch"):
         st.switch_page("pages/07_peer_mirror.py")
 with col_next:
-    if st.button("Next → Final Report 📄", type="primary", use_container_width=True):
+    if st.button("Next → Final Report 📄", type="primary", width="stretch"):
         st.switch_page("pages/10_final_report.py")
+
+

@@ -128,7 +128,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
     else:
         st.info("Complete the skill quiz to see your scores here.")
 
@@ -146,11 +146,11 @@ with st.sidebar:
         ("📄 Final Report",            "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -305,12 +305,14 @@ track_df = pd.DataFrame([
     for track, count in track_counts.items()
 ]).sort_values("Skills You Have", ascending=False)
 
-st.dataframe(track_df, use_container_width=True, hide_index=True)
+st.dataframe(track_df, width="stretch", hide_index=True)
 
 st.markdown("---")
 
 # ── Navigation to next window ─────────────────────────────────
 col_nav1, col_nav2 = st.columns(2)
 with col_nav2:
-    if st.button("Next → Urgency Engine ⏰", type="primary", use_container_width=True):
+    if st.button("Next → Urgency Engine ⏰", type="primary", width="stretch"):
         st.switch_page("pages/04_urgency.py")
+
+

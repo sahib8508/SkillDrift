@@ -118,7 +118,7 @@ with st.sidebar:
                 margin=dict(l=20, r=20, t=20, b=20),
                 height=280,
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width="stretch")
 
     st.markdown("---")
     st.markdown("📊 **Your Dashboard**")
@@ -132,11 +132,11 @@ with st.sidebar:
         ("📄 Final Report",              "pages/10_final_report.py"),
     ]
     for label, page in nav_pages:
-        if st.button(label, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, width="stretch", key=f"nav_{page}"):
             st.switch_page(page)
 
     st.markdown("---")
-    if st.button("🚪 Log Out", use_container_width=True):
+    if st.button("🚪 Log Out", width="stretch"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.switch_page("pages/01_home.py")
@@ -332,7 +332,7 @@ fig_bar.update_layout(
     height=380,
 )
 
-st.plotly_chart(fig_bar, use_container_width=True)
+st.plotly_chart(fig_bar, width="stretch")
 
 st.caption(
     f"Available hours estimate: {semesters_remaining} semesters remaining "
@@ -354,15 +354,17 @@ if distraction_skills:
         for skill in distraction_skills
     ])
 
-    st.dataframe(dist_df, use_container_width=True, hide_index=True)
+    st.dataframe(dist_df, width="stretch", hide_index=True)
 
 st.markdown("---")
 
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Drift Score", use_container_width=True):
+    if st.button("← Back to Drift Score", width="stretch"):
         st.switch_page("pages/03_drift_score.py")
 with col_next:
-    if st.button("Next → Career Track Match 🏆", type="primary", use_container_width=True):
+    if st.button("Next → Career Track Match 🏆", type="primary", width="stretch"):
         st.switch_page("pages/05_career_match.py")
+
+

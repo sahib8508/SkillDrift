@@ -52,3 +52,5 @@ for key, value in defaults.items():
 
 # Route to home page content directly
 st.switch_page("pages/01_home.py")
+
+

@@ -680,3 +680,6 @@ if __name__ == "__main__":
     save_outputs(required_skills_df, skills_mapping_df, city_df)
     # Print summary
     print_summary(required_skills_df, skills_mapping_df, city_df)
+
+
+
