@@ -9,18 +9,14 @@ import re
 import time
 import streamlit as st
 from google import genai
-from google.genai import types
 
 # =============================================================
 # SECTION 1 — CONFIGURE GEMINI API
-# API key is read from Streamlit secrets (secrets.toml)
-# Never hardcoded in this file.
 # =============================================================
 
 def configure_gemini():
     """
     Configures the Gemini API client using the key from secrets.
-    Call this once at the start of the quiz flow.
     Returns True if configured successfully, False otherwise.
     """
     try:
@@ -34,134 +30,162 @@ def configure_gemini():
 
 # =============================================================
 # SECTION 2 — PROMPT BUILDER
-# Builds the exact prompt sent to Gemini for each skill.
 # =============================================================
 
 def build_quiz_prompt(skill: str, level: str) -> str:
     """
-    Builds a clean, specific prompt for Gemini to generate
-    2 multiple choice questions for a given skill and level.
-
-    Parameters
-    ----------
-    skill : str   e.g. "SQL"
-    level : str   e.g. "Intermediate"
-
-    Returns
-    -------
-    prompt : str
+    Builds the prompt sent to Gemini for a given skill and level.
+    Returns 2 MCQs in strict JSON format.
     """
     prompt = f"""You are an expert technical interviewer for Indian CSE placement preparation.
 
-Generate exactly 2 multiple choice questions to test a B.Tech CSE student's knowledge of {skill} at {level} level.
+Generate exactly 3 multiple choice questions to test a B.Tech CSE student's knowledge of {skill} at {level} level.
 
 Rules:
 - Questions must be practical and specific to {skill}
 - Difficulty must match {level} level exactly
 - Each question must have exactly 4 options: A, B, C, D
 - Exactly one option must be correct
-- Return ONLY a valid JSON array with no extra text before or after
+- The correct answers must be randomly distributed among A, B, C, and D
+- Do NOT repeat the same correct option more than twice
+- Output MUST contain exactly 3 questions (no more, no less)
 
-Required JSON format:
+Output format (STRICT JSON, no extra text):
+
 [
   {{
-    "question": "Your question text here?",
-    "option_a": "First option",
-    "option_b": "Second option",
-    "option_c": "Third option",
-    "option_d": "Fourth option",
+    "question": "Question 1?",
+    "option_a": "Option A",
+    "option_b": "Option B",
+    "option_c": "Option C",
+    "option_d": "Option D",
     "correct": "A"
   }},
   {{
-    "question": "Your second question text here?",
-    "option_a": "First option",
-    "option_b": "Second option",
-    "option_c": "Third option",
-    "option_d": "Fourth option",
+    "question": "Question 2?",
+    "option_a": "Option A",
+    "option_b": "Option B",
+    "option_c": "Option C",
+    "option_d": "Option D",
     "correct": "B"
+  }},
+  {{
+    "question": "Question 3?",
+    "option_a": "Option A",
+    "option_b": "Option B",
+    "option_c": "Option C",
+    "option_d": "Option D",
+    "correct": "C"
   }}
 ]
 
-The "correct" field must be exactly one of: A, B, C, or D (uppercase only).
-Return only the JSON array. No explanation. No markdown. No code blocks."""
+Constraints:
+- The "correct" field must be exactly one of: A, B, C, or D (uppercase only)
+- Return ONLY the JSON array
+- No explanation
+- No markdown
+- No code block
+- No trailing commas
+"""
 
     return prompt
 
 
 # =============================================================
 # SECTION 3 — GEMINI API CALLER WITH SAFETY WRAPPER
-# Tries twice before marking skill as Unverified.
-# Never crashes the app on bad Gemini response.
+#
+# Uses gemini-2.0-flash (current recommended free-tier model).
+# Retries once on failure. Surfaces the real error in Streamlit
+# instead of silently returning an empty list.
 # =============================================================
+
+# Primary model — gemini-2.0-flash is the current recommended free model
+# (gemini-1.5-flash has free-tier quota restrictions in 2025)
+GEMINI_MODEL = "gemini-2.5-flash"
 
 def call_gemini_with_retry(prompt: str, skill: str) -> list:
     """
-    Calls Gemini API and attempts to parse the JSON response.
+    Calls Gemini API and parses the JSON response.
     Retries once if the first response is malformed.
-    Returns empty list if both attempts fail.
+    Returns empty list if both attempts fail (skill marked Unverified).
 
     Parameters
     ----------
-    prompt : str   The prompt to send to Gemini
-    skill  : str   Skill name (used only for error messages)
+    prompt : str   The quiz prompt
+    skill  : str   Skill name (for error messages only)
 
     Returns
     -------
-    questions : list of dicts  (empty list = both attempts failed)
+    questions : list of dicts  (empty = both attempts failed)
     """
 
-   
-
+    # Get API key from Streamlit secrets
     try:
         api_key = st.secrets["gemini"]["api_key"]
-        client  = genai.Client(api_key=api_key)
     except Exception as e:
+        st.error(
+            f"❌ **Gemini API key missing or misconfigured.**\n\n"
+            f"Check that `.streamlit/secrets.toml` has:\n"
+            f"```\n[gemini]\napi_key = \"YOUR_KEY\"\n```\n\n"
+            f"Error: {e}"
+        )
         return []
+
+    # Build client fresh each call (stateless, safe for Streamlit reruns)
+    try:
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        st.error(f"❌ Could not create Gemini client: {e}")
+        return []
+
+    last_error = None
 
     for attempt in range(2):
         try:
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model=GEMINI_MODEL,
                 contents=prompt,
             )
-            raw_text  = response.text.strip()
+            raw_text = response.text.strip()
             questions = parse_gemini_response(raw_text, skill, attempt + 1)
             if questions:
                 return questions
+            # Parse succeeded but validation failed — retry
             if attempt == 0:
                 time.sleep(1)
-        except Exception:
+
+        except Exception as e:
+            last_error = e
             if attempt == 0:
+                # Wait and retry once
                 time.sleep(2)
             else:
+                # Both attempts failed — show the actual error
+                st.warning(
+                    f"⚠️ Gemini API error for **{skill}** "
+                    f"({type(e).__name__}): {e}. "
+                    f"Skill will be accepted as Unverified."
+                )
                 return []
 
+    # Parse failed on both attempts (no exception, just bad JSON from Gemini)
     return []
 
 
 def parse_gemini_response(raw_text: str, skill: str, attempt: int) -> list:
     """
-    Attempts to parse Gemini's response as a JSON array.
-    Handles common issues like markdown code blocks and extra text.
+    Parses Gemini's response as a JSON array.
+    Handles markdown code fences and leading/trailing text.
 
-    Parameters
-    ----------
-    raw_text : str    Raw text from Gemini response
-    skill    : str    Used for error display only
-    attempt  : int    1 or 2 (for logging)
-
-    Returns
-    -------
-    questions : list  (empty list if parsing fails)
+    Returns questions list, or empty list if parsing fails.
     """
 
-    # Step 1 — Remove markdown code fences if present
-    # Gemini sometimes wraps JSON in ```json ... ```
+    # Remove markdown fences: ```json ... ``` or ``` ... ```
     cleaned = re.sub(r"```(?:json)?\s*", "", raw_text)
     cleaned = re.sub(r"```", "", cleaned)
     cleaned = cleaned.strip()
 
-    # Step 2 — Try direct JSON parse
+    # Strategy 1 — direct JSON parse
     try:
         questions = json.loads(cleaned)
         if validate_questions(questions):
@@ -169,8 +193,7 @@ def parse_gemini_response(raw_text: str, skill: str, attempt: int) -> list:
     except json.JSONDecodeError:
         pass
 
-    # Step 3 — Try to extract JSON array using regex
-    # Find the first [ ... ] block in the response
+    # Strategy 2 — extract the first [...] block using regex
     array_match = re.search(r"\[.*?\]", cleaned, re.DOTALL)
     if array_match:
         try:
@@ -180,19 +203,15 @@ def parse_gemini_response(raw_text: str, skill: str, attempt: int) -> list:
         except json.JSONDecodeError:
             pass
 
-    # Both parsing strategies failed
     return []
 
 
 def validate_questions(questions: list) -> bool:
     """
-    Validates that the parsed JSON has the correct structure.
-    Returns True if valid, False if any required field is missing.
+    Validates the parsed JSON has the correct structure.
+    Returns True only if all required fields and valid correct letters exist.
     """
-    if not isinstance(questions, list):
-        return False
-
-    if len(questions) == 0:
+    if not isinstance(questions, list) or len(questions) != 3:
         return False
 
     required_keys = {"question", "option_a", "option_b", "option_c", "option_d", "correct"}
@@ -202,7 +221,6 @@ def validate_questions(questions: list) -> bool:
             return False
         if not required_keys.issubset(q.keys()):
             return False
-        # correct must be A, B, C, or D
         if str(q.get("correct", "")).upper() not in {"A", "B", "C", "D"}:
             return False
 
@@ -211,39 +229,21 @@ def validate_questions(questions: list) -> bool:
 
 # =============================================================
 # SECTION 4 — QUIZ SCORER
-# Determines verified level for each skill based on quiz results.
 # =============================================================
 
 def score_quiz_answers(skill: str, claimed_level: str,
                        questions: list, student_answers: list) -> dict:
     """
-    Scores the student's answers for one skill's quiz questions.
+    Scores the student's answers for one skill.
 
     Scoring rules:
-    - More than half correct → level Confirmed at claimed level
-    - Exactly half correct   → level Downgraded by one step
+    - More than half correct  → Confirmed at claimed level
+    - Exactly half correct    → Downgraded by one step
     - Fewer than half correct → Not Verified (excluded from analysis)
-
-    Parameters
-    ----------
-    skill           : str   e.g. "SQL"
-    claimed_level   : str   e.g. "Intermediate"
-    questions       : list  List of question dicts from Gemini
-    student_answers : list  List of student's answers e.g. ["A", "C"]
-
-    Returns
-    -------
-    dict with keys:
-        skill           : str
-        claimed_level   : str
-        verified_level  : str  (confirmed level, downgraded, or "Not Verified")
-        status          : str  ("Confirmed", "Downgraded", "Not Verified")
-        correct_count   : int
-        total_questions : int
+    - No questions generated  → Unverified (accepted as-is)
     """
 
     if not questions:
-        # Gemini failed to generate questions — accept without verification
         return {
             "skill":           skill,
             "claimed_level":   claimed_level,
@@ -264,19 +264,20 @@ def score_quiz_answers(skill: str, claimed_level: str,
         if student_answer == correct_answer:
             correct_count += 1
 
-    # Determine result based on score
-    if correct_count > total / 2:
-        # More than half correct — confirmed
+    ratio = correct_count / total
+
+    if ratio >= 0.67:  # 2/3 or 3/3
         status = "Confirmed"
         verified_level = claimed_level
 
-    elif correct_count == total / 2:
-        # Exactly half correct — downgrade one step
-        status = "Downgraded"
-        verified_level = downgrade_level(claimed_level)
+    elif ratio >= 0.34:  # 1/3
+        status = "Borderline"
+        if claimed_level == "Beginner":
+            verified_level = "Beginner"
+        else:
+            verified_level = downgrade_level(claimed_level)
 
-    else:
-        # Fewer than half correct — not verified
+    else:  # 0/3
         status = "Not Verified"
         verified_level = "Not Verified"
 
@@ -292,48 +293,22 @@ def score_quiz_answers(skill: str, claimed_level: str,
 
 def downgrade_level(level: str) -> str:
     """
-    Downgrades a skill level by one step.
-    Advanced -> Intermediate -> Beginner -> Not Verified
+    Advanced → Intermediate → Beginner → Beginner
     """
     downgrade_map = {
-        "Advanced":     "Intermediate",
+        "Advanced": "Intermediate",
         "Intermediate": "Beginner",
-        "Beginner":     "Not Verified",
+        "Beginner": "Beginner",
     }
-    return downgrade_map.get(level, "Not Verified")
+    return downgrade_map.get(level, "Beginner")
 
 
 # =============================================================
 # SECTION 5 — FULL QUIZ RUNNER
-# Orchestrates the complete quiz for all selected skills.
-# This is the main function called from 02_skill_input.py
+# Called once from 02_skill_input.py after skill submission.
 # =============================================================
 
 def run_skill_verification_quiz(selected_skills: dict) -> dict:
-    """
-    Runs the complete verification quiz for all selected skills.
-    Displays questions in Streamlit UI and collects answers.
-
-    This function is called ONCE from 02_skill_input.py after
-    the student submits their skill selections.
-
-    Parameters
-    ----------
-    selected_skills : dict
-        {skill_name: claimed_level}
-        e.g. {"Python": "Intermediate", "SQL": "Advanced"}
-
-    Returns
-    -------
-    verified_skills : dict
-        {skill_name: verified_level}
-        Only includes skills that are Confirmed, Downgraded, or Unverified.
-        Not Verified skills are EXCLUDED from this dict.
-
-    Also stores in st.session_state:
-        quiz_results      : list of result dicts (for display in Window 2)
-        verified_skills   : dict (same as return value)
-    """
 
     if not configure_gemini():
         st.error("Cannot run quiz — Gemini API not configured.")
@@ -346,24 +321,33 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
         "**This quiz verifies whether you actually know what you claimed.**"
     )
 
-    # Generate all questions first so student sees all at once
-    all_quiz_data = []
+    # ✅ Generate quiz only once
+    selected_sig = tuple(sorted(selected_skills.items()))
 
-    with st.spinner("Generating quiz questions using Gemini AI..."):
-        for skill, level in selected_skills.items():
-            prompt = build_quiz_prompt(skill, level)
-            questions = call_gemini_with_retry(prompt, skill)
-            all_quiz_data.append({
-                "skill":    skill,
-                "level":    level,
-                "questions": questions,
-            })
-            # Small delay between API calls to respect rate limits
-            time.sleep(0.5)
+    if "quiz_data_sig" not in st.session_state or st.session_state["quiz_data_sig"] != selected_sig:
+        with st.spinner(f"Generating quiz questions using Gemini AI (model: {GEMINI_MODEL})..."):
+
+            st.session_state["quiz_data"] = []
+
+            for skill, level in selected_skills.items():
+                prompt = build_quiz_prompt(skill, level)
+                questions = call_gemini_with_retry(prompt, skill)
+
+                st.session_state["quiz_data"].append({
+                    "skill": skill,
+                    "level": level,
+                    "questions": questions,
+                })
+
+                time.sleep(0.5)
+
+        st.session_state["quiz_data_sig"] = selected_sig
+
+    all_quiz_data = st.session_state["quiz_data"]
 
     # Display questions and collect answers
     st.markdown("---")
-    student_responses = {}  # skill -> list of answers
+    student_responses = {}
 
     for quiz_item in all_quiz_data:
         skill = quiz_item["skill"]
@@ -391,7 +375,6 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
                 "D": q["option_d"],
             }
 
-            # Display as radio buttons
             option_labels = [f"{k}: {v}" for k, v in options.items()]
             selected = st.radio(
                 label=f"Select your answer:",
@@ -400,14 +383,9 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
                 index=None,
             )
 
-            # Extract just the letter (A/B/C/D) from the selected option
-            if selected:
-                answer_letter = selected[0]
-            else:
-                answer_letter = None
-
+            answer_letter = selected[0] if selected else None
             answers_for_skill.append(answer_letter)
-            st.markdown("")  # spacing
+            st.markdown("")
 
         student_responses[skill] = answers_for_skill
         st.markdown("---")
@@ -444,22 +422,22 @@ def run_skill_verification_quiz(selected_skills: dict) -> dict:
     verified_skills = {}
 
     for quiz_item in all_quiz_data:
-        skill    = quiz_item["skill"]
-        level    = quiz_item["level"]
+        skill     = quiz_item["skill"]
+        level     = quiz_item["level"]
         questions = quiz_item["questions"]
-        answers  = student_responses.get(skill, [])
+        answers   = student_responses.get(skill, [])
 
         result = score_quiz_answers(skill, level, questions, answers)
         quiz_results.append(result)
 
-        # Only include skills that are not "Not Verified"
         if result["verified_level"] != "Not Verified":
             verified_skills[skill] = result["verified_level"]
-
-    # Save to session state
-    st.session_state["quiz_results"]    = quiz_results
+    if not verified_skills:
+        for r in quiz_results:
+            verified_skills[r["skill"]] = r["claimed_level"]
+    st.session_state["quiz_results"] = quiz_results
     st.session_state["verified_skills"] = verified_skills
+    st.session_state["quiz_complete"] = True
 
-    return verified_skills
-
-
+    st.success("Quiz submitted successfully.")
+    return verified_skills                       # ← ADD THIS

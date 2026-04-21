@@ -57,8 +57,8 @@ with st.sidebar:
 
     if drift_score is not None:
         drift_color = (
-            "#2ECC71" if drift_score >= 60
-            else "#F39C12" if drift_score >= 40
+            "#2ECC71" if drift_score <= 20
+            else "#F39C12" if drift_score <= 60
             else "#E74C3C"
         )
         st.markdown(f"""
@@ -218,8 +218,8 @@ def make_report_row(label, value, value_color="#FAFAFA"):
 
 # Determine colors
 ds_color = (
-    "#2ECC71" if drift_score >= 60
-    else "#F39C12" if drift_score >= 40
+    "#2ECC71" if drift_score <= 20
+    else "#F39C12" if drift_score <= 60
     else "#E74C3C"
 )
 es_color = (

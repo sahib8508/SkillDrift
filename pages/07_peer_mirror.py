@@ -55,9 +55,10 @@ with st.sidebar:
     entropy_label = st.session_state.get("entropy_label", "")
 
     if drift_score is not None:
+        # LOW drift = focused = GREEN; HIGH drift = scattered = RED
         drift_color = (
-            "#2ECC71" if drift_score >= 60
-            else "#F39C12" if drift_score >= 40
+            "#2ECC71" if drift_score <= 20
+            else "#F39C12" if drift_score <= 60
             else "#E74C3C"
         )
         st.markdown(f"""
@@ -375,15 +376,15 @@ with st.expander("📖 View Full Placement Rate Lookup Table (All Drift Score Ra
     )
     import pandas as pd
     lookup_data = [
-        {"Drift Score Range": "80 – 100", "Label": "Highly Focused",
+        {"Drift Score Range": "0 – 20",   "Label": "Highly Focused",
          "Est. Placement Rate": "78%"},
-        {"Drift Score Range": "60 – 80",  "Label": "Moderately Focused",
+        {"Drift Score Range": "20 – 40",  "Label": "Moderately Focused",
          "Est. Placement Rate": "62%"},
         {"Drift Score Range": "40 – 60",  "Label": "Drifting",
          "Est. Placement Rate": "44%"},
-        {"Drift Score Range": "20 – 40",  "Label": "Highly Scattered",
+        {"Drift Score Range": "60 – 80",  "Label": "Highly Scattered",
          "Est. Placement Rate": "29%"},
-        {"Drift Score Range": "0 – 20",   "Label": "Extremely Scattered",
+        {"Drift Score Range": "80 – 100", "Label": "Extremely Scattered",
          "Est. Placement Rate": "18%"},
     ]
     st.dataframe(pd.DataFrame(lookup_data), width="stretch", hide_index=True)
