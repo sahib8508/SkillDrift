@@ -1,8 +1,4 @@
-# Window 2 - Skill Input 
-# =============================================================
 # pages/02_skill_input.py — Window 2: Name + Skills + Quiz
-# Three parts: Name collection → Skill selection → Gemini quiz
-# =============================================================
 
 import streamlit as st
 from datetime import datetime
@@ -20,30 +16,48 @@ from gemini_quiz import run_skill_verification_quiz
 
 st.set_page_config(
     page_title="SkillDrift — Skill Input",
-    page_icon="🎯",
+    page_icon="assets/logo.png",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-# Hide default sidebar nav
 st.markdown("""
 <style>
-    [data-testid="stSidebarNav"] {display: none;}
+    [data-testid="stSidebarNav"] { display: none; }
+    .stApp { background-color: #F5F5F7; }
+    .block-container { padding-top: 2rem; padding-bottom: 3rem; }
+    h1, h2, h3 { color: #1D1D1F !important; }
+    .stButton > button {
+        border-radius: 8px;
+        border: 1px solid #D2D2D7;
+        background: #F5F5F7;
+        color: #1D1D1F;
+        font-weight: 500;
+        transition: all 0.15s ease;
+    }
+    .stButton > button:hover { background: #E8E8ED; }
+    .stButton > button[kind="primary"] {
+        background: #6C63FF;
+        color: #FFFFFF;
+        border-color: #6C63FF;
+    }
+    .stButton > button[kind="primary"]:hover { background: #5A52E0; }
+    .stCheckbox label { color: #1D1D1F !important; }
+    .stRadio label { color: #1D1D1F !important; }
+    .stSelectbox label { color: #1D1D1F !important; }
+    .stTextInput label { color: #1D1D1F !important; }
+    div[data-baseweb="tab"] { color: #86868B; }
+    div[data-baseweb="tab"][aria-selected="true"] { color: #1D1D1F; }
+    .stProgress > div > div { background-color: #6C63FF; }
 </style>
 """, unsafe_allow_html=True)
 
-# Back to home button
-if st.button("← Back to Home"):
+if st.button("Back to Home"):
     st.switch_page("pages/01_home.py")
 
-st.title("🎯 Analyze My Career Focus")
+st.title("Analyze My Career Focus")
 st.markdown("---")
 
-# =============================================================
-# PART A — NAME COLLECTION
-# =============================================================
-
-# All skills organized into 6 tabs
 ALL_SKILLS = {
     "Programming Languages": [
         "Python", "Java", "C", "C++", "JavaScript", "TypeScript",
@@ -90,44 +104,42 @@ ALL_SKILLS = {
         "Cybersecurity", "Ethical Hacking", "SIEM", "SOC",
         "Penetration Testing", "Backend", "Frontend", "Full Stack",
         "Microservices", "DevOps", "MLOps", "Blockchain", "IoT",
-        "AR/VR", "Ai", "Risk Management", "MDR",
+        "AR/VR", "AI", "Risk Management", "MDR",
     ],
 }
 
 LEVELS = ["Beginner", "Intermediate", "Advanced"]
 
-# ── PART A: Name Input ────────────────────────────────────────
-st.subheader("Part 1 — Tell Us Your Name")
-st.markdown("*Your name will appear on your dashboard and your downloadable report.*")
+# ── Part A: Name ──────────────────────────────────────────────
+st.subheader("Part 1 — Your Name")
+st.markdown("*Your name will appear on your dashboard and downloadable report.*")
 
 name_input = st.text_input(
-    "Your Full Name",
+    "Full Name",
     value=st.session_state.get("student_name", "") or "",
     placeholder="e.g. Priya Sharma",
     max_chars=80,
 )
 
-# ── PART B: Skill Input Form ──────────────────────────────────
+# ── Part B: Skills ────────────────────────────────────────────
 st.markdown("---")
-st.subheader("Part 2 — Select Your Skills and Self-Rate Your Level")
+st.subheader("Part 2 — Select Your Skills")
 st.markdown(
     "Select every technology you have studied. Rate your level **honestly**. "
     "The quiz in the next step will verify your claims."
 )
 
-# Semester selector
 semester = st.selectbox(
-    "Your Current Semester",
+    "Current Semester",
     options=list(range(1, 9)),
     index=(st.session_state.get("semester", 4) or 4) - 1,
     format_func=lambda x: f"Semester {x}",
 )
 
-st.markdown("#### Select Your Skills")
-st.markdown("*Use the tabs below. Select a skill, then choose your level.*")
+st.markdown("#### Select Skills by Category")
+st.markdown("*Use the tabs below. Select a skill, then choose your proficiency level.*")
 
 selected_skills = {}
-
 tabs = st.tabs(list(ALL_SKILLS.keys()))
 
 for tab, (category, skills) in zip(tabs, ALL_SKILLS.items()):
@@ -157,22 +169,21 @@ for tab, (category, skills) in zip(tabs, ALL_SKILLS.items()):
                     )
                     selected_skills[skill] = level
 
-# ── Validation ────────────────────────────────────────────────
+# ── Submit ────────────────────────────────────────────────────
 st.markdown("---")
-
 col_submit, col_info = st.columns([2, 3])
 
 with col_submit:
     submit_skills = st.button(
-        "▶ Continue to Skill Verification Quiz",
+        "Continue to Skill Verification Quiz",
         type="primary",
-        width="stretch",
+        use_container_width=True,
     )
 
 with col_info:
     if selected_skills:
         skill_count = len(selected_skills)
-        color = "#E74C3C" if skill_count > 40 else "#2ECC71"
+        color = "#FF3B30" if skill_count > 40 else "#34C759"
         st.markdown(
             f"<span style='color:{color}; font-weight:700;'>"
             f"{skill_count} skills selected</span>",
@@ -180,23 +191,20 @@ with col_info:
         )
         if skill_count > 40:
             st.warning(
-                f"⚠️ You have selected {skill_count} skills. "
-                "This may indicate skill drift. You can still continue."
+                f"{skill_count} skills selected. This may indicate skill drift. "
+                "You can still continue."
             )
 
 if submit_skills:
-    # Validate name
     name_clean = name_input.strip()
     if not name_clean:
-        st.error("❌ Please enter your name to continue.")
+        st.error("Please enter your name to continue.")
         st.stop()
 
-    # Validate skill count
     if len(selected_skills) < 3:
-        st.error("❌ Please select at least 3 skills to continue.")
+        st.error("Please select at least 3 skills to continue.")
         st.stop()
 
-    # Save name and semester to session state
     st.session_state["student_name"]    = name_clean
     st.session_state["semester"]        = semester
     st.session_state["selected_skills"] = selected_skills
@@ -205,15 +213,12 @@ if submit_skills:
     st.session_state["verified_skills"] = {}
 
     st.success(
-        f"✅ Hello {name_clean}! You selected {len(selected_skills)} skills. "
+        f"Hello {name_clean}. You selected {len(selected_skills)} skills. "
         "Starting verification quiz..."
     )
     st.rerun()
 
-# =============================================================
-# PART C — GEMINI QUIZ (only shows after skills submitted)
-# =============================================================
-
+# ── Part C: Gemini Quiz ───────────────────────────────────────
 if (
     st.session_state.get("student_name")
     and st.session_state.get("selected_skills")
@@ -221,9 +226,9 @@ if (
 ):
     st.markdown("---")
     st.markdown(
-        f"### Welcome, {st.session_state['student_name']}! 👋\n"
+        f"### Welcome, {st.session_state['student_name']}\n"
         f"You selected **{len(st.session_state['selected_skills'])} skills**. "
-        f"Now let's verify what you actually know."
+        f"Now let us verify what you actually know."
     )
 
     verified = run_skill_verification_quiz(st.session_state["selected_skills"])
@@ -232,7 +237,6 @@ if (
         st.session_state["verified_skills"] = verified
         st.session_state["quiz_complete"]   = True
 
-        # Run all calculations immediately and cache in session_state
         with st.spinner("Running full career analysis..."):
             drift_score, drift_label, track_counts = calculate_drift_score(verified)
             entropy_score, entropy_label = calculate_entropy(track_counts)
@@ -246,7 +250,6 @@ if (
             debt       = calculate_focus_debt(verified, best_track)
             peer       = get_peer_placement_rate(drift_score, best_track)
 
-            # Store everything in session_state
             st.session_state["drift_score"]     = drift_score
             st.session_state["drift_label"]     = drift_label
             st.session_state["track_counts"]    = track_counts
@@ -261,15 +264,13 @@ if (
             st.session_state["focus_debt_info"] = debt
             st.session_state["peer_info"]       = peer
 
-        st.success("✅ Analysis complete! Redirecting to your dashboard...")
-        st.balloons()
+        st.success("Analysis complete. Redirecting to your dashboard...")
         st.switch_page("pages/03_drift_score.py")
 
-# Show quiz results table if quiz is already complete
 elif st.session_state.get("quiz_complete"):
     st.markdown("---")
     st.success(
-        f"✅ Quiz already completed, {st.session_state['student_name']}. "
+        f"Quiz already completed, {st.session_state['student_name']}. "
         "Navigate using the sidebar."
     )
 
@@ -280,18 +281,21 @@ elif st.session_state.get("quiz_complete"):
 
         rows = []
         for r in quiz_results:
-            status_icon = {"Confirmed": "✅", "Downgraded": "⚠️",
-                           "Not Verified": "❌", "Unverified": "🔶"}.get(r["status"], "")
+            status_map = {
+                "Confirmed":    "Confirmed",
+                "Downgraded":   "Downgraded",
+                "Not Verified": "Not Verified",
+                "Unverified":   "Unverified",
+            }
             rows.append({
-                "Skill": r["skill"],
-                "Claimed Level": r["claimed_level"],
+                "Skill":          r["skill"],
+                "Claimed Level":  r["claimed_level"],
                 "Verified Level": r["verified_level"],
-                "Status": f"{status_icon} {r['status']}",
-                "Score": f"{r['correct_count']}/{r['total_questions']}" if r["total_questions"] > 0 else "N/A",
+                "Status":         status_map.get(r["status"], r["status"]),
+                "Score":          f"{r['correct_count']}/{r['total_questions']}"
+                                  if r["total_questions"] > 0 else "N/A",
             })
-        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
-    if st.button("🎯 Go to Dashboard", type="primary"):
+    if st.button("Go to Dashboard", type="primary"):
         st.switch_page("pages/03_drift_score.py")
-
-

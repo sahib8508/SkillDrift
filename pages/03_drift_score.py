@@ -1,160 +1,33 @@
-# Window 3 - Drift Score 
-# =============================================================
 # pages/03_drift_score.py — Window 3: Drift Score Dashboard
-# =============================================================
+# BUG FIXED: track_df was built with { ... } (Ellipsis set literal) instead of a real dict.
+# This caused KeyError: 'Skills You Have' on sort_values().
 
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from brain import CAREER_TRACKS
+from _sidebar import APPLE_CSS, render_sidebar
 
 st.set_page_config(
-    page_title="SkillDrift — Your Dashboard",
-    page_icon="🎯",
+    page_title="SkillDrift — Drift Score",
+    page_icon="assets/logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
+st.markdown(APPLE_CSS, unsafe_allow_html=True)
+
 if not st.session_state.get("student_name"):
-    st.warning("⚠️ Session not found. Please start from the beginning.")
+    st.warning("Session not found. Please start from the beginning.")
     st.switch_page("pages/02_skill_input.py")
 
-# =============================================================
-# SIDEBAR
-# =============================================================
-
-with st.sidebar:
-    st.markdown("""
-    <div style="text-align:center; padding: 1rem 0;">
-        <svg width="80" height="80" viewBox="0 0 80 80"
-             xmlns="http://www.w3.org/2000/svg">
-            <circle cx="40" cy="40" r="40" fill="#2D3250"/>
-            <circle cx="40" cy="30" r="15" fill="#6C63FF"/>
-            <ellipse cx="40" cy="65" rx="22" ry="15" fill="#6C63FF"/>
-        </svg>
-    </div>
-    """, unsafe_allow_html=True)
-
-    student_name = st.session_state.get("student_name", "Student")
-    st.markdown(
-        f"<div style='text-align:center; font-weight:700; "
-        f"font-size:1.1rem; color:#FAFAFA;'>{student_name}</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        f"<div style='text-align:center; color:#7F8C8D; font-size:0.85rem;'>"
-        f"Semester {st.session_state.get('semester', '?')}</div>",
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("---")
-
-    drift_score   = st.session_state.get("drift_score")
-    drift_label   = st.session_state.get("drift_label", "")
-    entropy_score = st.session_state.get("entropy_score")
-    entropy_label = st.session_state.get("entropy_label", "")
-    # ✅ SAFETY FIX (MANDATORY)
-    if drift_score is None:
-        drift_score = 0
-
-    if entropy_score is None:
-        entropy_score = 0
-
-    if drift_score is not None:
-        # LOW drift = focused = good = GREEN
-        # HIGH drift = scattered = bad = RED
-        drift_color = (
-            "#2ECC71" if drift_score <= 20
-            else "#F39C12" if drift_score <= 60
-            else "#E74C3C"
-        )
-        st.markdown(f"""
-        <div style="background:#1A1D27; border:1px solid #2D3250;
-                    border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
-            <div style="color:#7F8C8D; font-size:0.8rem;">DRIFT SCORE</div>
-            <div style="font-size:2rem; font-weight:900; color:{drift_color};">
-                {drift_score}
-            </div>
-            <div style="color:#BDC3C7; font-size:0.85rem;">{drift_label}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # LOW entropy = ordered = focused = GREEN
-        # HIGH entropy = disordered = scattered = RED
-        entropy_color = (
-            "#2ECC71" if entropy_score < 1.2
-            else "#F39C12" if entropy_score < 2.0
-            else "#E74C3C"
-        )
-        st.markdown(f"""
-        <div style="background:#1A1D27; border:1px solid #2D3250;
-                    border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
-            <div style="color:#7F8C8D; font-size:0.8rem;">ENTROPY SCORE</div>
-            <div style="font-size:2rem; font-weight:900; color:{entropy_color};">
-                {entropy_score} <span style="font-size:1rem;">bits</span>
-            </div>
-            <div style="color:#BDC3C7; font-size:0.85rem;">{entropy_label}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        track_counts = st.session_state.get("track_counts", {})
-        if track_counts:
-            tracks = list(track_counts.keys())
-            counts = list(track_counts.values())
-            counts_closed = counts + [counts[0]]
-            tracks_closed = tracks + [tracks[0]]
-
-            fig_radar = go.Figure()
-            fig_radar.add_trace(go.Scatterpolar(
-                r=counts_closed,
-                theta=tracks_closed,
-                fill="toself",
-                fillcolor="rgba(108, 99, 255, 0.3)",
-                line=dict(color="#6C63FF", width=2),
-                name="Your Skills",
-            ))
-            fig_radar.update_layout(
-                polar=dict(
-                    radialaxis=dict(visible=True, showticklabels=False, gridcolor="#2D3250"),
-                    angularaxis=dict(tickfont=dict(size=9, color="#BDC3C7"), gridcolor="#2D3250"),
-                    bgcolor="#0E1117",
-                ),
-                paper_bgcolor="#0E1117",
-                plot_bgcolor="#0E1117",
-                showlegend=False,
-                margin=dict(l=20, r=20, t=20, b=20),
-                height=280,
-            )
-            st.plotly_chart(fig_radar, width="stretch")
-    else:
-        st.info("Complete the skill quiz to see your scores here.")
-
-    st.markdown("---")
-    st.markdown("**📊 Your Dashboard**")
-    nav_pages = [
-        ("🎯 Drift & Entropy Scores", "pages/03_drift_score.py"),
-        ("⏰ Urgency Engine",          "pages/04_urgency.py"),
-        ("🏆 Career Track Match",      "pages/05_career_match.py"),
-        ("📚 Next Skill & Readiness",  "pages/06_next_skill.py"),
-        ("👥 Peer Mirror",             "pages/07_peer_mirror.py"),
-        ("🗺️ Market Intelligence",    "pages/08_market_intel.py"),
-        ("📄 Final Report",            "pages/10_final_report.py"),
-    ]
-    for label, page in nav_pages:
-        if st.button(label, width="stretch", key=f"nav_{page}"):
-            st.switch_page(page)
-
-    st.markdown("---")
-    if st.button("🚪 Log Out", width="stretch"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.switch_page("pages/01_home.py")
+render_sidebar()
 
 # =============================================================
 # MAIN CONTENT
 # =============================================================
 
-st.title("🎯 Your Drift Score & Entropy Score")
+st.title("Drift Score & Entropy Score")
 st.markdown(
     "These two scores are calculated from your **verified** skill profile only. "
     "Skills you failed the quiz for are excluded from all analysis."
@@ -165,71 +38,71 @@ verified_skills = st.session_state.get("verified_skills", {})
 
 if not verified_skills:
     st.warning(
-        "⚠️ No verified skills found. "
+        "No verified skills found. "
         "This usually means all skills were marked Not Verified in the quiz. "
         "Please go back and re-enter your skills honestly."
     )
     st.stop()
 
-drift_score   = st.session_state.get("drift_score")
-drift_label   = st.session_state.get("drift_label")
-entropy_score = st.session_state.get("entropy_score")
-entropy_label = st.session_state.get("entropy_label")
-track_counts  = st.session_state.get("track_counts") or {}
-# ✅ FINAL SAFETY FIX (MAIN SECTION)
-if drift_score is None:
-    drift_score = 0
+# Safe retrieval — always default to 0 to prevent None arithmetic errors
+drift_score   = st.session_state.get("drift_score")   or 0
+drift_label   = st.session_state.get("drift_label")   or ""
+entropy_score = st.session_state.get("entropy_score") or 0
+entropy_label = st.session_state.get("entropy_label") or ""
+track_counts  = st.session_state.get("track_counts")  or {}
 
-if entropy_score is None:
-    entropy_score = 0
+# ── Score Cards ───────────────────────────────────────────────
+col1, col2, col3 = st.columns(3, gap="medium")
 
-# ── Score Display ─────────────────────────────────────────────
-col1, col2, col3 = st.columns(3)
+drift_color = (
+    "#34C759" if drift_score <= 20
+    else "#FF9500" if drift_score <= 60
+    else "#FF3B30"
+)
+
+entropy_color = (
+    "#34C759" if entropy_score < 1.2
+    else "#FF9500" if entropy_score < 2.0
+    else "#FF3B30"
+)
 
 with col1:
-    # LOW drift = focused = GREEN; HIGH drift = scattered = RED
-    drift_color = (
-        "#2ECC71" if drift_score <= 20
-        else "#F39C12" if drift_score <= 60
-        else "#E74C3C"
-    )
     st.markdown(f"""
-    <div style="background:#1A1D27; border:2px solid {drift_color};
-                border-radius:12px; padding:2rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.9rem; margin-bottom:0.5rem;">
-            DRIFT SCORE
+    <div style="background:#FFFFFF; border:2px solid {drift_color};
+                border-radius:18px; padding:2rem; text-align:center;
+                box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem;">
+            Drift Score
         </div>
-        <div style="font-size:4rem; font-weight:900; color:{drift_color};">
+        <div style="font-size:4rem; font-weight:700; color:{drift_color}; line-height:1;">
             {drift_score}
         </div>
-        <div style="color:#FAFAFA; font-size:1.1rem; font-weight:600;">
+        <div style="color:#1D1D1F; font-size:1rem; font-weight:600; margin-top:0.4rem;">
             {drift_label}
         </div>
-        <div style="color:#7F8C8D; font-size:0.8rem; margin-top:0.5rem;">
+        <div style="color:#86868B; font-size:0.8rem; margin-top:0.4rem;">
             0 = Focused &nbsp;|&nbsp; 100 = Scattered
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
-    entropy_color = (
-        "#2ECC71" if entropy_score < 1.2
-        else "#F39C12" if entropy_score < 2.0
-        else "#E74C3C"
-    )
     st.markdown(f"""
-    <div style="background:#1A1D27; border:2px solid {entropy_color};
-                border-radius:12px; padding:2rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.9rem; margin-bottom:0.5rem;">
-            ENTROPY SCORE
+    <div style="background:#FFFFFF; border:2px solid {entropy_color};
+                border-radius:18px; padding:2rem; text-align:center;
+                box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem;">
+            Entropy Score
         </div>
-        <div style="font-size:4rem; font-weight:900; color:{entropy_color};">
+        <div style="font-size:4rem; font-weight:700; color:{entropy_color}; line-height:1;">
             {entropy_score}
         </div>
-        <div style="color:#FAFAFA; font-size:1.1rem; font-weight:600;">
+        <div style="color:#1D1D1F; font-size:1rem; font-weight:600; margin-top:0.4rem;">
             {entropy_label}
         </div>
-        <div style="color:#7F8C8D; font-size:0.8rem; margin-top:0.5rem;">
+        <div style="color:#86868B; font-size:0.8rem; margin-top:0.4rem;">
             0 bits = Focused &nbsp;|&nbsp; 3 bits = Max Scatter
         </div>
     </div>
@@ -238,18 +111,20 @@ with col2:
 with col3:
     skill_count = len(verified_skills)
     st.markdown(f"""
-    <div style="background:#1A1D27; border:2px solid #6C63FF;
-                border-radius:12px; padding:2rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.9rem; margin-bottom:0.5rem;">
-            VERIFIED SKILLS
+    <div style="background:#FFFFFF; border:2px solid #6C63FF;
+                border-radius:18px; padding:2rem; text-align:center;
+                box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem;">
+            Verified Skills
         </div>
-        <div style="font-size:4rem; font-weight:900; color:#6C63FF;">
+        <div style="font-size:4rem; font-weight:700; color:#6C63FF; line-height:1;">
             {skill_count}
         </div>
-        <div style="color:#FAFAFA; font-size:1.1rem; font-weight:600;">
+        <div style="color:#1D1D1F; font-size:1rem; font-weight:600; margin-top:0.4rem;">
             Skills Confirmed
         </div>
-        <div style="color:#7F8C8D; font-size:0.8rem; margin-top:0.5rem;">
+        <div style="color:#86868B; font-size:0.8rem; margin-top:0.4rem;">
             after Gemini verification
         </div>
     </div>
@@ -257,97 +132,134 @@ with col3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ── What Your Scores Mean ─────────────────────────────────────
-st.subheader("📖 What These Numbers Mean For You")
+# ── Interpretation ────────────────────────────────────────────
+st.subheader("What These Numbers Mean For You")
 
-col_a, col_b = st.columns(2)
+col_a, col_b = st.columns(2, gap="large")
+
+if drift_score <= 20:
+    drift_interpretation = (
+        "Your skills are concentrated in very few tracks — you are not drifting. "
+        "This is the ideal pattern for placement readiness."
+    )
+elif drift_score <= 40:
+    drift_interpretation = (
+        "Your skills are mostly concentrated but with some spread into adjacent tracks. "
+        "Mild drift — manageable, but watch your focus going forward."
+    )
+elif drift_score <= 60:
+    drift_interpretation = (
+        "Your skills are visibly spread across multiple tracks. "
+        "You are drifting. This needs correction before placement season."
+    )
+else:
+    drift_interpretation = (
+        "Your skills are scattered broadly across many unrelated tracks. "
+        "Strong drift — your lack of depth in any single track is a placement risk."
+    )
 
 with col_a:
     st.markdown("**Drift Score Explained**")
-
-    if drift_score <= 20:
-        interpretation = (
-            "Your skills are concentrated in very few tracks — you are not drifting. "
-            "This is the ideal pattern for placement readiness."
-        )
-    elif drift_score <= 40:
-        interpretation = (
-            "Your skills are mostly concentrated but with some spread into adjacent tracks. "
-            "Mild drift — manageable but watch your focus going forward."
-        )
-    elif drift_score <= 60:
-        interpretation = (
-            "Your skills are visibly spread across multiple tracks. "
-            "You are drifting. This needs correction before placement season."
-        )
-    else:
-        interpretation = (
-            "Your skills are scattered broadly across many unrelated tracks. "
-            "This is strong drift — your lack of depth in any single track is a placement risk."
-        )
-
     st.markdown(f"""
-    Your Drift Score of **{drift_score}** measures how scattered your
-    {skill_count} verified skills are across the 8 CSE career tracks.
+    <div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+                padding:1.5rem; color:#1D1D1F; line-height:1.7;">
 
-    **Score 0** = All your skills are in one track → no drift → highly focused ✅
+    Your Drift Score of <strong>{drift_score}</strong> measures how scattered your
+    {skill_count} verified skills are across the 8 CSE career tracks.<br><br>
 
-    **Score 100** = Skills equally spread across all 8 tracks → maximum drift ❌
+    <strong>Score 0</strong> — All your skills are in one track: no drift, highly focused.<br>
+    <strong>Score 100</strong> — Skills equally spread across all 8 tracks: maximum drift.<br><br>
 
-    A focused student targeting Data Analyst typically scores **below 30**.
-    Placement-ready profiles from Indian industry data average **Drift Score ≤ 25**.
+    A focused student targeting Data Analyst typically scores <strong>below 30</strong>.
+    Placement-ready profiles from Indian industry data average <strong>Drift Score &le; 25</strong>.<br><br>
 
-    > **Your interpretation:** {interpretation}
+    <span style="background:#F5F5F7; border-radius:8px; padding:0.5rem 0.75rem;
+                 display:block; border-left:3px solid #6C63FF;">
+        <em>{drift_interpretation}</em>
+    </span><br>
 
-    *Formula: Drift Score = 100 − (normalized standard deviation of skill counts
-    across 8 tracks). Based on: Garg & Singh 2022, "Skill Portfolio Concentration
-    Metrics for Graduate Employability Prediction", IJSTEM Vol 9.*
-    """)
+    <span style="color:#86868B; font-size:0.8rem;">
+        Formula: Drift Score = 100 − (normalized standard deviation of skill counts
+        across 8 tracks). Reference: Garg &amp; Singh 2022, IJSTEM Vol 9.
+    </span>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col_b:
     st.markdown("**Entropy Score Explained**")
     st.markdown(f"""
-    Your Entropy Score of **{entropy_score} bits** uses **Shannon's Information
-    Entropy**: H = −Σ p × log₂(p), where p is the proportion of your verified
-    skills in each career track.
+    <div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+                padding:1.5rem; color:#1D1D1F; line-height:1.7;">
 
-    **0 bits** = All skills in one track → perfect order → zero uncertainty ✅
+    Your Entropy Score of <strong>{entropy_score} bits</strong> uses Shannon's Information
+    Entropy: H = &minus;&Sigma; p &times; log&#8322;(p), where p is the proportion of your verified
+    skills in each career track.<br><br>
 
-    **~3 bits** = Skills equally spread across all 8 tracks → maximum disorder ❌
+    <strong>0 bits</strong> — All skills in one track: perfect order, zero uncertainty.<br>
+    <strong>~3 bits</strong> — Skills equally spread across all 8 tracks: maximum disorder.<br><br>
 
-    A focused Data Analyst profile typically scores **below 1.2 bits**.
-    Your {entropy_score} bits puts you in the **{entropy_label}** category.
+    A focused Data Analyst profile typically scores <strong>below 1.2 bits</strong>.
+    Your {entropy_score} bits puts you in the <strong>{entropy_label}</strong> category.<br><br>
 
-    **How Drift Score and Entropy differ:**
-    Both measure skill scatter, but through different mathematical lenses.
-    Drift Score (std-dev based) is more sensitive to the *magnitude* of the
-    dominant track. Entropy is more sensitive to *how many tracks* you have
-    spread into. A student with 15 skills in Data Analyst and 1 each in
-    5 other tracks gets a good Drift Score but slightly elevated Entropy.
-    Both together give a complete picture.
-    """)
+    <span style="background:#F5F5F7; border-radius:8px; padding:0.5rem 0.75rem;
+                 display:block; border-left:3px solid #6C63FF;">
+        <strong>How Drift Score and Entropy differ:</strong><br>
+        Drift Score (std-dev based) responds more to the magnitude of the dominant track.
+        Entropy is more sensitive to how many tracks you have spread into.
+        Both together give a complete picture — they are complementary, not redundant.
+    </span>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("---")
 
 # ── Track Breakdown Table ─────────────────────────────────────
-st.subheader("📊 Your Skill Distribution Across All 8 Tracks")
+# BUG FIX: Was `pd.DataFrame([{ ... } for ...])` where `{ ... }` is a Python
+# set containing Ellipsis — not a dict. This caused KeyError: 'Skills You Have'.
+# Replaced with a proper dict comprehension.
+
+st.subheader("Skill Distribution Across All 8 Tracks")
 st.markdown(
     "More skills concentrated in ONE track = less drift = better placement readiness."
 )
 
-track_df = pd.DataFrame([
-    { ... }
-    for track, count in track_counts.items()
-])
-if not track_df.empty:
-    track_df = track_df.sort_values("Skills You Have", ascending=False)
+total_skill_count = max(len(verified_skills), 1)
 
-st.dataframe(track_df, width="stretch", hide_index=True)
+if track_counts:
+    track_df = pd.DataFrame([
+        {
+            "Career Track":      track,
+            "Skills You Have":   count,
+            "Share of Profile":  f"{round(count / total_skill_count * 100, 1)}%",
+            "Focus Signal":      (
+                "Primary Track"   if count == max(track_counts.values()) and count > 0
+                else "Secondary"  if count > 0
+                else "None"
+            ),
+        }
+        for track, count in track_counts.items()
+    ])
+
+    if not track_df.empty:
+        track_df = track_df.sort_values("Skills You Have", ascending=False).reset_index(drop=True)
+
+    # Color Focus Signal column
+    def color_focus(val):
+        if val == "Primary Track":
+            return "color: #6C63FF; font-weight: 700"
+        elif val == "Secondary":
+            return "color: #FF9500"
+        return "color: #86868B"
+
+    styled = track_df.style.map(color_focus, subset=["Focus Signal"])
+    st.dataframe(styled, use_container_width=True, hide_index=True)
+else:
+    st.info("No track data available. Please complete the quiz first.")
 
 st.markdown("---")
 
 # ── Navigation ────────────────────────────────────────────────
 col_nav1, col_nav2 = st.columns(2)
 with col_nav2:
-    if st.button("Next → Urgency Engine ⏰", type="primary", width="stretch"):
+    if st.button("Next — Urgency Engine", type="primary", use_container_width=True):
         st.switch_page("pages/04_urgency.py")

@@ -11,7 +11,7 @@ import streamlit as st
 # Page config — must be the very first Streamlit call
 st.set_page_config(
     page_title="SkillDrift — Career Focus Analyzer",
-    page_icon="🎯",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )

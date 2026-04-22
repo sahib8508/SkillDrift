@@ -1,155 +1,32 @@
-# Window 4 - Urgency Engine 
-
-# =============================================================
 # pages/04_urgency.py — Window 4: Urgency Engine
-# Shows semester-based urgency level and focus debt calculation.
-# =============================================================
 
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from brain import CAREER_TRACKS
+from _sidebar import APPLE_CSS, render_sidebar
 
 st.set_page_config(
     page_title="SkillDrift — Urgency Engine",
-    page_icon="⏰",
+    page_icon="assets/logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# ── Session Guard ─────────────────────────────────────────────
+st.markdown(APPLE_CSS, unsafe_allow_html=True)
+
 if not st.session_state.get("student_name"):
-    st.warning("⚠️ Session not found. Please start from the beginning.")
+    st.warning("Session not found. Please start from the beginning.")
     st.switch_page("pages/02_skill_input.py")
 
-# =============================================================
-# SIDEBAR — identical block used across all dashboard pages
-# =============================================================
-with st.sidebar:
-    st.markdown("""
-    <div style="text-align:center; padding: 1rem 0;">
-      <svg width="80" height="80" viewBox="0 0 80 80"
-           xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="40" fill="#2D3250"/>
-        <circle cx="40" cy="30" r="15" fill="#6C63FF"/>
-        <ellipse cx="40" cy="65" rx="22" ry="15" fill="#6C63FF"/>
-      </svg>
-    </div>
-    """, unsafe_allow_html=True)
-
-    student_name = st.session_state.get("student_name", "Student")
-    st.markdown(
-        f"<div style='text-align:center; font-weight:700; "
-        f"font-size:1.1rem; color:#FAFAFA;'>{student_name}</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        f"<div style='text-align:center; color:#7F8C8D; font-size:0.85rem;'>"
-        f"Semester {st.session_state.get('semester', '?')}</div>",
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("---")
-
-    drift_score  = st.session_state.get("drift_score")
-    drift_label  = st.session_state.get("drift_label", "")
-    entropy_score = st.session_state.get("entropy_score")
-    entropy_label = st.session_state.get("entropy_label", "")
-
-    if drift_score is not None:
-        # LOW drift = focused = GREEN; HIGH drift = scattered = RED
-        drift_color = (
-            "#2ECC71" if drift_score <= 20
-            else "#F39C12" if drift_score <= 60
-            else "#E74C3C"
-        )
-        st.markdown(f"""
-        <div style="background:#1A1D27; border:1px solid #2D3250;
-                    border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
-            <div style="color:#7F8C8D; font-size:0.8rem;">DRIFT SCORE</div>
-            <div style="font-size:2rem; font-weight:900; color:{drift_color};">
-                {drift_score}
-            </div>
-            <div style="color:#BDC3C7; font-size:0.85rem;">{drift_label}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        entropy_color = (
-            "#2ECC71" if entropy_score < 1.2
-            else "#F39C12" if entropy_score < 2.0
-            else "#E74C3C"
-        )
-        st.markdown(f"""
-        <div style="background:#1A1D27; border:1px solid #2D3250;
-                    border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
-            <div style="color:#7F8C8D; font-size:0.8rem;">ENTROPY SCORE</div>
-            <div style="font-size:2rem; font-weight:900; color:{entropy_color};">
-                {entropy_score}
-                <span style="font-size:1rem;">bits</span>
-            </div>
-            <div style="color:#BDC3C7; font-size:0.85rem;">{entropy_label}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        track_counts = st.session_state.get("track_counts", {})
-        if track_counts:
-            tracks  = list(track_counts.keys())
-            counts  = list(track_counts.values())
-            counts_closed = counts + [counts[0]]
-            tracks_closed = tracks + [tracks[0]]
-
-            fig_radar = go.Figure()
-            fig_radar.add_trace(go.Scatterpolar(
-                r=counts_closed,
-                theta=tracks_closed,
-                fill="toself",
-                fillcolor="rgba(108, 99, 255, 0.3)",
-                line=dict(color="#6C63FF", width=2),
-            ))
-            fig_radar.update_layout(
-                polar=dict(
-                    radialaxis=dict(visible=True, showticklabels=False,
-                                    gridcolor="#2D3250"),
-                    angularaxis=dict(tickfont=dict(size=9, color="#BDC3C7"),
-                                     gridcolor="#2D3250"),
-                    bgcolor="#0E1117",
-                ),
-                paper_bgcolor="#0E1117",
-                showlegend=False,
-                margin=dict(l=20, r=20, t=20, b=20),
-                height=280,
-            )
-            st.plotly_chart(fig_radar, width="stretch")
-
-    st.markdown("---")
-    st.markdown("📊 **Your Dashboard**")
-    nav_pages = [
-        ("🎯 Drift & Entropy Scores",   "pages/03_drift_score.py"),
-        ("⏰ Urgency Engine",            "pages/04_urgency.py"),
-        ("🏆 Career Track Match",        "pages/05_career_match.py"),
-        ("📚 Next Skill & Readiness",    "pages/06_next_skill.py"),
-        ("👥 Peer Mirror",               "pages/07_peer_mirror.py"),
-        ("🗺️ Market Intelligence",       "pages/08_market_intel.py"),
-        ("📄 Final Report",              "pages/10_final_report.py"),
-    ]
-    for label, page in nav_pages:
-        if st.button(label, width="stretch", key=f"nav_{page}"):
-            st.switch_page(page)
-
-    st.markdown("---")
-    if st.button("🚪 Log Out", width="stretch"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.switch_page("pages/01_home.py")
+render_sidebar()
 
 # =============================================================
 # MAIN CONTENT
 # =============================================================
 
-st.title("⏰ Urgency Engine")
-st.markdown(
-    "How much time do you have left — and how much have you already lost?"
-)
+st.title("Urgency Engine")
+st.markdown("How much time do you have left — and how much have you already lost?")
 st.markdown("---")
 
 urgency_info    = st.session_state.get("urgency_info", {})
@@ -158,127 +35,149 @@ semester        = st.session_state.get("semester", 4)
 best_track      = st.session_state.get("best_track", "your best matching track")
 
 if not urgency_info:
-    st.warning("⚠️ Urgency data not found. Please complete the quiz first.")
+    st.warning("Urgency data not found. Please complete the quiz first.")
     st.stop()
 
 urgency_level   = urgency_info.get("urgency_level", "Red")
-urgency_color   = urgency_info.get("urgency_color", "#E74C3C")
+urgency_color   = urgency_info.get("urgency_color", "#FF3B30")
 urgency_message = urgency_info.get("urgency_message", "")
 days_remaining  = urgency_info.get("days_remaining", 0)
 weeks_remaining = urgency_info.get("weeks_remaining", 0)
 
+# Map to Apple-style colors
+URGENCY_COLOR_MAP = {
+    "Green":  "#34C759",
+    "Yellow": "#FF9500",
+    "Red":    "#FF3B30",
+}
+urgency_color = URGENCY_COLOR_MAP.get(urgency_level, "#FF3B30")
+
 # ── Urgency Banner ────────────────────────────────────────────
-level_icon = {"Green": "🟢", "Yellow": "🟡", "Red": "🔴"}.get(urgency_level, "🔴")
+level_labels = {"Green": "Low Urgency", "Yellow": "Moderate Urgency", "Red": "High Urgency"}
+level_display = level_labels.get(urgency_level, urgency_level)
 
 st.markdown(f"""
-<div style="background:{urgency_color}22; border:2px solid {urgency_color};
-            border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
-    <div style="font-size:1.5rem; font-weight:900; color:{urgency_color};">
-        {level_icon} Urgency Level: {urgency_level}
+<div style="background:{urgency_color}18; border:2px solid {urgency_color};
+            border-radius:14px; padding:1.5rem; margin-bottom:1.5rem;">
+    <div style="font-size:1.3rem; font-weight:700; color:{urgency_color};">
+        {level_display}
     </div>
-    <div style="color:#FAFAFA; font-size:1.05rem; margin-top:0.5rem;">
+    <div style="color:#1D1D1F; font-size:1rem; margin-top:0.5rem; line-height:1.6;">
         {urgency_message}
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Countdown Cards ───────────────────────────────────────────
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns(3, gap="medium")
 
 with col1:
     st.markdown(f"""
-    <div style="background:#1A1D27; border:1px solid #2D3250;
-                border-radius:10px; padding:1.5rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.85rem;">YOUR SEMESTER</div>
-        <div style="font-size:3rem; font-weight:900; color:#6C63FF;">
+    <div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+                padding:1.5rem; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase;">Your Semester</div>
+        <div style="font-size:3rem; font-weight:700; color:#6C63FF; margin:0.35rem 0;">
             {semester}
         </div>
-        <div style="color:#BDC3C7; font-size:0.9rem;">of 8 semesters</div>
+        <div style="color:#86868B; font-size:0.9rem;">of 8 semesters</div>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
-    countdown_color = urgency_color
     if semester >= 7:
-        countdown_text = "Active Now"
+        countdown_text = "Active"
         countdown_sub  = "Placement season is here"
     else:
         countdown_text = str(weeks_remaining)
         countdown_sub  = "weeks until Semester 7"
 
     st.markdown(f"""
-    <div style="background:#1A1D27; border:1px solid #2D3250;
-                border-radius:10px; padding:1.5rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.85rem;">TIME REMAINING</div>
-        <div style="font-size:3rem; font-weight:900; color:{countdown_color};">
+    <div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+                padding:1.5rem; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase;">Time Remaining</div>
+        <div style="font-size:3rem; font-weight:700; color:{urgency_color}; margin:0.35rem 0;">
             {countdown_text}
         </div>
-        <div style="color:#BDC3C7; font-size:0.9rem;">{countdown_sub}</div>
+        <div style="color:#86868B; font-size:0.9rem;">{countdown_sub}</div>
     </div>
     """, unsafe_allow_html=True)
 
 with col3:
     debt_hours = focus_debt_info.get("focus_debt_hours", 0)
-    debt_color = "#E74C3C" if debt_hours > 90 else "#F39C12" if debt_hours > 30 else "#2ECC71"
+    debt_color = (
+        "#FF3B30" if debt_hours > 90
+        else "#FF9500" if debt_hours > 30
+        else "#34C759"
+    )
 
     st.markdown(f"""
-    <div style="background:#1A1D27; border:1px solid #2D3250;
-                border-radius:10px; padding:1.5rem; text-align:center;">
-        <div style="color:#7F8C8D; font-size:0.85rem;">FOCUS DEBT</div>
-        <div style="font-size:3rem; font-weight:900; color:{debt_color};">
+    <div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+                padding:1.5rem; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div style="color:#86868B; font-size:0.75rem; font-weight:600;
+                    letter-spacing:1px; text-transform:uppercase;">Focus Debt</div>
+        <div style="font-size:3rem; font-weight:700; color:{debt_color}; margin:0.35rem 0;">
             {debt_hours}
         </div>
-        <div style="color:#BDC3C7; font-size:0.9rem;">hours of wasted learning time</div>
+        <div style="color:#86868B; font-size:0.9rem;">estimated hours off-track</div>
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ── Focus Debt Explanation ────────────────────────────────────
-st.subheader("💸 Your Focus Debt Explained")
+st.subheader("Your Focus Debt Explained")
 
-daily_hours    = focus_debt_info.get("daily_hours", 2)
-days_to_recover = focus_debt_info.get("days_to_recover", 0)
+daily_hours        = focus_debt_info.get("daily_hours", 2)
+days_to_recover    = focus_debt_info.get("days_to_recover", 0)
 distraction_skills = focus_debt_info.get("distraction_skills", [])
 on_track_skills    = focus_debt_info.get("on_track_skills", [])
 
 st.markdown(f"""
-Your **Focus Debt** is the total estimated hours you have spent learning skills
-that do not contribute to your best matching career track: **{best_track}**.
+<div style="background:#FFFFFF; border:1px solid #D2D2D7; border-radius:14px;
+            padding:1.5rem; color:#1D1D1F; line-height:1.7; margin-bottom:1rem;">
+    Your <strong>Focus Debt</strong> is the estimated hours spent learning skills that do not
+    contribute to your best matching career track: <strong>{best_track}</strong>.<br><br>
+    Each off-track skill is estimated at <strong>30 hours</strong> of learning time
+    (based on average free course lengths on YouTube and NPTEL).<br><br>
+    <span style="background:#F5F5F7; border-radius:8px; padding:0.5rem 0.75rem;
+                 display:block; border-left:3px solid {debt_color};">
+        Focus debt: <strong>{debt_hours} hours</strong>.
+        At {daily_hours} hours of focused study per day,
+        that is <strong>{days_to_recover} days</strong> of learning time redirected
+        away from your career goal.
+    </span>
+</div>
+""", unsafe_allow_html=True)
 
-Each off-track skill is estimated at **30 hours** of learning time
-(based on average free course lengths on YouTube and NPTEL).
-
-> 📌 Your focus debt is **{debt_hours} hours**.
-> At {daily_hours} hours of focused study per day,
-> that is **{days_to_recover} days** of learning time redirected away from your career goal.
-""")
-
-# ── Two column skill breakdown ────────────────────────────────
+# ── Skill Breakdown ───────────────────────────────────────────
 st.markdown("---")
-col_a, col_b = st.columns(2)
+col_a, col_b = st.columns(2, gap="medium")
 
 with col_a:
-    st.markdown(f"#### ✅ On-Track Skills for {best_track}")
+    st.markdown(f"**On-Track Skills for {best_track}**")
     if on_track_skills:
         for skill in on_track_skills:
             st.markdown(
-                f"<div style='background:#1A1D27; border:1px solid #2ECC71; "
-                f"border-radius:6px; padding:0.4rem 0.8rem; margin:0.25rem 0; "
-                f"color:#2ECC71;'>✅ {skill}</div>",
+                f"<div style='background:#FFFFFF; border:1px solid #D2D2D7; "
+                f"border-left:4px solid #34C759; border-radius:8px; "
+                f"padding:0.4rem 0.8rem; margin:0.2rem 0; color:#1D1D1F;'>"
+                f"{skill}</div>",
                 unsafe_allow_html=True,
             )
     else:
         st.info("None of your verified skills match the required list for this track.")
 
 with col_b:
-    st.markdown("#### ⚠️ Distraction Skills (Off-Track)")
+    st.markdown("**Off-Track Skills (Focus Debt)**")
     if distraction_skills:
         for skill in distraction_skills:
             st.markdown(
-                f"<div style='background:#1A1D27; border:1px solid #E74C3C; "
-                f"border-radius:6px; padding:0.4rem 0.8rem; margin:0.25rem 0; "
-                f"color:#E74C3C;'>⚠️ {skill} — 30 hrs estimated</div>",
+                f"<div style='background:#FFFFFF; border:1px solid #D2D2D7; "
+                f"border-left:4px solid #FF3B30; border-radius:8px; "
+                f"padding:0.4rem 0.8rem; margin:0.2rem 0; color:#1D1D1F;'>"
+                f"{skill} — 30 hrs estimated</div>",
                 unsafe_allow_html=True,
             )
     else:
@@ -286,86 +185,76 @@ with col_b:
 
 st.markdown("---")
 
-# ── Focus Debt vs Available Time Bar Chart ────────────────────
-st.subheader("📊 Focus Debt vs Available Study Time")
+# ── Focus Debt vs Available Time Chart ───────────────────────
+st.subheader("Focus Debt vs Available Study Time")
 
-# Estimate total available study hours in remaining semesters
-# Each semester ≈ 20 weeks. 5 days/week. 2 hrs/day focused study.
 semesters_remaining = max(0, 8 - semester)
 available_hours = semesters_remaining * 20 * 5 * daily_hours
 
 fig_bar = go.Figure()
-
 fig_bar.add_trace(go.Bar(
-    name="Focus Debt (hours already lost to off-track skills)",
+    name="Focus Debt (hours off-track)",
     x=["Your Situation"],
     y=[debt_hours],
-    marker_color="#E74C3C",
+    marker_color="#FF3B30",
     text=[f"{debt_hours} hrs"],
     textposition="outside",
+    textfont=dict(color="#1D1D1F"),
 ))
-
 fig_bar.add_trace(go.Bar(
     name="Available Focused Study Hours Remaining",
     x=["Your Situation"],
     y=[available_hours],
-    marker_color="#2ECC71",
+    marker_color="#34C759",
     text=[f"{available_hours} hrs"],
     textposition="outside",
+    textfont=dict(color="#1D1D1F"),
 ))
-
 fig_bar.update_layout(
     barmode="group",
-    paper_bgcolor="#0E1117",
-    plot_bgcolor="#0E1117",
-    font=dict(color="#BDC3C7"),
+    paper_bgcolor="#FFFFFF",
+    plot_bgcolor="#F5F5F7",
+    font=dict(color="#1D1D1F"),
     legend=dict(
-        bgcolor="#1A1D27",
-        bordercolor="#2D3250",
-        font=dict(color="#BDC3C7"),
+        bgcolor="#FFFFFF",
+        bordercolor="#D2D2D7",
+        borderwidth=1,
+        font=dict(color="#1D1D1F"),
     ),
-    yaxis=dict(
-        gridcolor="#2D3250",
-        title="Hours",
-    ),
-    xaxis=dict(gridcolor="#2D3250"),
+    yaxis=dict(gridcolor="#D2D2D7", title="Hours", color="#1D1D1F"),
+    xaxis=dict(gridcolor="#D2D2D7", color="#1D1D1F"),
     margin=dict(t=40, b=40),
-    height=380,
+    height=360,
 )
-
-st.plotly_chart(fig_bar, width="stretch")
-
+st.plotly_chart(fig_bar, use_container_width=True)
 st.caption(
-    f"Available hours estimate: {semesters_remaining} semesters remaining "
-    f"× 20 weeks × 5 days × {daily_hours} hrs/day = {available_hours} hrs"
+    f"Available hours: {semesters_remaining} semesters × 20 weeks × 5 days "
+    f"× {daily_hours} hrs/day = {available_hours} hrs"
 )
 
 # ── Distraction Skills Table ──────────────────────────────────
 if distraction_skills:
     st.markdown("---")
-    st.subheader("📋 Distraction Skills Breakdown")
+    st.subheader("Off-Track Skills Breakdown")
 
     dist_df = pd.DataFrame([
         {
-            "Skill": skill,
-            "Estimated Hours Spent": 30,
-            "Relevant to Best Track?": "❌ No",
-            "Recommendation": "Deprioritise — focus on your career track first",
+            "Skill":                  skill,
+            "Estimated Hours Spent":  30,
+            "Relevant to Best Track": "No",
+            "Recommendation":         "Deprioritise — focus on your career track first",
         }
         for skill in distraction_skills
     ])
-
-    st.dataframe(dist_df, width="stretch", hide_index=True)
+    st.dataframe(dist_df, use_container_width=True, hide_index=True)
 
 st.markdown("---")
 
 # ── Navigation ────────────────────────────────────────────────
 col_prev, col_next = st.columns(2)
 with col_prev:
-    if st.button("← Back to Drift Score", width="stretch"):
+    if st.button("Back — Drift Score", use_container_width=True):
         st.switch_page("pages/03_drift_score.py")
 with col_next:
-    if st.button("Next → Career Track Match 🏆", type="primary", width="stretch"):
+    if st.button("Next — Career Track Match", type="primary", use_container_width=True):
         st.switch_page("pages/05_career_match.py")
-
-
