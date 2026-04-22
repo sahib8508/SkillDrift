@@ -13,14 +13,14 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
+st.session_state["_current_page"] = "drift"
 st.markdown(APPLE_CSS, unsafe_allow_html=True)
+render_sidebar()
 
 if not st.session_state.get("student_name"):
     st.warning("Session not found. Please start from the beginning.")
     st.switch_page("pages/02_skill_input.py")
 
-render_sidebar()
 
 student_name    = st.session_state.get("student_name", "")
 semester        = st.session_state.get("semester", "?")

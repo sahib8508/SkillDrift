@@ -8,23 +8,54 @@ APPLE_CSS = """
     [data-testid="stSidebarNav"] { display: none !important; }
     header[data-testid="stHeader"] { display: none !important; }
     .stDeployButton { display: none !important; }
-    [data-testid="collapsedControl"] { display: none !important; }
     #MainMenu { display: none !important; }
     footer { display: none !important; }
-
+    [data-testid="collapsedControl"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+    }
     .stApp { background-color: #F5F5F7; }
     .block-container { padding-top: 2rem; padding-bottom: 3rem; max-width: 1100px; }
 
+    section[data-testid="stSidebar"] { width: 268px !important; min-width: 268px !important; }
     section[data-testid="stSidebar"] > div {
         background-color: #FFFFFF;
-        border-right: 1px solid #D2D2D7;
+        border-right: 1px solid #E2E8F0;
         padding-top: 0 !important;
+        height: 100vh;
     }
-    section[data-testid="stSidebar"] .stVerticalBlock { gap: 0; }
+    section[data-testid="stSidebar"] .stVerticalBlock { gap: 0 !important; }
+    section[data-testid="stSidebar"] .stButton > button {
+        background: transparent !important;
+        border: none !important;
+        border-radius: 8px !important;
+        color: #515F74 !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        text-align: left !important;
+        padding: 10px 14px !important;
+        width: 100% !important;
+        transition: all 0.12s ease !important;
+        border-right: 3px solid transparent !important;
+        justify-content: flex-start !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: #F0F4F8 !important;
+        color: #171C1F !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+        background: transparent !important;
+        color: #515F74 !important;
+        border: none !important;
+    }
 
-    h1 { font-size: 1.7rem !important; font-weight: 700 !important; color: #1D1D1F !important; margin-bottom: 0.25rem !important; }
-    h2 { font-size: 1.25rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
-    h3 { font-size: 1.05rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
+    html, body, [class*="css"] { font-size: 16px !important; }
+    p, li, div { font-size: 1rem; }
+    h1 { font-size: 2rem !important; font-weight: 700 !important; color: #1D1D1F !important; margin-bottom: 0.25rem !important; }
+    h2 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
+    h3 { font-size: 1.2rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
 
     .stButton > button {
         border-radius: 8px;
@@ -32,8 +63,8 @@ APPLE_CSS = """
         background: #F5F5F7;
         color: #1D1D1F;
         font-weight: 500;
-        font-size: 0.875rem;
-        padding: 0.45rem 1rem;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
         transition: all 0.12s ease;
     }
     .stButton > button:hover { background: #E8E8ED; border-color: #C7C7CC; }
@@ -193,7 +224,12 @@ def render_sidebar():
                     margin=dict(l=15, r=15, t=8, b=8),
                     height=200,
                 )
-                st.plotly_chart(fig_radar, use_container_width=True)
+                page_key = st.session_state.get("_current_page", "default")
+                st.plotly_chart(
+                fig_radar,
+                width="stretch",
+                key=f"sidebar_radar_chart_{page_key}"
+                 )
         else:
             st.markdown(
                 "<div style='color:#86868B; font-size:0.8rem; text-align:center; "

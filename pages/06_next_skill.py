@@ -10,14 +10,14 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
+st.session_state["_current_page"] = "drift"
 st.markdown(APPLE_CSS, unsafe_allow_html=True)
+render_sidebar()
 
 if not st.session_state.get("student_name"):
     st.warning("Session not found. Please start from the beginning.")
     st.switch_page("pages/02_skill_input.py")
 
-render_sidebar()
 
 next_skill_info = st.session_state.get("next_skill_info", {})
 readiness_score = st.session_state.get("readiness_score", 0.0) or 0.0
@@ -192,7 +192,7 @@ if missing_skills:
         </div>
         """
 
-    st.markdown(rows_html, unsafe_allow_html=True)
+    st.html(rows_html)
 else:
     st.success(f"You already have all required skills for **{best_track}**. No missing skills found.")
 

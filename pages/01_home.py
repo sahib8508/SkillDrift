@@ -13,6 +13,7 @@ st.markdown("""
 <style>
     [data-testid="stSidebarNav"] { display: none !important; }
     [data-testid="collapsedControl"] { display: none !important; }
+    section[data-testid="stSidebar"] { display: none !important; }
     header[data-testid="stHeader"] { display: none !important; }
     .stDeployButton { display: none !important; }
     #MainMenu { display: none !important; }
@@ -58,7 +59,7 @@ st.markdown("""
         line-height: 1;
     }
     .stat-label {
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         color: #1D1D1F;
         margin-top: 0.6rem;
         line-height: 1.5;
@@ -92,7 +93,7 @@ st.markdown("""
         font-size: 0.92rem;
     }
     .step-desc {
-        font-size: 0.82rem;
+        font-size: 0.9rem;
         color: #86868B;
         line-height: 1.45;
     }
