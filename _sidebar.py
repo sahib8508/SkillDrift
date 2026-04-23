@@ -1,37 +1,31 @@
-# _sidebar.py — Shared sidebar renderer (matches ui_idea.html exactly)
+# _sidebar.py — Shared sidebar renderer
 
 import streamlit as st
 import plotly.graph_objects as go
+import streamlit.components.v1 as components
 
-# ── CSS injected on every dashboard page (03–08, 10) ────────────────────────
+# ── Global CSS ─────────────────────────────────────────────────────────────
 APPLE_CSS = """
 <style>
-    /* ── Hide Streamlit chrome ────────────────────────────────────── */
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    /* ── Hide Streamlit chrome ─────────────────────────────────────── */
     [data-testid="stSidebarNav"]     { display: none !important; }
     .stDeployButton                  { display: none !important; }
     #MainMenu                        { display: none !important; }
     footer                           { display: none !important; }
-
-    /* Hide toolbar CONTENT inside the header, but NOT the header shell.
-       Reason: in Streamlit 1.29+ the sidebar expand button lives inside
-       the header (data-testid="stExpandSidebar").  If we hide the whole
-       header we also hide the only way to re-open the sidebar. */
     [data-testid="stDecoration"]     { display: none !important; }
     [data-testid="stStatusWidget"]   { display: none !important; }
     [data-testid="stMainMenu"]       { display: none !important; }
     [data-testid="stToolbarActions"] { display: none !important; }
 
-    /* Make header shell invisible but still in the DOM */
     header[data-testid="stHeader"] {
         background:    transparent !important;
         border-bottom: none        !important;
         box-shadow:    none        !important;
     }
 
-    /* ── Sidebar toggle buttons — Streamlit 1.29 + (testids changed) ─ */
-    /* stExpandSidebar  = button shown in header when sidebar is CLOSED  */
-    /* stSidebarCollapseButton = button shown inside sidebar when OPEN   */
-    /* collapsedControl = legacy testid (Streamlit < 1.29)               */
+    /* ── Sidebar toggle buttons ─────────────────────────────────────── */
     [data-testid="stExpandSidebar"],
     [data-testid="stSidebarCollapseButton"],
     [data-testid="collapsedControl"] {
@@ -42,139 +36,256 @@ APPLE_CSS = """
         pointer-events: all     !important;
     }
 
-    /* Page background */
-    .stApp           { background-color: #f6fafe; }
-    .block-container { padding-top: 2rem; padding-bottom: 3rem; max-width: 1100px; }
+    /* ── Root vars ────────────────────────────────────────────────── */
+    :root {
+        --blue:      #002c98;
+        --blue-lt:   #eef2ff;
+        --red:       #ba1a1a;
+        --green:     #15803d;
+        --amber:     #d97706;
+        --text:      #171c1f;
+        --muted:     #515f74;
+        --border:    #e2e8f0;
+        --surface:   #f6fafe;
+        --card:      #ffffff;
+        --radius:    12px;
+    }
 
-    /* Sidebar shell */
-    
+    /* ── Page background ──────────────────────────────────────────── */
+    html, body, .stApp { background-color: var(--surface) !important; }
+
+    /* ── Block container: centered, max-width ─────────────────────── */
+    .block-container {
+        padding-top:    2rem      !important;
+        padding-bottom: 3rem      !important;
+        max-width:      960px     !important;
+        margin-left:    auto      !important;
+        margin-right:   auto      !important;
+        padding-left:   2rem      !important;
+        padding-right:  2rem      !important;
+    }
+
+    /* ── Sidebar shell ────────────────────────────────────────────── */
     section[data-testid="stSidebar"] > div {
-        background-color: #FFFFFF;
-        border-right:     1px solid #e2e8f0;
+        background-color: var(--card);
+        border-right:     1px solid var(--border);
         padding-top:      0 !important;
-        
     }
     section[data-testid="stSidebar"] .stVerticalBlock { gap: 0 !important; }
+    section[data-testid="stSidebar"] > div:first-child { padding-bottom: 0 !important; }
+    section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { padding-bottom: 10px !important; }
 
-    /* Sidebar nav buttons — default state */
+    /* ── Sidebar nav buttons (default state) ─────────────────────── */
     section[data-testid="stSidebar"] .stButton > button {
-        background:     transparent !important;
-        border:         none        !important;
-        border-right:   3px solid transparent !important;
-        border-radius:  8px         !important;
-        color:          #515f74     !important;
-        font-size:      0.85rem     !important;
-        font-weight:    500         !important;
-        text-align:     left        !important;
-        padding:        11px 14px   !important;
-        width:          100%        !important;
-        transition:     all 0.12s ease !important;
-        justify-content: flex-start !important;
-        display:        flex        !important;
-        align-items:    center      !important;
+        background:      transparent !important;
+        border:          none        !important;
+        border-radius:   6px         !important;
+        color:           var(--muted) !important;
+        font-size:       0.875rem    !important;
+        font-weight:     500         !important;
+        font-family:     'Inter', sans-serif !important;
+        text-align:      left        !important;
+        padding:         10px 14px   !important;
+        width:           100%        !important;
+        transition:      background 0.12s ease, color 0.12s ease !important;
+        justify-content: flex-start  !important;
+        display:         flex        !important;
+        align-items:     center      !important;
+        letter-spacing:  0           !important;
+        box-shadow:      none        !important;
     }
     section[data-testid="stSidebar"] .stButton > button:hover {
-        background: #f0f4f8 !important;
-        color:      #171c1f !important;
+        background: #f1f5f9 !important;
+        color:      var(--text) !important;
     }
 
     /* Sign-out button */
     section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:last-of-type {
-        color: #515f74 !important;
+        color: var(--muted) !important;
     }
     section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:last-of-type:hover {
         background: #fff0f0 !important;
-        color:      #ba1a1a !important;
+        color:      var(--red) !important;
     }
 
-    /* Global typography */
-    h1 { font-size: 2rem   !important; font-weight: 700 !important; color: #171c1f !important; margin-bottom: 0.25rem !important; }
-    h2 { font-size: 1.5rem !important; font-weight: 600 !important; color: #171c1f !important; }
-    h3 { font-size: 1.2rem !important; font-weight: 600 !important; color: #171c1f !important; }
+    /* ── Typography ───────────────────────────────────────────────── */
+    h1, h2, h3 { font-family: 'Manrope', sans-serif !important; color: var(--text) !important; }
+    h1 { font-size: 1.75rem !important; font-weight: 800 !important; line-height: 1.2 !important; margin-bottom: 0.25rem !important; }
+    h2 { font-size: 1.25rem !important; font-weight: 700 !important; margin-bottom: 0.25rem !important; }
+    h3 { font-size: 1.05rem !important; font-weight: 700 !important; }
+    p, li, div { font-family: 'Inter', sans-serif; }
 
-    /* Main-area buttons */
+    /* ── Main area buttons ────────────────────────────────────────── */
     .stButton > button {
-        border-radius: 8px;
-        border:        1.5px solid #D2D2D7;
-        background:    #F5F5F7;
-        color:         #171c1f;
-        font-weight:   500;
-        font-size:     0.875rem;
-        padding:       0.5rem 1rem;
-        transition:    all 0.12s ease;
+        border-radius:  8px;
+        border:         1.5px solid var(--border);
+        background:     var(--card);
+        color:          var(--text);
+        font-weight:    600;
+        font-size:      0.9rem;
+        font-family:    'Inter', sans-serif;
+        padding:        0.55rem 1.25rem;
+        transition:     all 0.12s ease;
+        letter-spacing: 0;
     }
-    .stButton > button:hover { background: #E8E8ED; border-color: #C7C7CC; }
+    .stButton > button:hover { background: #f0f4f8; border-color: #c2cad4; }
     .stButton > button[kind="primary"] {
-        background:   #002c98;
+        background:   var(--blue);
         color:        #FFFFFF;
-        border-color: #002c98;
-        font-weight:  600;
+        border-color: var(--blue);
+        font-weight:  700;
     }
-    .stButton > button[kind="primary"]:hover { background: #0038bf; border-color: #0038bf; }
+    .stButton > button[kind="primary"]:hover {
+        background:   #0038bf;
+        border-color: #0038bf;
+    }
 
-    /* Misc */
-    .stProgress > div > div { background-color: #002c98; border-radius: 4px; }
-    .stAlert { border-radius: 10px; }
-    div[data-baseweb="tab"]                       { color: #515f74; font-size: 0.875rem; }
-    div[data-baseweb="tab"][aria-selected="true"] { color: #171c1f; font-weight: 600; }
+    /* ── Progress / alert / tabs ───────────────────────────────────── */
+    .stProgress > div > div { background-color: var(--blue); border-radius: 4px; }
+    .stAlert { border-radius: var(--radius); }
+    div[data-baseweb="tab"]                       { color: var(--muted); font-size: 0.875rem; font-family: 'Inter', sans-serif; }
+    div[data-baseweb="tab"][aria-selected="true"] { color: var(--text); font-weight: 700; }
+
+    /* ── Table headers ─────────────────────────────────────────────── */
     .stDataFrame thead tr th {
         background-color: #f8fafc !important;
-        color:            #515f74 !important;
-        font-size:        0.78rem !important;
-        font-weight:      600     !important;
-        letter-spacing:   0.5px   !important;
+        color:            var(--muted) !important;
+        font-size:        0.72rem !important;
+        font-weight:      700     !important;
+        letter-spacing:   0.06em   !important;
         text-transform:   uppercase !important;
+        font-family:      'Inter', sans-serif !important;
     }
 
-    /* Score chips */
+    /* ── Score chips ───────────────────────────────────────────────── */
     .sd-score-chip {
         background:    #f8fafc;
-        border:        1px solid #e2e8f0;
+        border:        1px solid var(--border);
         border-radius: 8px;
-        padding:       8px 12px;
+        padding:       8px 10px;
         margin-bottom: 6px;
         display:       flex;
         align-items:   center;
         gap:           8px;
+        min-width:     0;
     }
     .sd-chip-label {
-        font-size:      0.72rem;
-        color:          #515f74;
-        font-weight:    600;
+        font-size:      0.65rem;
+        color:          var(--muted);
+        font-weight:    700;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        min-width:      52px;
+        white-space:    nowrap;
+        flex-shrink:    0;
+        width:          62px;
+        font-family:    'Inter', sans-serif;
     }
-    .sd-chip-value  { font-size: 0.9rem; font-weight: 700; }
-    .sd-chip-badge  {
-        font-size:     0.68rem;
+    .sd-chip-value {
+        font-size:   0.92rem;
+        font-weight: 800;
+        font-family: 'Manrope', sans-serif;
+        white-space: nowrap;
+        flex-shrink: 0;
+        min-width:   36px;
+    }
+    .sd-chip-badge {
+        font-size:     0.60rem;
         padding:       2px 7px;
         border-radius: 10px;
         font-weight:   700;
         margin-left:   auto;
+        flex-shrink:   0;
+        white-space:   nowrap;
+        font-family:   'Inter', sans-serif;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        max-width:     90px;
     }
-    .sd-badge-drift   { background: #ffdad6; color: #ba1a1a; }
-    .sd-badge-entropy { background: #d5e3fc; color: #002c98; }
+    .sd-badge-drift   { background: #ffdad6; color: var(--red); }
+    .sd-badge-entropy { background: #d5e3fc; color: var(--blue); }
 
-    /* Active nav highlight — injected inline per item */
-    .sd-nav-active-btn button {
-        background:   #eef2ff !important;
-        color:        #002c98 !important;
-        font-weight:  700     !important;
-        border-right: 3px solid #002c98 !important;
-    }
-
-    /* Form */
+    /* ── Forms ──────────────────────────────────────────────────────── */
     .stForm           { border: none !important; padding: 0 !important; }
-    .stRadio    label { font-size: 0.9rem  !important; color: #171c1f !important; }
-    .stCheckbox label { color: #171c1f    !important; font-size: 0.9rem !important; }
-    .stSelectbox label{ color: #171c1f   !important; font-size: 0.875rem !important; font-weight: 500 !important; }
-    .stTextInput label{ color: #171c1f   !important; font-size: 0.875rem !important; font-weight: 500 !important; }
+    .stRadio    label { font-size: 0.9rem  !important; color: var(--text) !important; font-family: 'Inter', sans-serif !important; }
+    .stCheckbox label { color: var(--text) !important; font-size: 0.9rem !important; font-family: 'Inter', sans-serif !important; }
+    .stSelectbox label { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important; }
+    .stTextInput label { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important; }
+    .stTextInput input { font-size: 1rem !important; font-family: 'Inter', sans-serif !important; }
+    .stSelectbox select { font-size: 1rem !important; }
+
+    /* ── Dashboard page title bar ───────────────────────────────────── */
+    .sd-topbar {
+        background:    var(--card);
+        border-bottom: 1px solid var(--border);
+        padding:       24px 0 20px 0;
+        margin-bottom: 28px;
+    }
+    .sd-topbar-title {
+        font-family: 'Manrope', sans-serif;
+        font-size:   1.5rem;
+        font-weight: 800;
+        color:       var(--text);
+        margin:      0;
+    }
+    .sd-topbar-sub {
+        font-size:  0.875rem;
+        color:      var(--muted);
+        margin-top: 4px;
+    }
+
+    /* ── Cards ──────────────────────────────────────────────────────── */
+    .sd-card {
+        background:    var(--card);
+        border:        1px solid var(--border);
+        border-radius: var(--radius);
+        padding:       24px;
+        box-shadow:    0 2px 12px rgba(23,28,31,.04);
+    }
+
+    /* ── Metric card ────────────────────────────────────────────────── */
+    .sd-metric {
+        background:    var(--card);
+        border:        1px solid var(--border);
+        border-radius: var(--radius);
+        padding:       24px 20px;
+        text-align:    center;
+    }
+    .sd-metric-label {
+        font-size:      0.7rem;
+        font-weight:    700;
+        color:          var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom:  10px;
+        font-family:    'Inter', sans-serif;
+    }
+    .sd-metric-value {
+        font-size:   3rem;
+        font-weight: 800;
+        line-height: 1;
+        font-family: 'Manrope', sans-serif;
+    }
+    .sd-metric-sub {
+        font-size:  0.82rem;
+        color:      var(--muted);
+        margin-top: 8px;
+    }
 </style>
 """
 
-# ── Navigation definition ──────────────────────────────────────────────────
+# ── Entropy label shortener ─────────────────────────────────────────────────
+def _short_entropy_label(label: str) -> str:
+    mapping = {
+        "Highly Ordered — Strong Focus":    "Highly Ordered",
+        "Moderately Ordered":               "Moderate",
+        "Disordered — Showing Drift":       "Disordered",
+        "Highly Disordered — Strong Drift": "High Disorder",
+    }
+    return mapping.get(label, label.split(" — ")[0] if " — " in label else label)
+
+# ── Navigation ──────────────────────────────────────────────────────────────
 NAV_PAGES = [
+    ("Skill Input",            "pages/02_skill_input.py"),
     ("Drift & Entropy Scores", "pages/03_drift_score.py"),
     ("Urgency Engine",         "pages/04_urgency.py"),
     ("Career Track Match",     "pages/05_career_match.py"),
@@ -184,52 +295,88 @@ NAV_PAGES = [
     ("Final Report",           "pages/10_final_report.py"),
 ]
 
-# Map session key → page file for active-nav detection
 _PAGE_KEY_MAP = {
-    "drift"  : "pages/03_drift_score.py",
-    "urgency": "pages/04_urgency.py",
-    "career" : "pages/05_career_match.py",
-    "next"   : "pages/06_next_skill.py",
-    "peer"   : "pages/07_peer_mirror.py",
-    "market" : "pages/08_market_intel.py",
-    "report" : "pages/10_final_report.py",
+    "skill_input": "pages/02_skill_input.py",
+    "drift"      : "pages/03_drift_score.py",
+    "urgency"    : "pages/04_urgency.py",
+    "career"     : "pages/05_career_match.py",
+    "next"       : "pages/06_next_skill.py",
+    "peer"       : "pages/07_peer_mirror.py",
+    "market"     : "pages/08_market_intel.py",
+    "report"     : "pages/10_final_report.py",
 }
 
 
+def _inject_active_nav_css(active_page: str) -> None:
+    active_label = next(
+        (label for label, page in NAV_PAGES if page == active_page), ""
+    )
+    if not active_label:
+        return
+
+    components.html(f"""
+    <script>
+    (function() {{
+        const label = {repr(active_label)};
+        function highlight() {{
+            const sidebar = window.parent.document.querySelector('section[data-testid="stSidebar"]');
+            if (!sidebar) return;
+            sidebar.querySelectorAll('button').forEach(btn => {{
+                const txt = btn.innerText.trim();
+                if (txt === label) {{
+                    btn.style.setProperty('background',  '#f1f5f9', 'important');
+                    btn.style.setProperty('color',       '#171c1f', 'important');
+                    btn.style.setProperty('font-weight', '700',     'important');
+                }} else if (['Skill Input','Drift & Entropy Scores','Urgency Engine',
+                             'Career Track Match','Next Skill & Readiness',
+                             'Peer Mirror & Survival','Market Intelligence',
+                             'Final Report'].includes(txt)) {{
+                    btn.style.removeProperty('background');
+                    btn.style.removeProperty('color');
+                    btn.style.removeProperty('font-weight');
+                }}
+            }});
+        }}
+        highlight();
+        setTimeout(highlight, 200);
+        setTimeout(highlight, 600);
+    }})();
+    </script>
+    """, height=0, scrolling=False)
+
+
 def render_sidebar():
-    """Render the complete sidebar matching ui_idea.html design."""
     with st.sidebar:
 
         student_name = st.session_state.get("student_name", "Student")
         semester_val = st.session_state.get("semester", "?")
 
-        # ── Profile header ────────────────────────────────────────────────
+        # ── Profile header ────────────────────────────────────────────
         st.markdown(f"""
         <div style="display:flex;align-items:center;gap:12px;
-                    padding:20px 16px 12px 16px;
-                    border-bottom:1px solid #f0f4f8;">
+                    padding:22px 16px 16px 16px;
+                    border-bottom:1px solid #e2e8f0;">
             <div style="flex-shrink:0;">
-                <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="22" cy="22" r="22" fill="#e2e8f0"/>
-                    <circle cx="22" cy="18" r="8"  fill="#94a3b8"/>
-                    <ellipse cx="22" cy="36" rx="13" ry="9" fill="#94a3b8"/>
+                <svg width="40" height="40" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="22" cy="22" r="22" fill="#e8edf4"/>
+                    <circle cx="22" cy="18" r="8"  fill="#a3b1c6"/>
+                    <ellipse cx="22" cy="36" rx="13" ry="9" fill="#a3b1c6"/>
                 </svg>
             </div>
-            <div>
-                <div style="font-weight:700;font-size:0.95rem;color:#171c1f;
-                            line-height:1.25;font-family:-apple-system,BlinkMacSystemFont,
-                            'Inter',sans-serif;">
+            <div style="min-width:0;">
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:0.92rem;
+                            color:#171c1f;line-height:1.25;white-space:nowrap;
+                            overflow:hidden;text-overflow:ellipsis;">
                     {student_name}
                 </div>
-                <div style="font-size:0.75rem;color:#515f74;margin-top:2px;">
+                <div style="font-size:0.75rem;color:#515f74;margin-top:2px;font-family:'Inter',sans-serif;">
                     Semester {semester_val}
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Score chips ───────────────────────────────────────────────────
+        # ── Score chips ───────────────────────────────────────────────
         drift_score   = st.session_state.get("drift_score")
         drift_label   = st.session_state.get("drift_label", "")
         entropy_score = st.session_state.get("entropy_score") or 0
@@ -246,8 +393,12 @@ def render_sidebar():
                 else "#d97706" if entropy_score < 2.0
                 else "#ba1a1a"
             )
+
+            short_entropy = _short_entropy_label(entropy_label)
+
+            # Both chips use identical HTML structure: label | value | badge
             st.markdown(f"""
-            <div style="padding:10px 12px 0 12px;">
+            <div style="padding:10px 10px 6px 10px;">
                 <div class="sd-score-chip">
                     <span class="sd-chip-label">Drift</span>
                     <span class="sd-chip-value" style="color:{drift_color};">{drift_score}</span>
@@ -255,15 +406,13 @@ def render_sidebar():
                 </div>
                 <div class="sd-score-chip">
                     <span class="sd-chip-label">Entropy</span>
-                    <span class="sd-chip-value" style="color:{entropy_color};">
-                        {entropy_score}<span style="font-size:0.72rem;font-weight:400;"> bits</span>
-                    </span>
-                    <span class="sd-chip-badge sd-badge-entropy">{entropy_label}</span>
+                    <span class="sd-chip-value" style="color:{entropy_color};">{entropy_score}</span>
+                    <span class="sd-chip-badge sd-badge-entropy">{short_entropy}</span>
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # Mini radar chart
+            # ── Mini radar ────────────────────────────────────────────
             track_counts = st.session_state.get("track_counts") or {}
             if track_counts and any(v > 0 for v in track_counts.values()):
                 tracks        = list(track_counts.keys())
@@ -276,80 +425,132 @@ def render_sidebar():
                     r=counts_closed,
                     theta=tracks_closed,
                     fill="toself",
-                    fillcolor="rgba(0,44,152,0.12)",
+                    fillcolor="rgba(0,44,152,0.10)",
                     line=dict(color="#002c98", width=2),
                 ))
                 fig.update_layout(
                     polar=dict(
-                        radialaxis=dict(
-                            visible=True,
-                            showticklabels=False,
-                            gridcolor="#e2e8f0",
-                        ),
-                        angularaxis=dict(
-                            tickfont=dict(size=7, color="#515f74"),
-                            gridcolor="#e2e8f0",
-                        ),
+                        radialaxis=dict(visible=True, showticklabels=False, gridcolor="#e2e8f0"),
+                        angularaxis=dict(tickfont=dict(size=7, color="#515f74"), gridcolor="#e2e8f0"),
                         bgcolor="#FFFFFF",
                     ),
                     paper_bgcolor="#FFFFFF",
                     showlegend=False,
-                    margin=dict(l=12, r=12, t=8, b=8),
+                    margin=dict(l=12, r=12, t=22, b=8),
                     height=130,
                 )
+                st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
                 page_key = st.session_state.get("_current_page", "default")
-                st.plotly_chart(
-                    fig,
-                    use_container_width=True,
-                    key=f"sidebar_radar_{page_key}",
-                )
+                st.plotly_chart(fig, use_container_width=True, key=f"sidebar_radar_{page_key}")
+
         else:
             st.markdown(
-                "<div style='color:#515f74;font-size:0.8rem;text-align:center;"
-                "padding:12px 14px;'>Complete the skill quiz to see your scores.</div>",
+                "<div style='color:#515f74;font-size:0.82rem;text-align:center;"
+                "padding:16px 14px;font-family:Inter,sans-serif;"
+                "line-height:1.5;'>Complete the skill quiz to see your scores.</div>",
                 unsafe_allow_html=True,
             )
 
-        # ── Nav section label ─────────────────────────────────────────────
-        st.markdown(
-            "<div style='color:#515f74;font-size:0.62rem;font-weight:700;"
-            "letter-spacing:0.8px;text-transform:uppercase;"
-            "padding:8px 14px 4px 14px;'>DASHBOARD</div>",
-            unsafe_allow_html=True,
-        )
+        # ── Dashboard section label ───────────────────────────────────
+        st.markdown("""
+        <div style="margin:14px 12px 10px 12px;border-top:1px solid #e2e8f0;"></div>
+        """, unsafe_allow_html=True)
 
-        # ── Nav buttons ───────────────────────────────────────────────────
+        # ── Active page detection + CSS injection ─────────────────────
         active_page = _PAGE_KEY_MAP.get(st.session_state.get("_current_page", ""), "")
+        _inject_active_nav_css(active_page)
 
+        # ── Nav buttons ───────────────────────────────────────────────
         for label, page in NAV_PAGES:
-            is_active = (page == active_page)
-
-            if is_active:
-                # Wrap in a div with the active class so the CSS selector fires
-                st.markdown(
-                    "<div class='sd-nav-active-btn'>",
-                    unsafe_allow_html=True,
-                )
-
             if st.button(label, key=f"nav__{page}", use_container_width=True):
                 st.switch_page(page)
 
-            if is_active:
-                st.markdown("</div>", unsafe_allow_html=True)
-
-        # ── Footer divider + sign-out ─────────────────────────────────────
+        # ── Footer ────────────────────────────────────────────────────
         st.markdown(
-            "<div style='border-top:1px solid #e2e8f0;margin:6px 0 0 0;'></div>",
+            "<div style='border-top:1px solid #e2e8f0;margin:8px 0 0 0;'></div>",
             unsafe_allow_html=True,
         )
-        st.markdown("<div style='padding:4px 0 8px 0;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='padding:12px 0;'></div>", unsafe_allow_html=True)
 
         if st.button("Sign Out", key="sidebar_signout", use_container_width=True):
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.switch_page("pages/01_home.py")
+            st.session_state["_show_signout_dialog"] = True
 
-    # ── Auto-expand sidebar ONCE per page visit (not on every rerender) ────
-    # Uses a session_state flag per page so the JS fires only on first
-    # navigation to this page. After that the user can freely collapse/expand.
-   
+        if st.session_state.get("_show_signout_dialog"):
+            cancel_clicked = st.button("_cancel_hidden", key="signout_cancel")
+            confirm_clicked = st.button("_confirm_hidden", key="signout_confirm")
+
+            if cancel_clicked:
+                st.session_state["_show_signout_dialog"] = False
+                st.rerun()
+            if confirm_clicked:
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.switch_page("pages/01_home.py")
+
+            components.html("""
+            <script>
+            (function() {
+                const doc = window.parent.document;
+
+                // Remove existing overlay if any
+                const existing = doc.getElementById('sd-logout-overlay');
+                if (existing) existing.remove();
+
+                const overlay = doc.createElement('div');
+                overlay.id = 'sd-logout-overlay';
+                overlay.style.cssText = `
+                    position:fixed; inset:0; background:rgba(0,0,0,0.45);
+                    display:flex; align-items:center; justify-content:center;
+                    z-index:999999; font-family:'Inter',sans-serif;
+                `;
+
+                overlay.innerHTML = `
+                    <div style="background:#fff;border-radius:16px;padding:40px 36px 32px;
+                                width:420px;max-width:90vw;text-align:center;
+                                box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+                        <div style="width:60px;height:60px;border-radius:50%;background:#fff8e1;
+                                    display:flex;align-items:center;justify-content:center;
+                                    margin:0 auto 20px;font-size:28px;">⚠️</div>
+                        <div style="font-size:1.35rem;font-weight:700;color:#171c1f;margin-bottom:12px;
+                                    font-family:'Inter',sans-serif;">Log Out?</div>
+                        <div style="font-size:0.9rem;color:#515f74;line-height:1.6;margin-bottom:28px;
+                                    font-family:'Inter',sans-serif;">
+                            All your data will be lost. You will need to re-enter your name,
+                            skills, and complete the verification quiz again from the beginning.
+                        </div>
+                        <div style="display:flex;gap:12px;">
+                            <button id="sd-cancel-btn" style="flex:1;padding:11px 0;border-radius:8px;
+                                border:1.5px solid #e2e8f0;background:#fff;color:#171c1f;
+                                font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">
+                                Cancel — Stay Here
+                            </button>
+                            <button id="sd-logout-btn" style="flex:1;padding:11px 0;border-radius:8px;
+                                border:none;background:#ba1a1a;color:#fff;
+                                font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+                                Yes, Log Out
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                doc.body.appendChild(overlay);
+
+                doc.getElementById('sd-cancel-btn').onclick = function() {
+                    overlay.remove();
+                    // Click the hidden cancel button in Streamlit
+                    const btns = doc.querySelectorAll('button');
+                    btns.forEach(b => {
+                        if (b.innerText.trim() === '_cancel_hidden') b.click();
+                    });
+                };
+
+                doc.getElementById('sd-logout-btn').onclick = function() {
+                    overlay.remove();
+                    const btns = doc.querySelectorAll('button');
+                    btns.forEach(b => {
+                        if (b.innerText.trim() === '_confirm_hidden') b.click();
+                    });
+                };
+            })();
+            </script>
+            """, height=0, scrolling=False)

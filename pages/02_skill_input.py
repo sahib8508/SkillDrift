@@ -12,85 +12,173 @@ from gemini_quiz import run_skill_verification_quiz
 st.set_page_config(
     page_title="SkillDrift — Skill Input",
     page_icon="assets/logo.png",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="collapsed",
 )
 
 st.markdown("""
 <style>
-    [data-testid="stSidebarNav"]     { display: none !important; }
-    [data-testid="collapsedControl"] { display: none !important; }
-    [data-testid="stExpandSidebar"]  { display: none !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+    [data-testid="stSidebarNav"]            { display: none !important; }
+    [data-testid="collapsedControl"]        { display: none !important; }
+    [data-testid="stExpandSidebar"]         { display: none !important; }
     [data-testid="stSidebarCollapseButton"] { display: none !important; }
-    section[data-testid="stSidebar"] { display: none !important; }
-    header[data-testid="stHeader"]   { display: none !important; }
-    .stDeployButton { display: none !important; }
-    #MainMenu { display: none !important; }
-    footer { display: none !important; }
+    section[data-testid="stSidebar"]        { display: none !important; }
+    header[data-testid="stHeader"]          { display: none !important; }
+    .stDeployButton  { display: none !important; }
+    #MainMenu        { display: none !important; }
+    footer           { display: none !important; }
 
-    .stApp { background-color: #F5F5F7; }
-    .block-container { padding-top: 1.75rem; padding-bottom: 3rem; max-width: 1000px; }
+    :root {
+        --blue:    #002c98;
+        --blue-lt: #eef2ff;
+        --text:    #171c1f;
+        --muted:   #515f74;
+        --border:  #e2e8f0;
+        --surface: #f6fafe;
+        --card:    #ffffff;
+    }
 
-    h1 { font-size: 1.6rem !important; font-weight: 700 !important; color: #1D1D1F !important; }
-    h2 { font-size: 1.2rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
-    h3 { font-size: 1rem !important; font-weight: 600 !important; color: #1D1D1F !important; }
+    html, body, .stApp { background-color: var(--surface) !important; font-family: 'Inter', sans-serif; }
 
+    .block-container {
+        padding-top:    0         !important;
+        padding-bottom: 3rem      !important;
+        max-width:      900px     !important;
+        margin-left:    auto      !important;
+        margin-right:   auto      !important;
+        padding-left:   2rem      !important;
+        padding-right:  2rem      !important;
+    }
+
+    /* Top bar */
+    .p2-topbar {
+        display:         flex;
+        justify-content: space-between;
+        align-items:     center;
+        padding:         18px 0;
+        border-bottom:   1px solid var(--border);
+        margin-bottom:   40px;
+    }
+    .p2-logo {
+        font-family:    'Manrope', sans-serif;
+        font-size:      1.2rem;
+        font-weight:    800;
+        color:          var(--blue);
+        letter-spacing: -0.02em;
+    }
+    .p2-step-badge {
+        font-size:      0.78rem;
+        font-weight:    700;
+        color:          var(--muted);
+        background:     #eaeff4;
+        padding:        5px 14px;
+        border-radius:  20px;
+        font-family:    'Inter', sans-serif;
+    }
+
+    /* Buttons */
     .stButton > button {
         border-radius: 8px;
-        border: 1px solid #D2D2D7;
-        background: #F5F5F7;
-        color: #1D1D1F;
-        font-weight: 500;
-        font-size: 0.875rem;
-        transition: all 0.12s ease;
+        border:        1.5px solid var(--border);
+        background:    var(--card);
+        color:         var(--text);
+        font-weight:   600;
+        font-size:     0.9rem;
+        font-family:   'Inter', sans-serif;
+        padding:       0.5rem 1.25rem;
+        transition:    all 0.12s ease;
     }
-    .stButton > button:hover { background: #E8E8ED; }
+    .stButton > button:hover { background: #f0f4f8; }
     .stButton > button[kind="primary"] {
-        background: #6C63FF;
-        color: #FFFFFF;
-        border-color: #6C63FF;
-        font-weight: 600;
+        background:   var(--blue);
+        color:        #fff;
+        border-color: var(--blue);
+        font-weight:  700;
     }
-    .stButton > button[kind="primary"]:hover { background: #5A52E0; }
-
-    .stCheckbox label { color: #1D1D1F !important; font-size: 0.88rem !important; }
-    .stRadio label { color: #1D1D1F !important; font-size: 0.85rem !important; }
-    .stSelectbox label { color: #1D1D1F !important; font-size: 0.875rem !important; font-weight: 500 !important; }
-    .stTextInput label { color: #1D1D1F !important; font-size: 0.875rem !important; font-weight: 500 !important; }
-    .stTextInput input { font-size: 0.95rem !important; }
-
-    div[data-baseweb="tab"] { color: #86868B; font-size: 0.875rem; }
-    div[data-baseweb="tab"][aria-selected="true"] { color: #1D1D1F; font-weight: 600; }
-    .stProgress > div > div { background-color: #6C63FF; }
-
-    .section-box {
-        background: #FFFFFF;
-        border: 1px solid #D2D2D7;
-        border-radius: 14px;
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 1rem;
+    .stButton > button[kind="primary"]:hover {
+        background: #0038bf; border-color: #0038bf;
     }
-    .section-tag {
-        font-size: 0.68rem;
-        font-weight: 600;
-        color: #6C63FF;
-        letter-spacing: 0.8px;
+
+    /* Typography */
+    .p2-title {
+        font-family:   'Manrope', sans-serif;
+        font-size:     1.6rem;
+        font-weight:   800;
+        color:         var(--text);
+        margin-bottom: 6px;
+    }
+    .p2-sub {
+        font-size:     0.9rem;
+        color:         var(--muted);
+        margin-bottom: 32px;
+        line-height:   1.55;
+    }
+
+    /* Step labels */
+    .step-label {
+        font-size:      0.72rem;
+        font-weight:    700;
+        color:          var(--blue);
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin-bottom: 0.5rem;
+        margin-bottom:  10px;
+        font-family:    'Inter', sans-serif;
     }
+
+    /* Form card */
+    .form-card {
+        background:    var(--card);
+        border:        1px solid var(--border);
+        border-radius: 14px;
+        padding:       28px;
+        margin-bottom: 20px;
+        box-shadow:    0 2px 12px rgba(23,28,31,.04);
+    }
+
+    /* Tabs */
+    div[data-baseweb="tab"] {
+        font-size:   0.875rem;
+        color:       var(--muted);
+        font-family: 'Inter', sans-serif;
+    }
+    div[data-baseweb="tab"][aria-selected="true"] {
+        color: var(--text); font-weight: 700;
+    }
+
+    /* Checkbox / radio */
+    .stCheckbox label { color: var(--text) !important; font-size: 0.9rem !important; font-family: 'Inter', sans-serif !important; }
+    .stRadio   label  { color: var(--text) !important; font-size: 0.875rem !important; font-family: 'Inter', sans-serif !important; }
+
+    /* Form inputs */
+    .stTextInput label  { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important; }
+    .stSelectbox label  { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important; }
+    .stTextInput input  { font-size: 1rem !important; font-family: 'Inter', sans-serif !important; }
+
+    /* Progress */
+    .stProgress > div > div { background-color: var(--blue); }
+
+    /* Divider */
+    .sd-divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
 </style>
 """, unsafe_allow_html=True)
 
+# ── Top bar ───────────────────────────────────────────────────────────────────
+st.markdown("<div style='padding-top:20px;'><span style='font-family:Manrope,sans-serif;font-size:1.2rem;font-weight:800;color:#002c98;letter-spacing:-0.02em;'>SkillDrift</span></div>", unsafe_allow_html=True)
+
+st.markdown("<hr style='border:none;border-top:1px solid #e2e8f0;margin:0 0 36px 0;'>", unsafe_allow_html=True)
+
+# Back button
 if st.button("Back to Home", key="back_home"):
     st.switch_page("pages/01_home.py")
 
+st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+
+# Page title
 st.markdown("""
-<div style="margin-bottom:1.25rem;">
-    <div style="font-size:1.6rem; font-weight:700; color:#1D1D1F;">Analyze My Career Focus</div>
-    <div style="font-size:0.9rem; color:#86868B; margin-top:0.2rem;">
-        Fill in your details, select your skills, and take a short quiz to verify what you know.
-    </div>
-</div>
+<div class="p2-title">Analyze My Career Focus</div>
+<div class="p2-sub">Fill in your details, select your skills, and take a short quiz to verify what you know.</div>
 """, unsafe_allow_html=True)
 
 ALL_SKILLS = {
@@ -145,8 +233,8 @@ ALL_SKILLS = {
 
 LEVELS = ["Beginner", "Intermediate", "Advanced"]
 
-# ── Part 1 — Name + Semester (compact, side by side) ──────────
-st.markdown('<div class="section-tag">Step 1 — Your Details</div>', unsafe_allow_html=True)
+# ── Step 1 — Details ──────────────────────────────────────────────────────────
+st.markdown('<div class="step-label">Step 1 — Your Details</div>', unsafe_allow_html=True)
 
 col_name, col_sem = st.columns([3, 1], gap="medium")
 with col_name:
@@ -164,14 +252,12 @@ with col_sem:
         format_func=lambda x: f"Sem {x}",
     )
 
-st.markdown("<div style='height:0.75rem;'></div>", unsafe_allow_html=True)
-
-# ── Part 2 — Skills ───────────────────────────────────────────
-st.markdown('<div class="section-tag">Step 2 — Select Your Skills</div>', unsafe_allow_html=True)
+# ── Step 2 — Skills ────────────────────────────────────────────────────────────
+st.markdown('<div class="step-label" style="margin-top:8px;">Step 2 — Select Your Skills</div>', unsafe_allow_html=True)
 st.markdown(
-    "<div style='font-size:0.85rem; color:#86868B; margin-bottom:0.75rem;'>"
+    "<div style='font-size:0.88rem; color:#515f74; margin-bottom:14px;'>"
     "Select every technology you have studied. Rate your level honestly — "
-    "the quiz in the next step will verify your claims."
+    "the quiz will verify your claims."
     "</div>",
     unsafe_allow_html=True,
 )
@@ -182,8 +268,8 @@ tabs = st.tabs(list(ALL_SKILLS.keys()))
 for tab, (category, skills) in zip(tabs, ALL_SKILLS.items()):
     with tab:
         st.markdown(
-            f"<div style='font-size:0.8rem; color:#86868B; margin-bottom:0.5rem;'>"
-            f"Select all that apply</div>",
+            "<div style='font-size:0.82rem;color:#515f74;margin:10px 0 12px 0;'>"
+            "Select all that apply, then set your level.</div>",
             unsafe_allow_html=True,
         )
         cols = st.columns(2)
@@ -204,8 +290,8 @@ for tab, (category, skills) in zip(tabs, ALL_SKILLS.items()):
                     )
                     selected_skills[skill] = level
 
-# ── Submit ────────────────────────────────────────────────────
-st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
+# ── Submit ─────────────────────────────────────────────────────────────────────
+st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 col_submit, col_info = st.columns([2, 3])
 
 with col_submit:
@@ -218,11 +304,10 @@ with col_submit:
 with col_info:
     if selected_skills:
         skill_count = len(selected_skills)
-        color = "#FF3B30" if skill_count > 40 else "#34C759"
+        color = "#ba1a1a" if skill_count > 40 else "#15803d"
         st.markdown(
-            f"<div style='padding-top:0.5rem;'>"
-            f"<span style='color:{color}; font-weight:600; font-size:0.9rem;'>"
-            f"{skill_count} skills selected</span></div>",
+            f"<div style='padding-top:0.5rem;font-size:0.9rem;font-weight:700;color:{color};'>"
+            f"{skill_count} skills selected</div>",
             unsafe_allow_html=True,
         )
         if skill_count > 40:
@@ -247,18 +332,19 @@ if submit_skills:
     st.success(f"Hello {name_clean}. {len(selected_skills)} skills selected. Starting quiz...")
     st.rerun()
 
-# ── Part 3 — Quiz ─────────────────────────────────────────────
+# ── Quiz ───────────────────────────────────────────────────────────────────────
 if (
     st.session_state.get("student_name")
     and st.session_state.get("selected_skills")
     and not st.session_state.get("quiz_complete")
 ):
-    st.markdown("<hr style='border:none; border-top:1px solid #D2D2D7; margin:1.5rem 0;'>",
-                unsafe_allow_html=True)
+    st.markdown("<hr style='border:none;border-top:1px solid #e2e8f0;margin:2rem 0;'>", unsafe_allow_html=True)
+
     st.markdown(
-        f"<div style='font-size:1rem; font-weight:600; color:#1D1D1F; margin-bottom:0.25rem;'>"
+        f"<div style='font-family:Manrope,sans-serif;font-size:1.1rem;font-weight:700;"
+        f"color:#171c1f;margin-bottom:6px;'>"
         f"Welcome, {st.session_state['student_name']}</div>"
-        f"<div style='font-size:0.85rem; color:#86868B;'>"
+        f"<div style='font-size:0.88rem;color:#515f74;margin-bottom:20px;'>"
         f"{len(st.session_state['selected_skills'])} skills selected — "
         f"now let us verify what you actually know.</div>",
         unsafe_allow_html=True,
@@ -301,13 +387,16 @@ if (
         st.switch_page("pages/03_drift_score.py")
 
 elif st.session_state.get("quiz_complete"):
-    st.markdown("<hr style='border:none; border-top:1px solid #D2D2D7; margin:1.5rem 0;'>",
-                unsafe_allow_html=True)
+    st.markdown("<hr style='border:none;border-top:1px solid #e2e8f0;margin:2rem 0;'>", unsafe_allow_html=True)
     st.success(f"Quiz already completed, {st.session_state['student_name']}. Navigate using the sidebar.")
 
     quiz_results = st.session_state.get("quiz_results", [])
     if quiz_results:
-        st.subheader("Your Verified Skill Levels")
+        st.markdown(
+            "<div style='font-family:Manrope,sans-serif;font-size:1rem;font-weight:700;"
+            "color:#171c1f;margin:16px 0 12px 0;'>Your Verified Skill Levels</div>",
+            unsafe_allow_html=True,
+        )
         import pandas as pd
         rows = []
         for r in quiz_results:
