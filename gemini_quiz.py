@@ -264,131 +264,147 @@ def ensure_quiz_data(selected_skills: dict):
         st.error("Cannot generate quiz - Gemini not configured.")
         return None
 
-    # Centered, professional loader card. Streamlit's default
-    # st.spinner rendered against a wide layout produced an
-    # off-center block on the Proctored Quiz page; we draw our
-    # own centered card instead so it sits in the visual middle
-    # of the page on every viewport.
-    st.markdown(
-        """
-        <style>
-        .sd-quiz-loader-wrap {
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-        .sd-quiz-loader-card {
-            width: 100%;
-            max-width: 520px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 32px 32px 28px 32px;
-            box-shadow: 0 8px 30px rgba(23,28,31,0.06);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            text-align: center;
-        }
-        .sd-quiz-loader-title {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #002c98;
-            margin-bottom: 6px;
-            letter-spacing: -0.01em;
-        }
-        .sd-quiz-loader-sub {
-            font-size: 0.88rem;
-            color: #515f74;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .sd-quiz-loader-spin {
-            width: 38px;
-            height: 38px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #002c98;
-            border-radius: 50%;
-            margin: 0 auto 18px auto;
-            animation: sd-spin 0.85s linear infinite;
-        }
-        @keyframes sd-spin { to { transform: rotate(360deg); } }
-        .sd-quiz-loader-card .stProgress > div > div {
-            background-color: #002c98 !important;
-        }
-        .sd-quiz-loader-status {
-            font-size: 0.82rem;
-            color: #171c1f;
-            font-weight: 600;
-            margin-top: 12px;
-            min-height: 1.2em;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
+    # ALL loader UI lives inside ONE st.empty() placeholder rendered
+    # as pure HTML. No st.progress, no st.spinner. That means a
+    # single .empty() call removes every trace of the loader -
+    # no leftover progress bar or status line above the next page.
     loader = st.empty()
-    with loader.container():
-        st.markdown(
-            """
-            <div class="sd-quiz-loader-wrap">
-              <div class="sd-quiz-loader-card" id="sd-quiz-loader-card">
-                <div class="sd-quiz-loader-spin"></div>
+
+    def _render_loader(progress_pct: float, current_skill: str | None,
+                       current_idx: int, total_count: int,
+                       done: bool = False):
+        # progress_pct is 0..1
+        bar_width = max(0.0, min(1.0, progress_pct)) * 100.0
+        if done:
+            status_html = (
+                "<div class='sd-quiz-loader-status' style='color:#15803d;'>"
+                "All questions generated successfully.</div>"
+            )
+            spin_html = ""
+            sub_text  = "Loading your test..."
+        else:
+            spin_html = "<div class='sd-quiz-loader-spin'></div>"
+            sub_text  = ("Our AI is preparing questions tailored to every "
+                         "skill and level you selected. This usually takes "
+                         "a few seconds.")
+            if current_skill:
+                status_html = (
+                    f"<div class='sd-quiz-loader-status'>"
+                    f"Skill {current_idx} of {total_count} &middot; "
+                    f"{current_skill}</div>"
+                )
+            else:
+                status_html = (
+                    "<div class='sd-quiz-loader-status'>Starting...</div>"
+                )
+
+        loader.markdown(
+            f"""
+            <style>
+            .sd-loader-fixed {{
+                position: fixed;
+                inset: 0;
+                background: #f6fafe;
+                z-index: 9000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }}
+            .sd-quiz-loader-card {{
+                width: 100%;
+                max-width: 520px;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 32px 32px 26px 32px;
+                box-shadow: 0 8px 30px rgba(23,28,31,0.06);
+                text-align: center;
+            }}
+            .sd-quiz-loader-title {{
+                font-family: 'Manrope', sans-serif;
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: #002c98;
+                margin-bottom: 6px;
+            }}
+            .sd-quiz-loader-sub {{
+                font-size: 0.88rem;
+                color: #515f74;
+                margin-bottom: 20px;
+                line-height: 1.5;
+            }}
+            .sd-quiz-loader-spin {{
+                width: 38px; height: 38px;
+                border: 3px solid #e2e8f0;
+                border-top-color: #002c98;
+                border-radius: 50%;
+                margin: 0 auto 18px auto;
+                animation: sd-spin 0.85s linear infinite;
+            }}
+            @keyframes sd-spin {{ to {{ transform: rotate(360deg); }} }}
+            .sd-quiz-bar-track {{
+                width: 100%;
+                height: 8px;
+                background: #e2e8f0;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-top: 4px;
+            }}
+            .sd-quiz-bar-fill {{
+                height: 100%;
+                background: #002c98;
+                border-radius: 4px;
+                transition: width 0.3s ease;
+            }}
+            .sd-quiz-loader-status {{
+                font-size: 0.82rem;
+                color: #171c1f;
+                font-weight: 600;
+                margin-top: 14px;
+                min-height: 1.2em;
+            }}
+            </style>
+            <div class="sd-loader-fixed">
+              <div class="sd-quiz-loader-card">
+                {spin_html}
                 <div class="sd-quiz-loader-title">Generating your personalized quiz</div>
-                <div class="sd-quiz-loader-sub">
-                  Our AI is preparing questions tailored to every skill
-                  and level you selected. This usually takes a few seconds.
+                <div class="sd-quiz-loader-sub">{sub_text}</div>
+                <div class="sd-quiz-bar-track">
+                  <div class="sd-quiz-bar-fill" style="width:{bar_width:.1f}%;"></div>
                 </div>
+                {status_html}
               </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        prog_placeholder = st.empty()
-        status_placeholder = st.empty()
 
-        with prog_placeholder.container():
-            prog = st.progress(0)
+    _render_loader(0.0, None, 0, max(len(selected_skills), 1))
 
-        quiz_data = []
-        total = max(len(selected_skills), 1)
-        for i, (skill, level) in enumerate(selected_skills.items()):
-            with prog_placeholder.container():
-                prog = st.progress(
-                    i / total,
-                    text=f"Preparing questions for {skill} ({level})...",
-                )
-            status_placeholder.markdown(
-                f"<div class='sd-quiz-loader-status'>"
-                f"Skill {i+1} of {total} &middot; {skill}</div>",
-                unsafe_allow_html=True,
-            )
-            prompt    = build_quiz_prompt(skill, level)
-            questions = call_gemini_with_retry(prompt, skill)
-            source = "gemini"
-            if not questions:
-                questions = fallback_questions(skill, level)
-                source = "fallback"
-            quiz_data.append({
-                "skill":     skill,
-                "level":     level,
-                "questions": questions[:3],
-                "source":    source,
-            })
-            time.sleep(0.25)
+    quiz_data = []
+    total = max(len(selected_skills), 1)
+    for i, (skill, level) in enumerate(selected_skills.items()):
+        _render_loader(i / total, skill, i + 1, total)
+        prompt    = build_quiz_prompt(skill, level)
+        questions = call_gemini_with_retry(prompt, skill)
+        source = "gemini"
+        if not questions:
+            questions = fallback_questions(skill, level)
+            source = "fallback"
+        quiz_data.append({
+            "skill":     skill,
+            "level":     level,
+            "questions": questions[:3],
+            "source":    source,
+        })
+        time.sleep(0.2)
 
-        with prog_placeholder.container():
-            prog = st.progress(1.0, text="Questions ready.")
-        status_placeholder.markdown(
-            "<div class='sd-quiz-loader-status' style='color:#15803d;'>"
-            "All questions generated successfully.</div>",
-            unsafe_allow_html=True,
-        )
-        time.sleep(0.4)
+    _render_loader(1.0, None, total, total, done=True)
+    time.sleep(0.4)
 
-    # Clear the loader card so the quiz UI can render cleanly
+    # Clear EVERY pixel of loader UI completely.
     loader.empty()
 
     st.session_state["quiz_data"]     = quiz_data

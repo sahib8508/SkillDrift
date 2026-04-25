@@ -1,6 +1,6 @@
 # pages/02b_quiz.py
 # =============================================================
-# SkillDrift proctored quiz - HARDENED FINAL VERSION
+# SkillDrift proctored quiz - HARDENED FINAL
 # =============================================================
 
 import time
@@ -49,8 +49,28 @@ MAX_VIOLATIONS    = get_max_violations()
 NO_FACE_THRESHOLD = int(get_no_face_threshold())
 
 
+def _full_page_reset():
+    """Wipe ALL quiz / proctor / control state from session, in
+    memory AND on disk. Used after Restart from a terminated test
+    so the new run starts genuinely clean."""
+    reset_quiz_state(full=False)
+    reset_proctor_state()
+    # Explicitly set False (not pop) - session_store loads whitelisted
+    # keys back from disk on next page load; popping alone leaves the
+    # old True value in the JSON file.
+    st.session_state["quiz_terminated"] = False
+    st.session_state["quiz_started"]    = False
+    st.session_state["quiz_complete"]   = False
+    for k in ("_starting", "_camera_locked", "_camera_confirmed",
+              "_proctor_reset_done", "_seen_ts", "_seen_fx",
+              "_confirm_cancel", "_cam_label",
+              "proctor_violations"):
+        st.session_state.pop(k, None)
+    save_session()
+
+
 # =============================================================
-# 0. CSS  (single block, no per-rerun re-injection)
+# 0. CSS  (single block)
 # =============================================================
 
 st.markdown("""
@@ -88,7 +108,16 @@ body.sd-test-running .block-container {
   padding-right: 340px !important;
 }
 
-/* ---------- Header card ---------- */
+/* Hide every leftover empty Streamlit element-container that would
+   otherwise show as a thin white horizontal bar. This kills the
+   stray progress bar / status banner sliver above the header. */
+.element-container:empty,
+.element-container:has(> div:empty),
+[data-testid="stVerticalBlockBorderWrapper"]:empty {
+  display: none !important;
+}
+
+/* ---------- Header ---------- */
 .q-header {
   background: #002c98; color: #fff; border-radius: 12px;
   padding: 18px 24px; display: flex; justify-content: space-between;
@@ -131,6 +160,41 @@ body.sd-test-running .block-container {
   border: 1px solid #e2e8f0; line-height: 1.55;
 }
 
+/* ---------- Starting overlay (covers the page during the
+              brief rerun between Start click and in-test view) ---------- */
+.sd-starting-overlay {
+  position: fixed; inset: 0;
+  background: #f6fafe;
+  z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif;
+}
+.sd-starting-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(23,28,31,0.06);
+}
+.sd-starting-card .h {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.1rem; font-weight: 800; color: #002c98;
+  margin-bottom: 6px;
+}
+.sd-starting-card .p {
+  font-size: 0.88rem; color: #515f74;
+}
+.sd-starting-spin {
+  width: 36px; height: 36px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #002c98;
+  border-radius: 50%;
+  margin: 0 auto 16px auto;
+  animation: sd-spin 0.85s linear infinite;
+}
+@keyframes sd-spin { to { transform: rotate(360deg); } }
+
 /* ---------- Rules strip ---------- */
 .q-instr {
   font-size: 0.84rem; color: #515f74; margin: 16px 0 22px 0;
@@ -140,7 +204,7 @@ body.sd-test-running .block-container {
 }
 .q-instr b { color: #171c1f; }
 
-/* ---------- Cam-wait ---------- */
+/* ---------- Cam-wait notice ---------- */
 .cam-wait {
   background: #ffffff; border: 1px solid #e2e8f0;
   border-left: 4px solid #f59e0b; border-radius: 10px;
@@ -183,7 +247,6 @@ div[data-testid="stRadio"] > div[role="radiogroup"] > label {
 div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
   border-color: #002c98; background: #eef2ff;
 }
-
 .q-fallback-badge {
   background: #fff7ed; color: #9a3412; border: 1px solid #fdba74;
   border-radius: 6px; padding: 2px 9px; font-size: 0.7rem;
@@ -217,13 +280,11 @@ div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
 .stButton > button[kind="primary"]:hover,
 .stForm button[kind="primary"]:hover { background: #0038bf; border-color: #0038bf; }
 
-/* ---------- PINNED CAMERA SHELL ---------- */
+/* ---------- Pinned camera shell ---------- */
 div.sd-cam-pinned {
   position: fixed !important;
-  top: 14px !important;
-  right: 14px !important;
-  width: 300px !important;
-  z-index: 9999 !important;
+  top: 14px !important; right: 14px !important;
+  width: 300px !important; z-index: 9999 !important;
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
   border-top: 3px solid #002c98 !important;
@@ -245,9 +306,9 @@ div.sd-cam-pinned video {
   width: 100% !important;
   border-radius: 8px !important;
   background: #000 !important;
-  pointer-events: none !important;  /* never let user click the video */
+  pointer-events: none !important;
 }
-/* Kill native HTML5 media controls on the camera video. */
+/* Always remove native HTML5 media controls on the camera <video>. */
 div.sd-cam-pinned video::-webkit-media-controls,
 div.sd-cam-pinned video::-webkit-media-controls-enclosure,
 div.sd-cam-pinned video::-webkit-media-controls-panel,
@@ -268,17 +329,13 @@ div.sd-cam-pinned video::-internal-media-controls-overlay-cast-button {
 }
 div.sd-cam-pinned iframe { width: 100% !important; }
 
-/* Compact webrtc widget controls */
 div.sd-cam-pinned button {
-  font-size: 0.74rem !important;
-  padding: 4px 10px !important;
+  font-size: 0.74rem !important; padding: 4px 10px !important;
   min-height: 28px !important; height: 28px !important;
 }
 div.sd-cam-pinned select {
   font-size: 0.74rem !important; padding: 3px 6px !important;
 }
-
-/* Status panel */
 div.sd-cam-pinned .sd-cam-status {
   margin-top: 10px; background: #f6fafe;
   border: 1px solid #e2e8f0; border-radius: 8px;
@@ -290,30 +347,36 @@ div.sd-cam-pinned .sd-cam-status .row {
 }
 div.sd-cam-pinned .sd-cam-status .label { color: #515f74; }
 div.sd-cam-pinned .sd-cam-status .val   { font-weight: 700; }
-
-/* Hide streamlit-webrtc internal status banner */
 div.sd-cam-pinned [data-testid="stStatusWidget"],
 div.sd-cam-pinned [data-baseweb="notification"] { display: none !important; }
 
-/* ---------- LOCKED CAMERA: bullet-proof control hiding ----------
-   Once the camera is locked we render an opaque overlay div on top
-   of the entire webrtc widget area. This blocks STOP / SELECT DEVICE
-   regardless of how streamlit-webrtc structures its DOM internally.
-*/
-.sd-cam-locked-overlay {
+/* ---------- LOCKED CAMERA: opaque overlay over the entire
+              webrtc widget controls area. Set inside cam shell
+              via JS once _camera_confirmed=True. ---------- */
+div.sd-cam-pinned .sd-cam-lock-shield {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 50px;          /* covers the controls row at the bottom */
-  background: linear-gradient(180deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.85) 30%,
-    rgba(255,255,255,1.0) 100%);
+  left: 0; right: 0;
+  bottom: auto; top: 0;
+  height: 100%;
   z-index: 50;
-  pointer-events: auto;  /* eat all clicks */
+  pointer-events: none;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 6px;
+}
+/* The actual control-blocker covers ONLY the bottom region where
+   START/STOP/SELECT DEVICE live, leaving the video preview clear. */
+div.sd-cam-pinned .sd-cam-lock-bottom {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 56px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  z-index: 60;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
@@ -321,7 +384,6 @@ div.sd-cam-pinned [data-baseweb="notification"] { display: none !important; }
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-div.sd-cam-pinned { position: fixed !important; }
 div.sd-cam-pinned > div { position: relative; }
 
 /* ---------- WARNING MODAL ---------- */
@@ -345,14 +407,13 @@ div.sd-cam-pinned > div { position: relative; }
   font-size: 0.95rem; color: #171c1f; line-height: 1.6; margin-bottom: 22px;
 }
 .sd-warn-card .hint { font-size: 0.82rem; color: #515f74; margin-bottom: 14px; }
-
 .sd-warn-ack-wrap {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, 80px);
   z-index: 100001; width: 320px; max-width: 80vw;
 }
 
-/* ---------- CONFIRM-DEVICE MODAL ---------- */
+/* ---------- Confirm-camera modal ---------- */
 .sd-confirm-overlay {
   position: fixed; inset: 0;
   background: rgba(15, 23, 42, 0.55);
@@ -372,6 +433,11 @@ div.sd-cam-pinned > div { position: relative; }
 }
 .sd-confirm-card .p {
   font-size: 0.92rem; color: #171c1f; line-height: 1.55; margin-bottom: 16px;
+}
+.sd-confirm-ack-wrap {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, 60px);
+  z-index: 99999; width: 460px; max-width: 92vw;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -400,15 +466,10 @@ if st.session_state.get("quiz_complete"):
 
 
 # =============================================================
-# 2. TERMINATED SCREEN
-# (Do NOT call render_proctor_camera here - it triggers the
-#  streamlit-webrtc shutdown crash. Just show the message and
-#  let the user navigate away. The next page will not have
-#  the widget so the camera ends naturally.)
+# 2. TERMINATED SCREEN  (no webrtc calls here)
 # =============================================================
 
 snap = get_proctor_snapshot()
-st.session_state["proctor_violations"] = snap["violations"]
 
 if snap["violations"] >= MAX_VIOLATIONS:
     st.session_state["quiz_terminated"] = True
@@ -434,19 +495,20 @@ if st.session_state.get("quiz_terminated"):
     with c1:
         if st.button("Restart from Beginning", type="primary",
                      use_container_width=True, key="qz_restart"):
-            reset_quiz_state(full=True)
-            reset_proctor_state()
-            for k in ("quiz_terminated", "quiz_started", "_starting",
-                      "_camera_locked", "_camera_confirmed",
-                      "_proctor_reset_done", "_seen_ts", "_seen_fx",
-                      "_confirm_cancel"):
-                st.session_state.pop(k, None)
-            save_session()
+            _full_page_reset()
             if HAS_JS_EVAL:
                 try:
                     streamlit_js_eval(
-                        js_expressions="(document.exitFullscreen ? document.exitFullscreen() : null)",
-                        key="exit_fs_term_r",
+                        js_expressions=(
+                            "(function(){"
+                            "  if (document.exitFullscreen) document.exitFullscreen();"
+                            "  if (window._sdProctorAttached) {"
+                            "    window._sdTabSwitches = 0;"
+                            "    window._sdFsExits = 0;"
+                            "  } return 1;"
+                            "})()"
+                        ),
+                        key="reset_js_r",
                     )
                 except Exception:
                     pass
@@ -454,19 +516,20 @@ if st.session_state.get("quiz_terminated"):
     with c2:
         if st.button("Go Back to Home", use_container_width=True,
                      key="qz_goback"):
-            reset_quiz_state(full=True)
-            reset_proctor_state()
-            for k in ("quiz_terminated", "quiz_started", "_starting",
-                      "_camera_locked", "_camera_confirmed",
-                      "_proctor_reset_done", "_seen_ts", "_seen_fx",
-                      "_confirm_cancel"):
-                st.session_state.pop(k, None)
-            save_session()
+            _full_page_reset()
             if HAS_JS_EVAL:
                 try:
                     streamlit_js_eval(
-                        js_expressions="(document.exitFullscreen ? document.exitFullscreen() : null)",
-                        key="exit_fs_term_g",
+                        js_expressions=(
+                            "(function(){"
+                            "  if (document.exitFullscreen) document.exitFullscreen();"
+                            "  if (window._sdProctorAttached) {"
+                            "    window._sdTabSwitches = 0;"
+                            "    window._sdFsExits = 0;"
+                            "  } return 1;"
+                            "})()"
+                        ),
+                        key="reset_js_g",
                     )
                 except Exception:
                     pass
@@ -475,40 +538,58 @@ if st.session_state.get("quiz_terminated"):
 
 
 # =============================================================
-# 3. GENERATE QUESTIONS
+# 3. STARTING OVERLAY  (between Start click and in-test render)
 # =============================================================
+# The "_starting" flag is set by the Start button. When True we
+# show ONLY a centered loader covering the page - no pre-panel
+# duplicate, no shadow. quiz_started is set immediately so the
+# next rerun goes directly into the in-test path.
 
-selected_skills = st.session_state["selected_skills"]
-student_name    = st.session_state["student_name"]
+if st.session_state.get("_starting") and not st.session_state.get("quiz_started"):
+    st.session_state["quiz_started"] = True
+    save_session()
 
-if not st.session_state.get("_proctor_reset_done"):
-    reset_proctor_state()
-    st.session_state["_proctor_reset_done"] = True
-    if not st.session_state.get("quiz_started"):
-        st.session_state["quiz_started"] = False
-
-quiz_data = ensure_quiz_data(selected_skills)
-if not quiz_data:
-    st.error("Failed to generate quiz questions. Please go back and try again.")
-    if st.button("Go Back"):
-        st.switch_page("pages/02_skill_input.py")
-    st.stop()
+if st.session_state.get("_starting") and not st.session_state.get("_starting_dismissed"):
+    # Render full-screen loader. Do NOT render anything else.
+    st.markdown(
+        """
+        <div class="sd-starting-overlay">
+          <div class="sd-starting-card">
+            <div class="sd-starting-spin"></div>
+            <div class="h">Starting proctored test</div>
+            <div class="p">Entering fullscreen and preparing the camera...</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    # Brief pause so the overlay actually paints, then drop the flag
+    # and rerun directly into the in-test view.
+    time.sleep(0.4)
+    st.session_state["_starting_dismissed"] = True
+    save_session()
+    st.rerun()
 
 
 # =============================================================
 # 4. PRE-START GATE
 # =============================================================
 
-quiz_started = st.session_state.get("quiz_started", False)
+if not st.session_state.get("quiz_started"):
+    selected_skills = st.session_state["selected_skills"]
+    student_name    = st.session_state["student_name"]
 
-if not quiz_started:
-    # If a previous click set _starting=True but the rerun
-    # hadn't yet flipped quiz_started, flip it NOW and rerun.
-    # This kills the "two Start buttons" flash.
-    if st.session_state.get("_starting"):
-        st.session_state["quiz_started"] = True
-        save_session()
-        st.rerun()
+    # Reset proctor state cleanly the first time we hit the gate
+    if not st.session_state.get("_proctor_reset_done"):
+        reset_proctor_state()
+        st.session_state["_proctor_reset_done"] = True
+
+    quiz_data = ensure_quiz_data(selected_skills)
+    if not quiz_data:
+        st.error("Failed to generate quiz questions. Please go back and try again.")
+        if st.button("Go Back"):
+            st.switch_page("pages/02_skill_input.py")
+        st.stop()
 
     total_q = sum(len(x['questions']) for x in quiz_data)
     st.markdown(
@@ -570,26 +651,27 @@ if not quiz_started:
         )
 
     if cancel_clicked_pre:
-        reset_quiz_state(full=False)
-        reset_proctor_state()
-        for k in ("_starting", "_camera_locked", "_camera_confirmed"):
-            st.session_state.pop(k, None)
-        save_session()
+        _full_page_reset()
         st.switch_page("pages/01_home.py")
 
     if start_clicked:
-        st.session_state["_starting"] = True
-        st.session_state["quiz_started"] = True
-        save_session()
+        # Reset JS-side counters BEFORE entering test so any earlier
+        # alt-tabs done while reading instructions don't count.
         if HAS_JS_EVAL:
             try:
                 streamlit_js_eval(
                     js_expressions=(
                         "(function(){"
+                        "  if (window._sdProctorAttached) {"
+                        "    window._sdTabSwitches = 0;"
+                        "    window._sdFsExits = 0;"
+                        "  }"
                         "  var d = window.parent.document.documentElement;"
-                        "  if (d.requestFullscreen) { d.requestFullscreen(); }"
-                        "  else if (d.webkitRequestFullscreen) { d.webkitRequestFullscreen(); }"
-                        "  else if (d.msRequestFullscreen) { d.msRequestFullscreen(); }"
+                        "  try {"
+                        "    if (d.requestFullscreen) d.requestFullscreen();"
+                        "    else if (d.webkitRequestFullscreen) d.webkitRequestFullscreen();"
+                        "    else if (d.msRequestFullscreen) d.msRequestFullscreen();"
+                        "  } catch (e) {}"
                         "  return 1;"
                         "})()"
                     ),
@@ -597,18 +679,32 @@ if not quiz_started:
                 )
             except Exception:
                 pass
+        st.session_state["_starting"] = True
+        st.session_state["_seen_ts"] = 0
+        st.session_state["_seen_fx"] = 0
+        save_session()
         st.rerun()
 
     st.stop()
 
 
 # =============================================================
-# 5. BODY CLASS  (test is running)
+# 5. IN-TEST  -  body class + helpers
 # =============================================================
 
-camera_locked = st.session_state.get("_camera_locked", False)
+selected_skills = st.session_state["selected_skills"]
+student_name    = st.session_state["student_name"]
+
+quiz_data = ensure_quiz_data(selected_skills)
+if not quiz_data:
+    st.error("Failed to generate quiz questions. Please go back and try again.")
+    if st.button("Go Back"):
+        st.switch_page("pages/02_skill_input.py")
+    st.stop()
+
+camera_confirmed = st.session_state.get("_camera_confirmed", False)
 classes = ["sd-test-running"]
-if camera_locked:
+if camera_confirmed:
     classes.append("sd-cam-locked")
 
 components.html(
@@ -628,7 +724,7 @@ components.html(
 
 
 # =============================================================
-# 6. WARNING MODAL  (rendered FIRST, no autorefresh while open)
+# 6. WARNING MODAL  (rendered first; no autorefresh while open)
 # =============================================================
 
 pending = snap.get("pending_warning") or ""
@@ -648,15 +744,13 @@ if pending:
         unsafe_allow_html=True,
     )
 
-    ack_holder = st.empty()
-    with ack_holder.container():
-        st.markdown('<div id="sd-warn-ack-anchor"></div>', unsafe_allow_html=True)
-        ack_clicked = st.button(
-            "I understand, continue test",
-            type="primary",
-            use_container_width=True,
-            key=f"ack_warning_{int(snap.get('pending_warning_at', 0))}",
-        )
+    st.markdown('<div id="sd-warn-ack-anchor"></div>', unsafe_allow_html=True)
+    ack_clicked = st.button(
+        "I understand, continue test",
+        type="primary",
+        use_container_width=True,
+        key=f"ack_warning_{int(snap.get('pending_warning_at', 0))}",
+    )
 
     components.html(
         """
@@ -680,10 +774,7 @@ if pending:
             return true;
           }
           var n = 0;
-          var t = setInterval(function(){
-            n++;
-            if (move() || n > 20) clearInterval(t);
-          }, 50);
+          var t = setInterval(function(){ n++; if (move() || n>30) clearInterval(t); }, 40);
         })();
         </script>
         """,
@@ -698,9 +789,10 @@ if pending:
                     js_expressions=(
                         "(function(){"
                         "  var d = window.parent.document.documentElement;"
-                        "  if (d.requestFullscreen) { d.requestFullscreen(); }"
-                        "  else if (d.webkitRequestFullscreen) { d.webkitRequestFullscreen(); }"
-                        "  else if (d.msRequestFullscreen) { d.msRequestFullscreen(); }"
+                        "  try {"
+                        "    if (d.requestFullscreen) d.requestFullscreen();"
+                        "    else if (d.webkitRequestFullscreen) d.webkitRequestFullscreen();"
+                        "  } catch (e) {}"
                         "  return 1;"
                         "})()"
                     ),
@@ -715,10 +807,21 @@ if pending:
 
 
 # =============================================================
-# 7. AUTOREFRESH + JS BRIDGES (only when no warning)
+# 7. AUTOREFRESH + JS BRIDGE  (runs only when no modal blocks it)
 # =============================================================
 
-if HAS_AUTOREFRESH:
+# IMPORTANT: do NOT autorefresh while the confirm-device modal is
+# up either - that's the same bug as the warning modal.
+modal_active = (
+    not st.session_state.get("_camera_confirmed")
+    and any([
+        # camera is running (modal will be shown below)
+        snap["running"] and snap["last_frame_time"] is not None
+        and (time.time() - snap["last_frame_time"]) < 5,
+    ])
+)
+
+if HAS_AUTOREFRESH and not modal_active:
     st_autorefresh(interval=2500, key="quiz_autorefresh")
 
 if HAS_JS_EVAL:
@@ -741,16 +844,31 @@ if HAS_JS_EVAL:
         w._sdProctorAttached = true;
         w._sdTabSwitches = 0;
         w._sdFsExits     = 0;
+        w._sdLastEventAt = 0;
+
+        function bumpTabSwitch() {
+          // Debounce: ignore bumps within 1500 ms of any prior event
+          var now = Date.now();
+          if (now - w._sdLastEventAt < 1500) return;
+          w._sdLastEventAt = now;
+          w._sdTabSwitches = (w._sdTabSwitches || 0) + 1;
+        }
+        function bumpFsExit() {
+          var now = Date.now();
+          // If we just counted a tab switch, do NOT also count an
+          // implicit fullscreen exit - alt-tab triggers both.
+          if (now - w._sdLastEventAt < 1500) return;
+          w._sdLastEventAt = now;
+          w._sdFsExits = (w._sdFsExits || 0) + 1;
+        }
 
         d.addEventListener('visibilitychange', function() {
-          if (d.hidden) { w._sdTabSwitches = (w._sdTabSwitches || 0) + 1; }
+          if (d.hidden) bumpTabSwitch();
         });
-        w.addEventListener('blur', function() {
-          w._sdTabSwitches = (w._sdTabSwitches || 0) + 1;
-        });
+        w.addEventListener('blur', function() { bumpTabSwitch(); });
         d.addEventListener('fullscreenchange', function() {
           if (!d.fullscreenElement) {
-            w._sdFsExits = (w._sdFsExits || 0) + 1;
+            bumpFsExit();
             var oneShot = function() {
               reqFs();
               d.removeEventListener('click',   oneShot, true);
@@ -795,24 +913,23 @@ if HAS_JS_EVAL:
         d.addEventListener('keydown', oneShot2, true);
       }
 
-      // Read selected camera device label, if any.
+      // Read selected camera label & strip native video controls.
       var camLabel = '';
       try {
         var vids = d.querySelectorAll('video');
         for (var vi = 0; vi < vids.length; vi++) {
           var v = vids[vi];
+          try {
+            v.removeAttribute('controls');
+            v.controls = false;
+            v.disablePictureInPicture = true;
+            v.setAttribute('disablePictureInPicture','');
+            v.setAttribute('controlslist','nodownload nofullscreen noremoteplayback noplaybackrate');
+          } catch (eVid) {}
           if (v && v.srcObject && v.srcObject.getVideoTracks) {
             var ts = v.srcObject.getVideoTracks();
             if (ts && ts.length > 0 && ts[0].label) {
               camLabel = ts[0].label;
-              // Also strip any native controls attribute
-              try {
-                v.removeAttribute('controls');
-                v.controls = false;
-                v.disablePictureInPicture = true;
-                v.setAttribute('disablePictureInPicture','');
-                v.setAttribute('controlslist','nodownload nofullscreen noremoteplayback noplaybackrate');
-              } catch (eVid) {}
               break;
             }
           }
@@ -829,19 +946,23 @@ if HAS_JS_EVAL:
     )
 
     if isinstance(js_result, list) and len(js_result) >= 2:
-        ts, fx = int(js_result[0] or 0), int(js_result[1] or 0)
+        ts = int(js_result[0] or 0)
+        fx = int(js_result[1] or 0)
         prev_ts = st.session_state.get("_seen_ts", 0)
         prev_fx = st.session_state.get("_seen_fx", 0)
-        for _ in range(max(0, ts - prev_ts)):
+        # Cap deltas at 1 per poll to be safe against any rare double
+        # counting. With proctor.py's pending+cooldown guards this is
+        # mostly defence-in-depth.
+        if ts > prev_ts:
             add_tab_switch_violation()
-        for _ in range(max(0, fx - prev_fx)):
+            st.session_state["_seen_ts"] = ts
+        if fx > prev_fx:
             add_fullscreen_exit_violation()
-        st.session_state["_seen_ts"] = ts
-        st.session_state["_seen_fx"] = fx
+            st.session_state["_seen_fx"] = fx
         if len(js_result) >= 3 and js_result[2]:
             st.session_state["_cam_label"] = str(js_result[2])
+        # Re-snapshot and check for terminal state
         snap = get_proctor_snapshot()
-        st.session_state["proctor_violations"] = snap["violations"]
         if snap["violations"] >= MAX_VIOLATIONS:
             st.session_state["quiz_terminated"] = True
             save_session()
@@ -877,11 +998,8 @@ st.markdown(
 
 
 # =============================================================
-# 9. PINNED CAMERA + STATUS PANEL
+# 9. PINNED CAMERA + STATUS
 # =============================================================
-
-st.markdown('<div id="sd-cam-wrap-marker" style="display:none;"></div>',
-            unsafe_allow_html=True)
 
 cam_container = st.container()
 with cam_container:
@@ -897,10 +1015,6 @@ cam_running = (
     and (time.time() - snap["last_frame_time"]) < 5
 )
 
-if cam_running and not camera_locked:
-    st.session_state["_camera_locked"] = True
-    save_session()
-
 face_status = "Detected" if snap["face_present"] else "Not detected"
 face_color  = "#15803d" if snap["face_present"] else "#dc2626"
 cam_status  = "Active" if cam_running else "Not started"
@@ -912,10 +1026,15 @@ recording_indicator = (
     "<span style='color:#9a3412;'>Awaiting camera</span>"
 )
 cam_label = st.session_state.get("_cam_label", "")
-if cam_label and len(cam_label) > 28:
-    cam_label_display = cam_label[:26] + "..."
+if cam_label:
+    if len(cam_label) > 26:
+        cam_label_display = cam_label[:24] + "..."
+    else:
+        cam_label_display = cam_label
+elif cam_running:
+    cam_label_display = "Default camera"
 else:
-    cam_label_display = cam_label or "(none yet)"
+    cam_label_display = "Not set"
 
 with cam_container:
     st.markdown(
@@ -939,8 +1058,7 @@ with cam_container:
         unsafe_allow_html=True,
     )
 
-# Pin the cam block + (when locked) inject the opaque overlay
-# that physically covers STOP / SELECT DEVICE.
+# Pin cam shell + (when locked) inject control-blocker overlay.
 components.html("""
 <script>
 (function(){
@@ -966,8 +1084,7 @@ components.html("""
     if (!camBlock.classList.contains('sd-cam-pinned')) {
       camBlock.classList.add('sd-cam-pinned');
     }
-
-    // Strip native controls from any <video> inside the cam shell.
+    // Strip native controls on every <video> inside the cam shell.
     var vids = camBlock.querySelectorAll('video');
     for (var vi = 0; vi < vids.length; vi++) {
       var v = vids[vi];
@@ -980,16 +1097,19 @@ components.html("""
       } catch (eVid) {}
     }
 
-    // If body has sd-cam-locked, ensure the lock overlay exists
-    // INSIDE the cam shell so it visually covers STOP/SELECT DEVICE.
+    // Lock overlay over the controls when body has sd-cam-locked.
     var locked = doc.body.classList.contains('sd-cam-locked');
-    var existing = camBlock.querySelector('.sd-cam-locked-overlay');
+    var existing = camBlock.querySelector('.sd-cam-lock-bottom');
     if (locked && !existing) {
       var ov = doc.createElement('div');
-      ov.className = 'sd-cam-locked-overlay';
+      ov.className = 'sd-cam-lock-bottom';
       ov.textContent = 'Camera locked for proctoring';
-      ov.addEventListener('click',   function(e){ e.preventDefault(); e.stopPropagation(); }, true);
+      ov.addEventListener('click',     function(e){ e.preventDefault(); e.stopPropagation(); }, true);
       ov.addEventListener('mousedown', function(e){ e.preventDefault(); e.stopPropagation(); }, true);
+      // Ensure parent is a positioning context.
+      camBlock.style.position = 'fixed';
+      var inner = camBlock.querySelector(':scope > div');
+      if (inner) inner.style.position = 'relative';
       camBlock.appendChild(ov);
     } else if (!locked && existing) {
       existing.remove();
@@ -1000,7 +1120,7 @@ components.html("""
   var t = setInterval(function(){
     tries++;
     pinAndLock();
-    if (tries > 40) clearInterval(t);
+    if (tries > 50) clearInterval(t);
   }, 100);
 })();
 </script>
@@ -1008,8 +1128,10 @@ components.html("""
 
 
 # =============================================================
-# 10. CONFIRM-DEVICE MODAL  (first time camera goes live)
+# 10. CONFIRM-DEVICE MODAL
 # =============================================================
+# Note: autorefresh is disabled when this modal is up (see step 7),
+# so the "Confirm and continue" button is reliably clickable.
 
 if cam_running and not st.session_state.get("_camera_confirmed"):
     st.markdown(
@@ -1025,9 +1147,12 @@ if cam_running and not st.session_state.get("_camera_confirmed"):
             </div>
           </div>
         </div>
+        <div class="sd-confirm-ack-wrap" id="sd-confirm-ack-wrap"></div>
         """,
         unsafe_allow_html=True,
     )
+
+    st.markdown('<div id="sd-confirm-ack-anchor"></div>', unsafe_allow_html=True)
     cc1, cc2 = st.columns(2, gap="medium")
     with cc1:
         if st.button("Confirm and continue",
@@ -1041,20 +1166,55 @@ if cam_running and not st.session_state.get("_camera_confirmed"):
         if st.button("Cancel test",
                      use_container_width=True,
                      key="cancel_cam_confirm"):
-            reset_quiz_state(full=False)
-            reset_proctor_state()
-            for k in ("_starting", "_camera_locked", "_camera_confirmed"):
-                st.session_state.pop(k, None)
-            save_session()
+            _full_page_reset()
             if HAS_JS_EVAL:
                 try:
                     streamlit_js_eval(
-                        js_expressions="(document.exitFullscreen ? document.exitFullscreen() : null)",
+                        js_expressions=(
+                            "(function(){"
+                            "  if (document.exitFullscreen) document.exitFullscreen();"
+                            "  if (window._sdProctorAttached) {"
+                            "    window._sdTabSwitches = 0;"
+                            "    window._sdFsExits = 0;"
+                            "  } return 1;"
+                            "})()"
+                        ),
                         key="exit_fs_cancel_confirm",
                     )
                 except Exception:
                     pass
             st.switch_page("pages/01_home.py")
+
+    # Move the two confirm buttons into the modal-anchored wrap so
+    # they sit visually inside the modal, above the dim backdrop.
+    components.html(
+        """
+        <script>
+        (function(){
+          var doc = window.parent.document;
+          function move(){
+            var anchor = doc.getElementById('sd-confirm-ack-anchor');
+            var dest   = doc.getElementById('sd-confirm-ack-wrap');
+            if (!anchor || !dest) return false;
+            // The two buttons are each in their own stColumn, all
+            // contained in the same stHorizontalBlock that sits
+            // right after the anchor.
+            var block = anchor.closest('[data-testid="stVerticalBlock"]')
+                      || anchor.parentElement;
+            if (!block) return false;
+            var horiz = block.querySelector('[data-testid="stHorizontalBlock"]');
+            if (!horiz) return false;
+            if (dest.firstChild !== horiz) dest.appendChild(horiz);
+            return true;
+          }
+          var n = 0;
+          var t = setInterval(function(){ n++; if (move() || n>40) clearInterval(t); }, 40);
+        })();
+        </script>
+        """,
+        height=0,
+    )
+
     st.stop()
 
 
@@ -1192,16 +1352,19 @@ with st.form("skill_quiz_form", clear_on_submit=False):
 
 if cancel_clicked:
     if st.session_state.get("_confirm_cancel"):
-        for k in ("_confirm_cancel", "_starting",
-                  "_camera_locked", "_camera_confirmed"):
-            st.session_state.pop(k, None)
-        reset_quiz_state(full=False)
-        reset_proctor_state()
-        save_session()
+        _full_page_reset()
         if HAS_JS_EVAL:
             try:
                 streamlit_js_eval(
-                    js_expressions="(document.exitFullscreen ? document.exitFullscreen() : null)",
+                    js_expressions=(
+                        "(function(){"
+                        "  if (document.exitFullscreen) document.exitFullscreen();"
+                        "  if (window._sdProctorAttached) {"
+                        "    window._sdTabSwitches = 0;"
+                        "    window._sdFsExits = 0;"
+                        "  } return 1;"
+                        "})()"
+                    ),
                     key="exit_fs_cancel",
                 )
             except Exception:

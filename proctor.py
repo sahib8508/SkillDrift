@@ -41,15 +41,13 @@ _DEFAULT_STATE = {
     "tab_switches":         0,
     "face_misses":          0,
     "fs_exits":             0,
-    # Latest unacknowledged warning (str or empty)
     "pending_warning":      "",
     "pending_warning_at":   0.0,
-    # Reason history for audit
-    "violation_log":        [],   # list of {reason, at}
+    "violation_log":        [],
 }
 
 _STATE = dict(_DEFAULT_STATE)
-_STATE["violation_log"] = []     # fresh list, not shared ref
+_STATE["violation_log"] = []
 
 
 _FACE_CASCADE = None
@@ -66,8 +64,7 @@ def _get_face_cascade():
 # =============================================================
 
 def reset_proctor_state():
-    """Wipe all in-memory proctor state. Called on test start
-    and on full reset (cancel / restart)."""
+    """Wipe all in-memory proctor state."""
     with _LOCK:
         _STATE.update({
             "no_face_seconds":      0.0,
@@ -90,7 +87,6 @@ def get_proctor_snapshot() -> dict:
     """Read-only copy of the current proctor state."""
     with _LOCK:
         snap = dict(_STATE)
-        # Deep-copy the log so callers can't mutate shared state
         snap["violation_log"] = list(_STATE["violation_log"])
         return snap
 
@@ -100,22 +96,31 @@ def get_max_violations() -> int:
 
 
 def get_no_face_threshold() -> float:
-    """Seconds of continuous no-face before a violation is recorded."""
     return NO_FACE_VIOLATION_SECONDS
 
 
 def acknowledge_warning():
-    """Clear the pending warning after the user clicks
-    'I understand'. Does NOT decrement the violation count."""
+    """Clear the pending warning. Does NOT decrement count."""
     with _LOCK:
         _STATE["pending_warning"]    = ""
         _STATE["pending_warning_at"] = 0.0
 
 
 def _record_violation(reason: str, counter_key: str):
-    """Internal helper. Increments the right counters and
-    sets the pending warning so the UI can display it."""
+    """Internal helper. Caller must already hold _LOCK."""
     now = time.time()
+
+    # Don't stack new violations on top of an unacknowledged one.
+    if _STATE.get("pending_warning"):
+        return
+
+    # Cooldown: don't double-count violations that fire within
+    # VIOLATION_COOLDOWN_SECONDS of the previous one. This is
+    # the fix for the bug where a single tab-switch was being
+    # registered three times by streamlit_js_eval re-running.
+    if (now - _STATE["last_violation_at"]) < VIOLATION_COOLDOWN_SECONDS:
+        return
+
     _STATE["violations"] += 1
     if counter_key in _STATE:
         _STATE[counter_key] += 1
@@ -189,6 +194,7 @@ def _video_frame_callback(frame):
             _STATE["no_face_seconds"] += dt
             if (
                 _STATE["no_face_streak"] >= NO_FACE_VIOLATION_SECONDS
+                and not _STATE.get("pending_warning")
                 and (now - _STATE["last_violation_at"]) >= VIOLATION_COOLDOWN_SECONDS
             ):
                 _record_violation(
@@ -198,7 +204,6 @@ def _video_frame_callback(frame):
                 )
                 _STATE["no_face_streak"] = 0.0
 
-    # Draw overlay on the camera feed
     if face_count > 0:
         sx = img.shape[1] / 320.0
         sy = img.shape[0] / 240.0
@@ -221,6 +226,11 @@ def _video_frame_callback(frame):
 
 def render_proctor_camera(key: str = "skilldrift-proctor",
                           desired_playing: bool = None):
+    """Render the webrtc camera widget.
+
+    Returns the webrtc context, or None if the widget can't be
+    rendered (e.g. mid-shutdown). Callers MUST tolerate None.
+    """
     kwargs = dict(
         key=key,
         mode=WebRtcMode.SENDRECV,
@@ -233,4 +243,11 @@ def render_proctor_camera(key: str = "skilldrift-proctor",
     )
     if desired_playing is not None:
         kwargs["desired_playing_state"] = desired_playing
-    return webrtc_streamer(**kwargs)
+    try:
+        return webrtc_streamer(**kwargs)
+    except AttributeError:
+        # streamlit-webrtc 0.47 shutdown race
+        # ('NoneType' has no attribute 'is_alive'). Non-fatal.
+        return None
+    except Exception:
+        return None
