@@ -162,26 +162,6 @@ def _fs_exit_and_home():
 
 
 # =============================================================
-# STEP 0 — ALWAYS remove sd-in-test from body on every page load.
-#
-# This runs unconditionally so that even if the student arrives at
-# the pre-start gate or the terminated screen after a previous test
-# session, the wide-layout body class is not left over from before.
-# The in-test section (step 6) re-adds it only when actually needed.
-# =============================================================
-
-components.html(
-    "<script>"
-    "(function(){"
-    "  var b=window.parent.document.body;"
-    "  b.classList.remove('sd-in-test');"
-    "})();"
-    "</script>",
-    height=0,
-)
-
-
-# =============================================================
 # CSS
 # =============================================================
 
@@ -215,11 +195,25 @@ input, textarea { -webkit-user-select: text !important; user-select: text !impor
   position: absolute !important;
   pointer-events: none !important;
 }
+/* Also collapse the wrapper element-container so no residual gap remains. */
+.element-container:has(> iframe[height="0"]) {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-/* Always show iframes inside the camera panel — never hide them. */
+/* Always show iframes inside the camera panel — never hide them.
+   This overrides the zero-height iframe hide rules above. */
 .sd-cam-shell iframe {
   display: block !important;
   width: 100% !important;
+  height: auto !important;
+}
+/* Ensure the cam shell element-container itself is never hidden. */
+.sd-cam-shell .element-container,
+.sd-cam-shell .element-container:has(> iframe) {
+  display: block !important;
   height: auto !important;
 }
 
@@ -240,6 +234,18 @@ body.sd-in-test .block-container {
   padding-right: 22rem   !important;
 }
 
+/* Terminated state — ALWAYS narrow centred, beats sd-in-test class.
+   Applied via a wrapper div so it renders correctly on first paint
+   without depending on async JS class removal. */
+body:has(.sd-terminated-marker) .block-container,
+body.sd-in-test:has(.sd-terminated-marker) .block-container {
+  max-width:     760px !important;
+  padding-right: 2rem  !important;
+  padding-left:  2rem  !important;
+  margin-left:   auto  !important;
+  margin-right:  auto  !important;
+}
+
 .element-container:empty,
 .element-container:has(> div:empty) { display: none !important; }
 
@@ -249,6 +255,11 @@ body.sd-in-test .block-container {
 .sd-centred-page {
   max-width: 680px;
   margin: 60px auto 0 auto;
+}
+
+/* Add top margin on terminated screen columns so card sits vertically centred */
+.sd-terminated-row {
+  margin-top: 80px;
 }
 
 /* ---- Assessment header ---- */
@@ -428,6 +439,10 @@ div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
   display: none !important; opacity: 0 !important; pointer-events: none !important;
 }
 .sd-cam-shell button, .sd-cam-shell select { display: none !important; }
+.sd-cam-shell hr,
+.sd-cam-shell [data-testid="stDivider"],
+.sd-cam-shell [data-testid="stMarkdownContainer"]:empty,
+.sd-cam-shell .element-container:has(> div:empty) { display: none !important; }
 .sd-cam-shell iframe { width: 100% !important; }
 .sd-cam-shell .sd-cam-status {
   margin-top: 10px; background: #f6fafe; border: 1px solid #e2e8f0;
@@ -500,8 +515,20 @@ if snap["violations"] >= MAX_VIOLATIONS:
     save_session()
 
 if st.session_state.get("quiz_terminated"):
-    st.markdown('<div class="sd-centred-page">', unsafe_allow_html=True)
-
+    # Marker div — CSS uses body:has(.sd-terminated-marker) to force narrow
+    # centred layout, beating sd-in-test on first paint with no JS race.
+    st.markdown(
+        '<div class="sd-terminated-marker" style="display:none;"></div>',
+        unsafe_allow_html=True,
+    )
+    # Also remove sd-in-test body class via inline script as a safety net.
+    st.markdown(
+        "<script>window.parent.document.body.classList.remove('sd-in-test');</script>",
+        unsafe_allow_html=True,
+    )
+    # Render directly inside .block-container which is already 760px max-width
+    # centered. No columns wrapper — columns inside a narrow centered container
+    # cause asymmetric splits and visual offset.
     st.markdown(
         f"""
         <div class="q-terminated">
@@ -531,7 +558,6 @@ if st.session_state.get("quiz_terminated"):
         _js(_fs_exit_and_home(), "terminate_redirect")
         st.switch_page("pages/01_home.py")
 
-    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
 
@@ -583,6 +609,12 @@ if st.session_state.get("_starting") and not st.session_state.get("_starting_dis
 if not st.session_state.get("quiz_started"):
     student_name    = st.session_state["student_name"]
     selected_skills = st.session_state["selected_skills"]
+
+    # Remove sd-in-test body class so pre-start layout is narrow and centred.
+    st.markdown(
+        "<script>window.parent.document.body.classList.remove('sd-in-test');</script>",
+        unsafe_allow_html=True,
+    )
 
     # Reset proctor in-memory state cleanly the first time we reach
     # the gate. This also clears any leftover violations from a
@@ -689,15 +721,8 @@ if not st.session_state.get("quiz_started"):
 selected_skills = st.session_state["selected_skills"]
 student_name    = st.session_state["student_name"]
 
-components.html(
-    "<script>"
-    "(function(){"
-    "  var b=window.parent.document.body;"
-    "  if(!b.classList.contains('sd-in-test')) b.classList.add('sd-in-test');"
-    "})();"
-    "</script>",
-    height=0,
-)
+# Body class is managed inside the JS proctor poll (step 9) which
+# already fires on every rerun — no separate components.html needed.
 
 
 # =============================================================
@@ -709,10 +734,6 @@ components.html(
 
 cam_container = st.container()
 with cam_container:
-    st.markdown(
-        '<div class="sd-cam-title">Live Camera Monitor</div>',
-        unsafe_allow_html=True,
-    )
     try:
         render_proctor_camera()
     except Exception:
@@ -800,6 +821,17 @@ components.html(
         if(!target) return false;
         if(!target.classList.contains('sd-cam-shell'))
           target.classList.add('sd-cam-shell');
+        // Inject title if not already present
+        if(!target.querySelector('.sd-cam-title')){
+          var t2=doc.createElement('div');
+          t2.className='sd-cam-title';
+          t2.textContent='Live Camera Monitor';
+          target.insertBefore(t2,target.firstChild);
+        }
+        // Hide any hr/divider elements Streamlit injects inside cam shell
+        target.querySelectorAll('hr,[data-testid="stDivider"]').forEach(function(el){
+          el.style.setProperty('display','none','important');
+        });
         target.querySelectorAll('video').forEach(function(v){
           try{
             v.removeAttribute('controls'); v.controls=false;
@@ -918,6 +950,7 @@ if HAS_AUTOREFRESH:
     st_autorefresh(interval=2500, key="quiz_autorefresh")
 
 # Pass the current serial to JS so it can detect a reset.
+# Also pass in_test=1 so JS knows to ADD the sd-in-test body class.
 current_serial = st.session_state.get("_js_serial", 0)
 
 if HAS_JS_EVAL:
@@ -925,6 +958,11 @@ if HAS_JS_EVAL:
     (function(){{
       var w=window.parent, d=w.document, root=d.documentElement;
       var newSerial={current_serial};
+
+      // Always manage body class from inside this poll.
+      // in_test=1 means we are past the pre-start gate and in the live quiz.
+      var b=d.body;
+      if(b && !b.classList.contains('sd-in-test')) b.classList.add('sd-in-test');
 
       function reqFs(){{
         if(d.fullscreenElement) return;
@@ -1130,14 +1168,16 @@ quiz_unlocked = cam_running and face_present
 if "_quiz_answers" not in st.session_state:
     st.session_state["_quiz_answers"] = {}
 
-# Snapshot current answers while unlocked before rendering the form.
-if quiz_unlocked:
-    for si, itm in enumerate(quiz_data):
-        for qi in range(len(itm.get("questions", []))):
-            k = f"q_{si}_{qi}"
-            v = st.session_state.get(k)
-            if v and not v.startswith("A. (locked)"):
-                st.session_state["_quiz_answers"][k] = v
+# Snapshot current answers ALWAYS — save any real (non-locked) answer
+# from session_state regardless of current lock state. This ensures
+# that if a user selects an answer while unlocked and then face
+# disappears in the same poll cycle, the answer is still captured.
+for _si, _itm in enumerate(quiz_data):
+    for _qi in range(len(_itm.get("questions", []))):
+        _k = f"q_{_si}_{_qi}"
+        _v = st.session_state.get(_k)
+        if _v and not str(_v).startswith("A. (locked)"):
+            st.session_state["_quiz_answers"][_k] = _v
 
 with st.form("skill_quiz_form", clear_on_submit=False):
     for skill_idx, item in enumerate(quiz_data):
