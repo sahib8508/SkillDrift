@@ -50,6 +50,17 @@ if not verified_skills and not quiz_results:
         st.switch_page("pages/02_skill_input.py")
     st.stop()
 
+# If quiz done but ALL skills failed — show friendly message
+if quiz_results and not verified_skills:
+    st.error(
+        "⚠️ None of your claimed skills were verified by the quiz. "
+        "Your Drift and Entropy scores below are based on your **claimed** skills "
+        "for reference, but please retake the quiz with honest self-assessment."
+    )
+    # Fall back to claimed skills for display purposes only
+    for r in quiz_results:
+        verified_skills[r["skill"]] = r["claimed_level"]
+
 
 # =============================================================
 # FINAL SCORE
@@ -106,7 +117,7 @@ st.markdown(f"""
     <div style="font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:800;
                 color:{score_color};margin-top:6px;">{score_label}</div>
     <div style="font-size:0.82rem;color:#515f74;margin-top:4px;">
-      Verified skills: <b>{len(verified_skills)}</b>
+      Verified skills: <b>{len(verified_skills)}</b> of {len(quiz_results)} passed
     </div>
   </div>
 </div>
@@ -129,9 +140,13 @@ st.markdown("""
 if quiz_results:
     rows = []
     for r in quiz_results:
+        correct = int(r.get("correct_count", 0))
+        total   = int(r.get("total_questions", 0))
+        score_str = f"{correct}/{total}" if total > 0 else "—"
         rows.append({
             "Skill":          r.get("skill", ""),
             "Claimed Level":  r.get("claimed_level", ""),
+            "Score":          score_str,
             "Verified Level": r.get("verified_level", ""),
             "Status":         r.get("status", ""),
         })
@@ -144,8 +159,32 @@ if quiz_results:
         if val == "Unverified":    return "color: #94a3b8;"
         return ""
 
-    styled = df.style.map(style_status, subset=["Status"])
+    def style_score(val: str):
+        if "/" not in val:
+            return ""
+        parts = val.split("/")
+        try:
+            c, t = int(parts[0]), int(parts[1])
+            ratio = c / t if t > 0 else 0
+            if ratio >= 0.67:   return "color: #15803d; font-weight: 700;"
+            elif ratio >= 0.34: return "color: #d97706; font-weight: 700;"
+            else:               return "color: #ba1a1a; font-weight: 700;"
+        except Exception:
+            return ""
+
+    styled = df.style.map(style_status, subset=["Status"]).map(style_score, subset=["Score"])
     st.dataframe(styled, use_container_width=True, hide_index=True)
+
+    # Explanation below table
+    st.markdown("""
+    <div style="font-size:0.82rem;color:#515f74;background:#f6fafe;border-radius:8px;
+                padding:10px 14px;border-left:3px solid #002c98;margin-top:8px;line-height:1.6;">
+        <b>How scoring works:</b> Each skill has 3 questions.
+        <span style="color:#15803d;font-weight:700;">2/3 or 3/3 → Confirmed</span> &nbsp;|&nbsp;
+        <span style="color:#d97706;font-weight:700;">1/3 → Borderline</span> (level downgraded) &nbsp;|&nbsp;
+        <span style="color:#ba1a1a;font-weight:700;">0/3 → Not Verified</span> (excluded from analysis)
+    </div>
+    """, unsafe_allow_html=True)
 else:
     st.info("No skill evaluation data available.")
 
@@ -197,13 +236,19 @@ with c2:
     """, unsafe_allow_html=True)
 
 with c3:
+    # Count only truly verified (Confirmed or Borderline), not Not Verified
+    truly_verified = sum(
+        1 for r in quiz_results
+        if r.get("status") in ("Confirmed", "Borderline")
+    )
+    not_verified_count = len(quiz_results) - truly_verified
     skill_count = len(verified_skills)
     st.markdown(f"""
     <div class="sd-metric" style="border-top:3px solid #002c98;">
         <div class="sd-metric-label">Verified Skills</div>
-        <div class="sd-metric-value" style="color:#002c98;">{skill_count}</div>
-        <div style="font-size:0.9rem;font-weight:700;color:#171c1f;margin-top:8px;">Skills Confirmed</div>
-        <div class="sd-metric-sub">after verification</div>
+        <div class="sd-metric-value" style="color:#002c98;">{truly_verified}</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#171c1f;margin-top:8px;">of {len(quiz_results)} claimed</div>
+        <div class="sd-metric-sub" style="color:#ba1a1a;">{not_verified_count} failed verification</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -232,10 +277,12 @@ with ca:
             What is the Drift Score?
         </div>
         <div style="font-size:0.9rem;color:#171c1f;line-height:1.7;">
-            Your score of <strong>{drift_score}</strong> measures how scattered your {skill_count} verified
-            skills are across 8 CSE career tracks.<br><br>
-            <strong>0</strong> = All skills in one track - fully focused.<br>
-            <strong>100</strong> = Skills spread across all 8 tracks - maximum drift.
+            Your score of <strong>{drift_score}</strong> measures how <em>unevenly</em> your verified
+            skills are distributed across 8 CSE career tracks.<br><br>
+            It uses <strong>standard deviation</strong>: a high std means one track dominates
+            (focused). A low std means skills are spread evenly (scattered).<br><br>
+            <strong>0</strong> = Perfectly even spread = Maximum Drift (Scattered)<br>
+            <strong>100</strong> = All skills in one track = No Drift (Highly Focused)
         </div>
         <div style="background:#f6fafe;border-radius:8px;padding:12px 14px;
                     border-left:3px solid {drift_color};margin-top:16px;
@@ -252,15 +299,23 @@ with cb:
             What is the Entropy Score?
         </div>
         <div style="font-size:0.9rem;color:#171c1f;line-height:1.7;">
-            Based on Shannon's Information Entropy - a mathematical measure of disorder.<br><br>
-            <strong>0 bits</strong> = All skills in one track - perfect focus.<br>
-            <strong>~3 bits</strong> = Skills spread equally - maximum disorder.
+            Based on Shannon's Information Entropy — measures <em>how many tracks</em>
+            you have touched, regardless of which one dominates.<br><br>
+            <strong>0 bits</strong> = All skills in exactly 1 track = Perfect focus.<br>
+            <strong>3 bits</strong> = Skills spread across all 8 tracks equally = Max disorder.
         </div>
-        <div style="background:#f6fafe;border-radius:8px;padding:12px 14px;
-                    border-left:3px solid {entropy_color};margin-top:16px;
+        <div style="background:#fff8e1;border-radius:8px;padding:12px 14px;
+                    border-left:3px solid #d97706;margin-top:16px;
                     font-size:0.88rem;color:#515f74;line-height:1.55;">
-            Your <strong>{entropy_score} bits</strong> puts you in the <strong>{entropy_label}</strong> category.
-            Drift Score measures magnitude of spread. Entropy measures how many tracks you have spread into.
+            <b>⚠️ Why can Drift be "Focused" but Entropy be "Disordered"?</b><br><br>
+            These measure <em>different things</em>. Skills like Python and SQL each belong to
+            5–7 tracks in the dataset. So even with just 3 skills, your entropy is high
+            because 7 out of 8 tracks are non-zero.<br><br>
+            <b>Drift</b> asks: <em>Is one track clearly dominant?</em> (Yes → low drift) <br>
+            <b>Entropy</b> asks: <em>How many tracks have at least one skill?</em> (Many → high entropy)<br><br>
+            Your current score of <b>{entropy_score} bits</b> means you have touched many tracks,
+            but Drift ({drift_score}) confirms Data Analyst is still your dominant track.
+            Focus deeper on Data Analyst skills to bring both scores down.
         </div>
     </div>
     """, unsafe_allow_html=True)

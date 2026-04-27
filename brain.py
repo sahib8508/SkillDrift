@@ -41,13 +41,13 @@ def load_skills_mapping() -> pd.DataFrame:
 
     TRACK_NAME_MAP = {
         "data_analyst":   "Data Analyst",
-        "data_scientist": "Data Scientist",
-        "data_engineer":  "Data Engineer",
         "ml_engineer":    "ML Engineer",
         "web_developer":  "Web Developer",
         "devops_cloud":   "DevOps Cloud",
         "cybersecurity":  "Cybersecurity",
         "software_dev":   "Software Dev",
+        "qa_tester":      "QA Tester",
+        "full_stack_dev": "Full Stack Dev",
     }
     long_df["track"] = long_df["track_raw"].map(TRACK_NAME_MAP)
     long_df = long_df[["skill", "track"]].reset_index(drop=True)
@@ -76,24 +76,24 @@ def load_faculty_credentials() -> pd.DataFrame:
 
 CAREER_TRACKS = [
     "Data Analyst",
-    "Data Scientist",
-    "Data Engineer",
     "ML Engineer",
     "Web Developer",
     "DevOps Cloud",
     "Cybersecurity",
     "Software Dev",
+    "QA Tester",
+    "Full Stack Dev",
 ]
 
 TRACK_TO_ROLE = {
     "Data Analyst":   "Data Analyst",
-    "Data Scientist": "Data Scientist",
-    "Data Engineer":  "Data Engineer",
     "ML Engineer":    "ML Engineer",
     "Web Developer":  "Web Developer",
     "DevOps Cloud":   "DevOps Cloud",
     "Cybersecurity":  "Cybersecurity",
     "Software Dev":   "Software Dev",
+    "QA Tester":      "QA Tester",
+    "Full Stack Dev": "Full Stack Dev",
 }
 
 
@@ -406,15 +406,15 @@ DRIFT_TO_PLACEMENT_RATE = [
 ]
 
 FOCUSED_PLACEMENT_RATES = {
-    "Data Analyst": 77, "Data Scientist": 71, "Data Engineer": 68,
-    "ML Engineer": 65, "Web Developer": 74, "DevOps Cloud": 72,
-    "Cybersecurity": 69, "Software Dev": 76,
+    "Data Analyst": 77, "ML Engineer": 65, "Web Developer": 74,
+    "DevOps Cloud": 72, "Cybersecurity": 69, "Software Dev": 76,
+    "QA Tester": 78, "Full Stack Dev": 75,
 }
 
 TRACK_SURVIVAL_RATES = {
-    "Data Analyst": 72, "Data Scientist": 51, "Data Engineer": 58,
-    "ML Engineer": 47, "Web Developer": 75, "DevOps Cloud": 63,
-    "Cybersecurity": 60, "Software Dev": 70,
+    "Data Analyst": 72, "ML Engineer": 47, "Web Developer": 75,
+    "DevOps Cloud": 63, "Cybersecurity": 60, "Software Dev": 70,
+    "QA Tester": 80, "Full Stack Dev": 73,
 }
 
 

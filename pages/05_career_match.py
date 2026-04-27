@@ -42,7 +42,7 @@ st.markdown("""
 <div style="margin-bottom:1.25rem;">
     <div style="font-size:1.6rem; font-weight:700; color:#1D1D1F;">Career Track Match</div>
     <div style="font-size:0.88rem; color:#86868B; margin-top:0.2rem;">
-        Your verified skills matched against 8 CSE career tracks — built from 794 real Indian job postings.
+        Your verified skills matched against 8 CSE career tracks — built from 1600 real Indian job postings.
     </div>
 </div>
 """, unsafe_allow_html=True)

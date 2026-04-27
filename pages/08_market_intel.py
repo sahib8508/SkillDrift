@@ -30,20 +30,20 @@ best_track = st.session_state.get("best_track", CAREER_TRACKS[0])
 
 TRACK_TO_CITY_COL = {
     "Data Analyst":   "Data Analyst",
-    "Data Scientist": "Data Scientist",
-    "Data Engineer":  "Data Engineer",
     "ML Engineer":    "ML Engineer",
     "Web Developer":  "Web Developer",
     "DevOps Cloud":   "DevOps Cloud",
     "Cybersecurity":  "Cybersecurity",
     "Software Dev":   "Software Dev",
+    "QA Tester":      "QA Tester",
+    "Full Stack Dev": "Full Stack Dev",
 }
 
 st.markdown("""
 <div style="margin-bottom:1.25rem;">
     <div style="font-size:1.6rem; font-weight:700; color:#1D1D1F;">Market Intelligence</div>
     <div style="font-size:0.88rem; color:#86868B; margin-top:0.2rem;">
-        Real data from 794 Indian job postings on Naukri.com — where are the jobs and what do employers want?
+        Real data from 1600 Indian job postings on Naukri.com — where are the jobs and what do employers want?
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -220,7 +220,7 @@ with tab2:
 
         st.markdown(
             "<div style='font-size:0.78rem; color:#86868B; margin-top:0.25rem;'>"
-            "Source: Skills extracted from 794 real Indian job descriptions from Naukri.com, "
+            "Source: Skills extracted from 1600 real Indian job descriptions from Naukri.com, "
             "processed using NLP frequency analysis.</div>",
             unsafe_allow_html=True,
         )
