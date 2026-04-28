@@ -1092,7 +1092,6 @@ _tmr_color = "#dc2626" if _remaining < 60 else ("#f59e0b" if _remaining < 180 el
 # Auto-submit when timer expires (only once)
 if _timer_expired and not st.session_state.get("_quiz_auto_submitted"):
     st.session_state["_quiz_auto_submitted"] = True
-    save_session()
     # Score with whatever answers were given (unanswered = wrong)
     verified = score_all(quiz_data)
     reset_proctor_state()
@@ -1103,8 +1102,8 @@ if _timer_expired and not st.session_state.get("_quiz_auto_submitted"):
             calculate_readiness_score, get_next_skill, get_urgency_level,
             calculate_focus_debt, get_peer_placement_rate,
         )
-        drift_score, drift_label, track_counts = calculate_drift_score(verified)
-        entropy_score, entropy_label           = calculate_entropy(track_counts)
+        drift_score, drift_label, track_counts = calculate_drift_score(verified, quiz_results=st.session_state.get("quiz_results", []))
+        entropy_score, entropy_label           = calculate_entropy(track_counts, drift_score)
         career_matches = calculate_career_match(verified)
         best_match     = career_matches[0] if career_matches else {}
         best_track     = best_match.get("track", "Unknown")
@@ -1127,10 +1126,14 @@ if _timer_expired and not st.session_state.get("_quiz_auto_submitted"):
         st.session_state["urgency_info"]    = urgency
         st.session_state["focus_debt_info"] = debt
         st.session_state["peer_info"]       = peer
-    except Exception:
-        pass
-    st.session_state["quiz_complete"] = True
-    save_session()
+        st.session_state["quiz_complete"]   = True
+        save_session()
+    except Exception as e:
+            import traceback
+            with open("error_log.txt", "a") as f:
+                f.write(f"\n--- AUTO-SUBMIT ERROR ---\n{traceback.format_exc()}\n")
+            st.error(f"Auto-submit scoring error: {e}")
+            st.stop()
     st.switch_page("pages/03_drift_score.py")
 
 
@@ -1477,15 +1480,14 @@ if st.session_state.get("_ua_modal_data"):
     st.stop()
 
 if submitted and quiz_unlocked and not st.session_state.get("_ua_modal_data"):
-    save_session()
     verified = score_all(quiz_data)
     reset_proctor_state()
     _js("(document.exitFullscreen?document.exitFullscreen():null)", "exit_fs_submit")
 
     with st.spinner("Calculating your score and skill evaluation..."):
         try:
-            drift_score, drift_label, track_counts = calculate_drift_score(verified)
-            entropy_score, entropy_label           = calculate_entropy(track_counts)
+            drift_score, drift_label, track_counts = calculate_drift_score(verified, quiz_results=st.session_state.get("quiz_results", []))
+            entropy_score, entropy_label           = calculate_entropy(track_counts, drift_score)
             career_matches = calculate_career_match(verified)
             best_match     = career_matches[0] if career_matches else {}
             best_track     = best_match.get("track", "Unknown")
@@ -1509,11 +1511,13 @@ if submitted and quiz_unlocked and not st.session_state.get("_ua_modal_data"):
             st.session_state["urgency_info"]    = urgency
             st.session_state["focus_debt_info"] = debt
             st.session_state["peer_info"]       = peer
+            st.session_state["quiz_complete"]   = True
+            save_session()
         except Exception as e:
+            import traceback
+            with open("error_log.txt", "a") as f:
+                f.write(f"\n--- SUBMIT ERROR ---\n{traceback.format_exc()}\n")
             st.error(f"Analysis error: {e}")
             st.stop()
-
-    st.session_state["quiz_complete"] = True
-    save_session()
     time.sleep(0.4)
     st.switch_page("pages/03_drift_score.py")

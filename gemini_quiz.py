@@ -216,7 +216,7 @@ def score_quiz_answers(skill, claimed_level, questions, student_answers):
 
     ratio = correct_count / total if total > 0 else 0
 
-    if ratio >= 0.67:
+    if ratio >= 0.66:
         status         = "Confirmed"
         verified_level = claimed_level
     elif ratio >= 0.34:

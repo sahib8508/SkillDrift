@@ -50,6 +50,7 @@ def load_skills_mapping() -> pd.DataFrame:
         "full_stack_dev": "Full Stack Dev",
     }
     long_df["track"] = long_df["track_raw"].map(TRACK_NAME_MAP)
+    long_df = long_df[long_df["track"].notna()].copy()
     long_df = long_df[["skill", "track"]].reset_index(drop=True)
     return long_df
 
@@ -113,29 +114,50 @@ LEVEL_WEIGHTS = {
 # SECTION 4 — DRIFT SCORE
 # =============================================================
 
-def calculate_drift_score(verified_skills: dict) -> tuple:
+def calculate_drift_score(verified_skills: dict, quiz_results: list = None) -> tuple:
+    """
+    verified_skills: dict of {skill: verified_level}
+    quiz_results:    list of result dicts from gemini_quiz.score_all()
+                     Used to apply half-weight (0.5) to Borderline skills
+                     so a student who barely passed gets a more honest drift score.
+                     Confirmed = 1.0 weight, Borderline = 0.5 weight.
+    """
     if len(verified_skills) < 3:
         return 0.0, "Insufficient Skills", {t: 0 for t in CAREER_TRACKS}
 
+    # Build weight map: Borderline skills count as 0.5, Confirmed as 1.0
+    weight_map = {}
+    if quiz_results:
+        for r in quiz_results:
+            skill = r.get("skill", "")
+            status = r.get("status", "Confirmed")
+            weight_map[skill.lower()] = 0.5 if status == "Borderline" else 1.0
+    # Default weight 1.0 for any skill not in quiz_results
+    for skill in verified_skills.keys():
+        if skill.lower() not in weight_map:
+            weight_map[skill.lower()] = 1.0
+
     skills_map_df = load_skills_mapping()
-    track_counts = {track: 0 for track in CAREER_TRACKS}
+    track_counts = {track: 0.0 for track in CAREER_TRACKS}
+    total_weight = 0.0
 
     for skill in verified_skills.keys():
+        weight = weight_map.get(skill.lower(), 1.0)
+        total_weight += weight
         matched_tracks = skills_map_df[
             skills_map_df["skill"].str.lower() == skill.lower()
         ]["track"].tolist()
         for track in matched_tracks:
             for career_track in CAREER_TRACKS:
                 if track.lower().replace(" ", "") == career_track.lower().replace(" ", ""):
-                    track_counts[career_track] += 1
+                    track_counts[career_track] += weight
                     break
 
     counts_array = np.array(list(track_counts.values()), dtype=float)
     actual_std = float(np.std(counts_array))
-    n_skills = len(verified_skills)
     n_tracks = len(CAREER_TRACKS)
     max_counts = np.zeros(n_tracks)
-    max_counts[0] = n_skills
+    max_counts[0] = total_weight  # use weighted total, not raw skill count
     max_std = float(np.std(max_counts))
     min_std = 0.0
 
@@ -158,32 +180,50 @@ def calculate_drift_score(verified_skills: dict) -> tuple:
     else:
         drift_label = "Extremely Scattered"
 
-    return drift_score, drift_label, track_counts
+    # Return integer track counts (for display) but use float internally
+    track_counts_int = {t: round(v, 2) for t, v in track_counts.items()}
+    return drift_score, drift_label, track_counts_int
 
 
 # =============================================================
 # SECTION 5 — ENTROPY SCORE
 # =============================================================
 
-def calculate_entropy(track_counts: dict) -> tuple:
-    counts = np.array(list(track_counts.values()), dtype=float)
-    total = counts.sum()
-    if total == 0:
-        return 0.0, "No Skills"
+def calculate_entropy(track_counts: dict, drift_score: float = None) -> tuple:
+    """
+    Entropy derived from the same concentration score used by drift.
+    Drift 0  (focused)   -> Entropy 0.0 bits
+    Drift 100 (scattered) -> Entropy 3.0 bits
+    Always consistent — eliminates contradictory readings.
+    """
+    if drift_score is None:
+        counts = np.array(list(track_counts.values()), dtype=float)
+        total = counts.sum()
+        if total == 0:
+            return 0.0, "No Skills"
+        n_tracks = len(counts)
+        actual_std = float(np.std(counts))
+        max_counts = np.zeros(n_tracks)
+        max_counts[0] = total
+        max_std = float(np.std(max_counts))
+        if max_std == 0:
+            concentration = 0.0
+        else:
+            concentration = float(np.clip(100.0 * actual_std / max_std, 0.0, 100.0))
+        drift_score = 100.0 - concentration
 
-    probs = counts / total
-    entropy_score = float(scipy_entropy(probs, base=2))
+    entropy_score = round((drift_score / 100.0) * 3.0, 2)
 
-    if entropy_score < 1.2:
-        entropy_label = "Highly Ordered — Strong Focus"
-    elif entropy_score < 2.0:
+    if entropy_score < 0.9:
+        entropy_label = "Highly Ordered"
+    elif entropy_score < 1.8:
         entropy_label = "Moderately Ordered"
-    elif entropy_score < 2.8:
-        entropy_label = "Disordered — Showing Drift"
+    elif entropy_score < 2.4:
+        entropy_label = "Disordered"
     else:
-        entropy_label = "Highly Disordered — Strong Drift"
+        entropy_label = "Highly Disordered"
 
-    return round(entropy_score, 2), entropy_label
+    return entropy_score, entropy_label
 
 
 # =============================================================
@@ -464,14 +504,14 @@ def parse_skills_string(skills_str: str) -> dict:
 # and return it in a shape that mirrors the student session_state.
 # =============================================================
 
-def compute_full_student_analysis(student_name: str, semester: int, verified_skills: dict) -> dict:
+def compute_full_student_analysis(student_name: str, semester: int, verified_skills: dict, quiz_results: list = None) -> dict:
     """
     Runs all 8 calculations for one student and returns a dict
     that mirrors the keys used in student session_state.
     Safe to call in a loop for batch processing.
     """
-    drift_score, drift_label, track_counts = calculate_drift_score(verified_skills)
-    entropy_score, entropy_label = calculate_entropy(track_counts)
+    drift_score, drift_label, track_counts = calculate_drift_score(verified_skills, quiz_results=quiz_results or [])
+    entropy_score, entropy_label = calculate_entropy(track_counts, drift_score)
     career_matches = calculate_career_match(verified_skills)
     best_match = career_matches[0] if career_matches else {}
     best_track = best_match.get("track", "Unknown")
