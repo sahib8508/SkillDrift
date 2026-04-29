@@ -254,9 +254,10 @@ def _table_with_view_buttons(columns, col_widths, row_data, key_prefix):
         with header_cols[i]:
             st.markdown(
                 f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;'
-                f'padding:8px 10px;font-size:10px;font-weight:700;color:#515f74;'
+                f'padding:10px 10px 12px;font-size:10px;font-weight:700;color:#515f74;margin-bottom:8px;'
                 f'text-transform:uppercase;letter-spacing:0.08em;font-family:Inter,sans-serif;'
-                f'line-height:1.3;text-align:{"center" if i == last_idx else "left"};">{c}</div>',
+                f'line-height:1.3;white-space:nowrap;overflow:hidden;'
+                f'text-align:{"center" if i == last_idx else "left"};">{c}</div>',
                 unsafe_allow_html=True,
             )
 
@@ -602,7 +603,7 @@ with tab_batch:
 
     _table_with_view_buttons(
         columns    =["Student", "Sem", "Drift", "Status", "Best Track", "Readiness", "Urgency", "View"],
-        col_widths =[3.2,        1,     1.2,     2.4,      2.4,         1.5,         1.5,       1.3],
+        col_widths =[2.6,        1,     1.2,     2.4,      2.4,         1.6,         1.5,       1.3],
         row_data   =rec_rows,
         key_prefix ="rec_view",
     )
@@ -773,13 +774,13 @@ with tab_placement:
 
             _table_with_view_buttons(
                 columns    =["Name", "Sem", "Drift", "Readiness", "Track", "View"],
-                col_widths =[3,      1,     1.2,     1.5,         2.5,     1.3],
+                col_widths =[2.2,    1.1,   1.2,     1.6,         2.5,     1.1],
                 row_data   =grp_rows,
                 key_prefix =f"pl_{matrix_key}_{group_key}",
             )
 
     # Matrix 1 — Drift
-    mx1l, mx1r = st.columns([3, 5])
+    mx1l, mx1r = st.columns([2.2, 5.8])
     with mx1l:
         st.markdown("""<div class="mx-card">
             <div class="mx-num">Matrix 01</div>
@@ -804,7 +805,7 @@ with tab_placement:
     st.markdown('<hr class="sd-divider">', unsafe_allow_html=True)
 
     # Matrix 2 — Readiness
-    mx2l, mx2r = st.columns([3, 5])
+    mx2l, mx2r = st.columns([2.2, 5.8])
     with mx2l:
         st.markdown("""<div class="mx-card">
             <div class="mx-num">Matrix 02</div>
@@ -829,7 +830,7 @@ with tab_placement:
     st.markdown('<hr class="sd-divider">', unsafe_allow_html=True)
 
     # Matrix 3 — Entropy
-    mx3l, mx3r = st.columns([3, 5])
+    mx3l, mx3r = st.columns([2.2, 5.8])
     with mx3l:
         st.markdown("""<div class="mx-card">
             <div class="mx-num">Matrix 03</div>
@@ -926,38 +927,55 @@ with tab_placement:
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
       * {{ box-sizing:border-box; margin:0; padding:0; }}
-      body {{ background:transparent; font-family:'Inter',sans-serif; }}
+      html, body {{ background:transparent; font-family:'Inter',sans-serif; overflow-x:hidden; }}
       table {{
         width:100%; border-collapse:collapse;
         background:#ffffff; border:1px solid #e2e8f0;
-        border-radius:12px; overflow:hidden; font-size:13px;
+        border-radius:12px; overflow:hidden; font-size:11.5px;
+        table-layout:fixed;
       }}
       thead tr {{ background:#f8fafc; }}
       thead th {{
-        padding:10px 12px; text-align:left; font-size:10px; font-weight:700;
-        color:#515f74; text-transform:uppercase; letter-spacing:0.08em;
+        padding:8px 7px; text-align:left; font-size:9.5px; font-weight:700;
+        color:#515f74; text-transform:uppercase; letter-spacing:0.07em;
         border-bottom:1.5px solid #e2e8f0; border-right:1px solid #e2e8f0;
-        white-space:nowrap; font-family:'Inter',sans-serif;
+        white-space:nowrap; font-family:'Inter',sans-serif; overflow:hidden;
       }}
       thead th:last-child {{ border-right:none; }}
       tbody tr {{ border-bottom:1px solid #e2e8f0; transition:background 0.1s; }}
       tbody tr:last-child {{ border-bottom:none; }}
       tbody tr:hover {{ background:#f6fafe !important; }}
       tbody td {{
-        padding:10px 12px; vertical-align:middle;
-        border-right:1px solid #e2e8f0;
+        padding:8px 7px; vertical-align:middle;
+        border-right:1px solid #e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
       }}
       tbody td:last-child {{ border-right:none; }}
-      .n  {{ font-family:'Manrope',sans-serif; font-weight:700; font-size:13.5px; color:#171c1f; }}
+      .n  {{ font-family:'Manrope',sans-serif; font-weight:700; font-size:12px; color:#171c1f; white-space:nowrap; }}
       .m  {{ color:#515f74; }}
       .b  {{ color:#002c98; font-weight:600; }}
+      col.c-student  {{ width:16%; }}
+      col.c-sem      {{ width:5%; }}
+      col.c-drift    {{ width:6%; }}
+      col.c-dgroup   {{ width:11%; }}
+      col.c-rpct     {{ width:9%; }}
+      col.c-rgroup   {{ width:11%; }}
+      col.c-entropy  {{ width:7%; }}
+      col.c-egroup   {{ width:13%; }}
+      col.c-track    {{ width:13%; }}
+      col.c-urgency  {{ width:9%; }}
     </style></head><body>
-    <table><thead>{thead_html}</thead>
+    <table>
+      <colgroup>
+        <col class="c-student"><col class="c-sem"><col class="c-drift"><col class="c-dgroup">
+        <col class="c-rpct"><col class="c-rgroup"><col class="c-entropy"><col class="c-egroup">
+        <col class="c-track"><col class="c-urgency">
+      </colgroup>
+      <thead>{thead_html}</thead>
     <tbody>{"".join(tbl_rows_html)}</tbody></table>
     </body></html>"""
 
     tbl_height = 44 + len(rows) * 44 + 10
-    components.html(full_table_html, height=tbl_height, scrolling=False)
+    components.html(full_table_html, height=tbl_height, scrolling=True)
 
     st.markdown("<div style='height:0.75rem;'></div>", unsafe_allow_html=True)
     st.markdown('<div class="sd-section-label">Export</div>', unsafe_allow_html=True)
