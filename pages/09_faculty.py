@@ -250,16 +250,18 @@ st.markdown("""
     }
     .fac-logo {
         font-family:    'Manrope', sans-serif;
-        font-size:      1.15rem;
+        font-size:      1.6rem;
         font-weight:    800;
         color:          var(--blue);
         letter-spacing: -0.02em;
+        line-height:    1.1;
     }
     .fac-subtitle {
         font-family: 'Inter', sans-serif;
-        font-size:   0.8rem;
+        font-size:   0.95rem;
+        font-weight: 600;
         color:       var(--muted);
-        margin-top:  2px;
+        margin-top:  4px;
     }
 
     /* ── Login page specific ── */
@@ -359,76 +361,120 @@ def do_signout():
 # ─────────────────────────────────────────────────────────────────────────────
 if not st.session_state.get("faculty_logged_in"):
 
-    # FIX 1: constrain login to 480px via wrapper — not stretched
+    # FIX 6: Professional login page — narrow inputs, centered, clean layout
     st.markdown("""
     <style>
-        /* On centered layout the block-container is already ~680px.
-           We wrap inputs in a narrower div so the form looks compact. */
-        .login-outer {
-            max-width:  480px;
-            margin:     0 auto;
-            padding:    0;
+        /* Force the block-container to a narrow login width */
+        .block-container {
+            max-width:      420px    !important;
+            padding-left:   1.5rem   !important;
+            padding-right:  1.5rem   !important;
+            padding-top:    0        !important;
+        }
+        /* Shrink all text inputs to be compact */
+        .stTextInput > div > div > input {
+            max-width:     100% !important;
+            width:         100% !important;
+            font-size:     0.92rem !important;
+            padding:       0.55rem 0.8rem !important;
+        }
+        /* FIX: Eye (password toggle) button — perfectly centered & clean */
+        .stTextInput > div > div {
+            position: relative !important;
+        }
+        .stTextInput > div > div > button {
+            position:        absolute !important;
+            right:           10px !important;
+            top:             50% !important;
+            transform:       translateY(-50%) !important;
+            background:      transparent !important;
+            border:          none !important;
+            padding:         0 !important;
+            margin:          0 !important;
+            height:          20px !important;
+            width:           20px !important;
+            display:         flex !important;
+            align-items:     center !important;
+            justify-content: center !important;
+            cursor:          pointer !important;
+            box-shadow:      none !important;
+            outline:         none !important;
+        }
+        .stTextInput > div > div > button:hover {
+            background: transparent !important;
+            border:     none !important;
+        }
+        .stTextInput > div > div > button svg {
+            width:  18px !important;
+            height: 18px !important;
+            color:  #515f74 !important;
         }
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:2.5rem;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:3rem;'></div>", unsafe_allow_html=True)
 
+    # Logo + heading
     st.markdown("""
-    <div style='max-width:480px;margin:0 auto;'>
-        <div style='text-align:center;margin-bottom:6px;'>
-            <span class='login-logo-text'>SkillDrift</span>
+    <div style='text-align:center;margin-bottom:28px;'>
+        <div style='display:inline-flex;align-items:center;justify-content:center;
+                    width:48px;height:48px;background:#002c98;border-radius:12px;
+                    margin-bottom:14px;'>
+            <span style='color:#ffffff;font-size:1.3rem;font-weight:800;font-family:Manrope,sans-serif;'>S</span>
         </div>
-        <div class='login-heading'>Faculty Login</div>
-        <div class='login-sub'>Sign in to access the Faculty Dashboard</div>
+        <div style='font-family:Manrope,sans-serif;font-size:1.5rem;font-weight:800;
+                    color:#002c98;letter-spacing:-0.02em;margin-bottom:4px;'>SkillDrift</div>
+        <div style='font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:700;
+                    color:#171c1f;margin-bottom:4px;'>Faculty Login</div>
+        <div style='font-size:0.85rem;color:#515f74;font-family:Inter,sans-serif;'>
+            Sign in to access the Faculty Dashboard
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Constrain input width via columns trick: spacer | form | spacer
-    _, col_form, _ = st.columns([1, 4, 1])
+    col_form = st  # use full (already-constrained) width
 
-    with col_form:
-        lockout_time   = st.session_state.get("faculty_lockout_time")
-        login_attempts = st.session_state.get("faculty_login_attempts", 0)
+    lockout_time   = st.session_state.get("faculty_lockout_time")
+    login_attempts = st.session_state.get("faculty_login_attempts", 0)
 
-        if lockout_time is not None and login_attempts >= 3:
-            st.error("Account temporarily locked. Refresh the page to try again.")
-            st.stop()
+    if lockout_time is not None and login_attempts >= 3:
+        st.error("Account temporarily locked. Refresh the page to try again.")
+        st.stop()
 
-        email_input    = st.text_input("Email Address", placeholder="faculty@college.edu", key="login_email")
-        password_input = st.text_input("Password", type="password", placeholder="Enter your password", key="login_pwd")
+    email_input    = st.text_input("Email Address", placeholder="faculty@college.edu", key="login_email")
+    password_input = st.text_input("Password", type="password", placeholder="Enter your password", key="login_pwd")
 
-        st.markdown("<div style='height:0.35rem;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 
-        col_login, col_home = st.columns(2)
-        with col_login:
-            login_btn = st.button("Sign In", type="primary", use_container_width=True, key="login_btn")
-        with col_home:
-            if st.button("Back to Home", use_container_width=True, key="home_btn"):
-                st.switch_page("pages/01_home.py")
+    login_btn = st.button("Sign In", type="primary", use_container_width=True, key="login_btn")
 
-        if login_btn:
-            if not email_input.strip() or not password_input.strip():
-                st.error("Please enter both email address and password.")
+    st.markdown("<div style='height:0.25rem;'></div>", unsafe_allow_html=True)
+
+    if st.button("Back to Home", use_container_width=True, key="home_btn"):
+        st.switch_page("pages/01_home.py")
+
+    if login_btn:
+        if not email_input.strip() or not password_input.strip():
+            st.error("Please enter both email address and password.")
+        else:
+            success, faculty_name_val, error_msg = verify_faculty_login(
+                email_input.strip(), password_input.strip()
+            )
+            if success:
+                st.session_state["faculty_logged_in"]      = True
+                st.session_state["faculty_name"]           = faculty_name_val
+                st.session_state["faculty_login_attempts"] = 0
+                st.session_state["faculty_lockout_time"]   = None
+                st.session_state["faculty_active_view"]    = "upload"
+                st.rerun()
             else:
-                success, faculty_name_val, error_msg = verify_faculty_login(
-                    email_input.strip(), password_input.strip()
-                )
-                if success:
-                    st.session_state["faculty_logged_in"]      = True
-                    st.session_state["faculty_name"]           = faculty_name_val
-                    st.session_state["faculty_login_attempts"] = 0
-                    st.session_state["faculty_lockout_time"]   = None
-                    st.session_state["faculty_active_view"]    = "upload"
-                    st.rerun()
+                attempts = st.session_state.get("faculty_login_attempts", 0) + 1
+                st.session_state["faculty_login_attempts"] = attempts
+                if attempts >= 3:
+                    st.session_state["faculty_lockout_time"] = datetime.now().isoformat()
+                    st.error("Account locked — too many failed attempts. Refresh the page.")
                 else:
-                    attempts = st.session_state.get("faculty_login_attempts", 0) + 1
-                    st.session_state["faculty_login_attempts"] = attempts
-                    if attempts >= 3:
-                        st.session_state["faculty_lockout_time"] = datetime.now().isoformat()
-                        st.error("Account locked — too many failed attempts. Refresh the page.")
-                    else:
-                        st.error(f"Incorrect credentials. {3 - attempts} attempt(s) remaining.")
+                    st.error(f"Incorrect credentials. {3 - attempts} attempt(s) remaining.")
 
     st.stop()
 
