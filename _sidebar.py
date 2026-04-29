@@ -382,7 +382,14 @@ def render_sidebar():
         entropy_score = st.session_state.get("entropy_score") or 0
         entropy_label = st.session_state.get("entropy_label", "")
 
-        if drift_score is not None:
+        # Don't show drift/entropy chips for sem 1 & 2
+        _sem_for_chips = 0
+        try:
+            _sem_for_chips = int(str(st.session_state.get("semester", 0)).split()[0])
+        except Exception:
+            pass
+
+        if drift_score is not None and _sem_for_chips > 2:
             drift_color = (
                 "#15803d" if drift_score <= 20
                 else "#d97706" if drift_score <= 60
@@ -443,7 +450,7 @@ def render_sidebar():
                 page_key = st.session_state.get("_current_page", "default")
                 st.plotly_chart(fig, use_container_width=True, key=f"sidebar_radar_{page_key}")
 
-        else:
+        elif _sem_for_chips > 2:
             st.markdown(
                 "<div style='color:#515f74;font-size:0.82rem;text-align:center;"
                 "padding:16px 14px;font-family:Inter,sans-serif;"
@@ -452,9 +459,27 @@ def render_sidebar():
             )
 
         # ── Dashboard section label ───────────────────────────────────
-        st.markdown("""
-        <div style="margin:14px 12px 10px 12px;border-top:1px solid #e2e8f0;"></div>
-        """, unsafe_allow_html=True)
+        # ── Dashboard section label ───────────────────────────────────
+        if _sem_for_chips <= 2:
+            st.markdown("""
+            <div style="margin:14px 0 0 0;border-top:1px solid #e2e8f0;"></div>
+            <div style="margin:12px 12px 0 12px;padding:12px 14px;
+                        background:#f0f7ff;border-radius:10px;
+                        border-left:3px solid #002c98;">
+                <div style="font-size:0.78rem;font-weight:700;color:#002c98;
+                            font-family:'Manrope',sans-serif;margin-bottom:4px;">
+                    Early Stage 
+                </div>
+                <div style="font-size:0.75rem;color:#515f74;font-family:'Inter',sans-serif;
+                            line-height:1.5;">
+                    Add more skills each semester to unlock your full dashboard.
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div style="margin:14px 0 10px 0;border-top:1px solid #e2e8f0;"></div>
+            """, unsafe_allow_html=True)
 
         # ── Active page detection + CSS injection ─────────────────────
         active_page = _PAGE_KEY_MAP.get(st.session_state.get("_current_page", ""), "")
@@ -467,6 +492,8 @@ def render_sidebar():
             sem_int = int(str(semester_val_n).split()[0]) if semester_val_n else 0
         except Exception:
             sem_int = 0
+        if sem_int <= 2:
+            return    
 
         verified_count = sum(
             1 for r in quiz_results
@@ -476,7 +503,9 @@ def render_sidebar():
 
         # Determine if gate is passed
         # Beginner (sem 1-2): need 2/3+; Intermediate/Advanced (sem 3-8): need 3/3+
-        if sem_int <= 2:
+        if sem_int == 1:
+            min_required = 1
+        elif sem_int == 2:
             min_required = 2
         else:
             min_required = 3

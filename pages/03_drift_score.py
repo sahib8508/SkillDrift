@@ -8,7 +8,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from session_store import init_session, clear_session
-from brain import CAREER_TRACKS
+from brain import CAREER_TRACKS, get_early_career_matches
 from _sidebar import APPLE_CSS, render_sidebar
 
 st.set_page_config(
@@ -80,7 +80,7 @@ truly_verified_display = sum(
 )
 
 # Beginner (sem 1-2): need 2+; Intermediate/Advanced (sem 3-8): need 3+
-min_required = 2 if sem_int <= 2 else 3
+min_required = 1 if sem_int == 1 else (2 if sem_int == 2 else 3)
 
 quiz_done = st.session_state.get("quiz_complete", False)
 
@@ -156,6 +156,84 @@ if quiz_done and not gate_passed:
 
     st.stop()
 
+    
+
+
+# =============================================================
+# EARLY SEMESTER MODE — Sem 1 & 2 skip drift score entirely
+# =============================================================
+
+if sem_int <= 2:
+    student_name = st.session_state.get("student_name", "")
+    skill_names  = list(verified_skills.keys())
+    matched      = get_early_career_matches(verified_skills)
+
+    st.markdown(f"""
+<div style="font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:800;
+            color:#171c1f;margin-bottom:6px;">Welcome, {student_name}! </div>
+<div style="font-size:0.95rem;color:#515f74;margin-bottom:32px;">
+    You're in Semester {sem_int} — early stage. Here's what your skills already unlock.
+</div>
+""", unsafe_allow_html=True)
+
+    # Skills verified card
+    st.markdown(f"""
+<div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;
+            padding:24px 28px;margin-bottom:20px;border-top:4px solid #002c98;">
+  <div style="font-size:0.78rem;font-weight:700;color:#515f74;
+              text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">
+    Skills You Verified
+  </div>
+  <div style="font-size:1.1rem;font-weight:600;color:#171c1f;">
+    {"  ·  ".join(skill_names) if skill_names else "None"}
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    # Job roles card
+    if matched:
+        st.markdown("""
+<div style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;
+            color:#171c1f;margin:24px 0 12px 0;">
+    Job Roles You Already Qualify For
+</div>
+""", unsafe_allow_html=True)
+        for track in matched:
+            st.markdown(f"""
+<div style="background:#f0f7ff;border:1px solid #bfdbfe;border-radius:10px;
+            padding:14px 20px;margin-bottom:10px;
+            font-size:0.95rem;font-weight:600;color:#002c98;">
+    {track}
+</div>
+""", unsafe_allow_html=True)
+    else:
+        st.info("No specific job role matched yet — try adding more common skills next semester.")
+
+    # Motivational message
+    skills_needed = 3 - len(skill_names)
+    st.markdown(f"""
+<div style="background:#f6fafe;border:1px solid #e2e8f0;border-radius:12px;
+            padding:20px 24px;margin-top:24px;">
+  <div style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;
+              color:#171c1f;margin-bottom:6px;">What's Next?</div>
+  <div style="font-size:0.9rem;color:#515f74;line-height:1.65;">
+    Add <strong>{max(skills_needed, 1)} more skill(s)</strong> by Semester 3 to unlock your full
+    SkillDrift dashboard — including Drift Score, Career Match, Urgency Engine, and your personal Report Card.
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("<div style='height:32px;'></div>", unsafe_allow_html=True)
+    if st.button("Start Over", type="primary"):
+        clear_session()
+        st.switch_page("pages/01_home.py")
+
+    st.stop()   # ← CRITICAL: stops the rest of the page from running
+
+
+# =============================================================
+# FINAL SCORE
+# =============================================================
 
 # =============================================================
 # FINAL SCORE

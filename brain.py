@@ -183,6 +183,23 @@ def calculate_drift_score(verified_skills: dict, quiz_results: list = None) -> t
     # Return integer track counts (for display) but use float internally
     track_counts_int = {t: round(v, 2) for t, v in track_counts.items()}
     return drift_score, drift_label, track_counts_int
+# =============================================================
+# EARLY SEMESTER CAREER MATCH (Sem 1 & 2 only)
+# =============================================================
+
+def get_early_career_matches(verified_skills: dict) -> list:
+    """
+    For sem 1-2 students with fewer than 3 skills.
+    Returns list of career track names that match any of their verified skills.
+    """
+    skills_map_df = load_skills_mapping()
+    matched_tracks = set()
+    for skill in verified_skills.keys():
+        tracks = skills_map_df[
+            skills_map_df["skill"].str.lower() == skill.lower()
+        ]["track"].tolist()
+        matched_tracks.update(tracks)
+    return sorted(list(matched_tracks))
 
 
 # =============================================================
