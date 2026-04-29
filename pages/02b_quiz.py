@@ -1096,39 +1096,40 @@ if _timer_expired and not st.session_state.get("_quiz_auto_submitted"):
     verified = score_all(quiz_data)
     reset_proctor_state()
     _js("(document.exitFullscreen?document.exitFullscreen():null)", "exit_fs_timer")
-    try:
-        from brain import (
-            calculate_drift_score, calculate_entropy, calculate_career_match,
-            calculate_readiness_score, get_next_skill, get_urgency_level,
-            calculate_focus_debt, get_peer_placement_rate,
-        )
-        drift_score, drift_label, track_counts = calculate_drift_score(verified, quiz_results=st.session_state.get("quiz_results", []))
-        entropy_score, entropy_label           = calculate_entropy(track_counts, drift_score)
-        career_matches = calculate_career_match(verified)
-        best_match     = career_matches[0] if career_matches else {}
-        best_track     = best_match.get("track", "Unknown")
-        match_pct      = best_match.get("match_pct", 0.0)
-        readiness      = calculate_readiness_score(verified, best_track)
-        next_skill     = get_next_skill(best_match.get("missing_skills", []), best_track)
-        urgency        = get_urgency_level(st.session_state.get("semester", 4))
-        debt           = calculate_focus_debt(verified, best_track)
-        peer           = get_peer_placement_rate(drift_score, best_track)
-        st.session_state["drift_score"]     = drift_score
-        st.session_state["drift_label"]     = drift_label
-        st.session_state["track_counts"]    = track_counts
-        st.session_state["entropy_score"]   = entropy_score
-        st.session_state["entropy_label"]   = entropy_label
-        st.session_state["career_matches"]  = career_matches
-        st.session_state["best_track"]      = best_track
-        st.session_state["match_pct"]       = match_pct
-        st.session_state["readiness_score"] = readiness
-        st.session_state["next_skill_info"] = next_skill
-        st.session_state["urgency_info"]    = urgency
-        st.session_state["focus_debt_info"] = debt
-        st.session_state["peer_info"]       = peer
-        st.session_state["quiz_complete"]   = True
-        save_session()
-    except Exception as e:
+    with st.spinner("Calculating your career profile..."):
+        try:
+            from brain import (
+                calculate_drift_score, calculate_entropy, calculate_career_match,
+                calculate_readiness_score, get_next_skill, get_urgency_level,
+                calculate_focus_debt, get_peer_placement_rate,
+            )
+            drift_score, drift_label, track_counts = calculate_drift_score(verified, quiz_results=st.session_state.get("quiz_results", []))
+            entropy_score, entropy_label           = calculate_entropy(track_counts, drift_score)
+            career_matches = calculate_career_match(verified)
+            best_match     = career_matches[0] if career_matches else {}
+            best_track     = best_match.get("track", "Unknown")
+            match_pct      = best_match.get("match_pct", 0.0)
+            readiness      = calculate_readiness_score(verified, best_track)
+            next_skill     = get_next_skill(best_match.get("missing_skills", []), best_track)
+            urgency        = get_urgency_level(st.session_state.get("semester", 4))
+            debt           = calculate_focus_debt(verified, best_track)
+            peer           = get_peer_placement_rate(drift_score, best_track)
+            st.session_state["drift_score"]     = drift_score
+            st.session_state["drift_label"]     = drift_label
+            st.session_state["track_counts"]    = track_counts
+            st.session_state["entropy_score"]   = entropy_score
+            st.session_state["entropy_label"]   = entropy_label
+            st.session_state["career_matches"]  = career_matches
+            st.session_state["best_track"]      = best_track
+            st.session_state["match_pct"]       = match_pct
+            st.session_state["readiness_score"] = readiness
+            st.session_state["next_skill_info"] = next_skill
+            st.session_state["urgency_info"]    = urgency
+            st.session_state["focus_debt_info"] = debt
+            st.session_state["peer_info"]       = peer
+            st.session_state["quiz_complete"]   = True
+            save_session()
+        except Exception as e:
             import traceback
             with open("error_log.txt", "a") as f:
                 f.write(f"\n--- AUTO-SUBMIT ERROR ---\n{traceback.format_exc()}\n")

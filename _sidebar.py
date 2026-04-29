@@ -287,13 +287,13 @@ def _short_entropy_label(label: str) -> str:
 
 # ── Navigation ──────────────────────────────────────────────────────────────
 NAV_PAGES = [
-    ("Dashboard",              "pages/03_drift_score.py"),
-    ("Urgency Engine",         "pages/04_urgency.py"),
-    ("Career Track Match",     "pages/05_career_match.py"),
-    ("Next Skill & Readiness", "pages/06_next_skill.py"),
-    ("Peer Mirror & Survival", "pages/07_peer_mirror.py"),
-    ("Market Intelligence",    "pages/08_market_intel.py"),
-    ("Final Report",           "pages/10_final_report.py"),
+    ("Dashboard",            "pages/03_drift_score.py"),
+    ("Time Left",            "pages/04_urgency.py"),
+    ("Career Match",         "pages/05_career_match.py"),
+    ("Next Skill to Learn",  "pages/06_next_skill.py"),
+    ("Placement Odds",       "pages/07_peer_mirror.py"),
+    ("Job Market",           "pages/08_market_intel.py"),
+    ("My Report Card",       "pages/10_final_report.py"),
 ]
 
 _PAGE_KEY_MAP = {
@@ -327,10 +327,10 @@ def _inject_active_nav_css(active_page: str) -> None:
                     btn.style.setProperty('background',  '#f1f5f9', 'important');
                     btn.style.setProperty('color',       '#171c1f', 'important');
                     btn.style.setProperty('font-weight', '700',     'important');
-                }} else if (['Dashboard','Urgency Engine',
-                             'Career Track Match','Next Skill & Readiness',
-                             'Peer Mirror & Survival','Market Intelligence',
-                             'Final Report'].includes(txt)) {{
+                }} else if (['Dashboard','Time Left',
+                             'Career Match','Next Skill to Learn',
+                             'Placement Odds','Job Market',
+                             'My Report Card'].includes(txt)) {{
                     btn.style.removeProperty('background');
                     btn.style.removeProperty('color');
                     btn.style.removeProperty('font-weight');

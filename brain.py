@@ -104,8 +104,8 @@ TRACK_TO_ROLE = {
 
 LEVEL_WEIGHTS = {
     "Advanced":     1.0,
-    "Intermediate": 1.0,
-    "Beginner":     0.5,
+    "Intermediate": 0.75,
+    "Beginner":     0.4,
     "Not Verified": 0.0,
 }
 
@@ -348,18 +348,16 @@ def get_urgency_level(semester: int) -> dict:
     today = datetime.now()
     current_year = today.year
 
-    if today.month < 7:
-        sem7_start = datetime(current_year, 7, 1)
-    else:
-        sem7_start = datetime(current_year + 1, 7, 1)
-
     if semester >= 7:
-        delta_days = (today - sem7_start).days
-        days_remaining = 0 if delta_days >= 0 else abs(delta_days)
+        days_remaining = 0
+        weeks_remaining = 0
     else:
+        if today.month < 7:
+            sem7_start = datetime(current_year, 7, 1)
+        else:
+            sem7_start = datetime(current_year + 1, 7, 1)
         days_remaining = max(0, (sem7_start - today).days)
-
-    weeks_remaining = days_remaining // 7
+        weeks_remaining = days_remaining // 7
 
     if semester <= 2:
         urgency_level = "Green"
@@ -438,11 +436,11 @@ def calculate_focus_debt(verified_skills: dict, best_track: str) -> dict:
 # =============================================================
 
 DRIFT_TO_PLACEMENT_RATE = [
-    ( 0,  20, 78),
-    (20,  40, 62),
-    (40,  60, 44),
-    (60,  80, 29),
-    (80, 100, 18),
+    ( 0,  20, 78, "65–85%"),
+    (20,  40, 62, "50–70%"),
+    (40,  60, 44, "35–55%"),
+    (60,  80, 29, "20–38%"),
+    (80, 100, 18, "10–25%"),
 ]
 
 FOCUSED_PLACEMENT_RATES = {
@@ -460,9 +458,11 @@ TRACK_SURVIVAL_RATES = {
 
 def get_peer_placement_rate(drift_score: float, best_track: str) -> dict:
     student_rate = 18
-    for min_d, max_d, rate in DRIFT_TO_PLACEMENT_RATE:
+    student_range = "10–25%"
+    for min_d, max_d, rate, range_str in DRIFT_TO_PLACEMENT_RATE:
         if min_d <= drift_score <= max_d:
             student_rate = rate
+            student_range = range_str
             break
 
     focused_rate = FOCUSED_PLACEMENT_RATES.get(best_track, 70)
@@ -472,6 +472,7 @@ def get_peer_placement_rate(drift_score: float, best_track: str) -> dict:
     )
     return {
         "student_placement_rate": student_rate,
+        "student_placement_range": student_range,
         "focused_placement_rate": focused_rate,
         "survival_rates": TRACK_SURVIVAL_RATES,
         "disclaimer": disclaimer,

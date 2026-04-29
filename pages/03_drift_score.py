@@ -5,6 +5,7 @@
 
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 
 from session_store import init_session, clear_session
 from brain import CAREER_TRACKS
@@ -365,8 +366,8 @@ with ca:
         </div>
         <div style="font-size:0.9rem;color:#171c1f;line-height:1.7;">
             Measures how unevenly your verified skills are distributed across 8 CSE career tracks.<br><br>
-            <strong>Low score (near 0)</strong> — skills spread evenly across tracks. Scattered.<br>
-            <strong>High score (near 100)</strong> — one track dominates. Focused.
+            <strong>Low score (near 0)</strong> — skills concentrated in one track. Focused.<br>
+            <strong>High score (near 100)</strong> — skills spread across many tracks. Scattered.
         </div>
         <div style="background:#f6fafe;border-radius:8px;padding:12px 14px;
                     border-left:3px solid {drift_color};margin-top:16px;
@@ -422,7 +423,7 @@ if track_counts:
     track_df = pd.DataFrame([
         {
             "Career Track":     track,
-            "Skills You Have":  count,
+            "Skills You Have":  int(count) if count == int(count) else round(count, 1),
             "Share of Profile": f"{round(count / total_skill_count * 100, 1)}%",
             "Focus Signal":     (
                 "Primary Track" if count == max(track_counts.values()) and count > 0
@@ -435,6 +436,87 @@ if track_counts:
 
     if not track_df.empty:
         track_df = track_df.sort_values("Skills You Have", ascending=False).reset_index(drop=True)
+
+    # Bar chart — ascending order (highest at top), color gradient by value, hover tooltips
+    chart_df = track_df[track_df["Skills You Have"] > 0].copy()
+    if not chart_df.empty:
+        # Sort ascending so highest bar is at the TOP (plotly renders bottom-up)
+        chart_df = chart_df.sort_values("Skills You Have", ascending=True)
+        max_val = chart_df["Skills You Have"].max()
+        min_val = chart_df["Skills You Have"].min()
+
+        # Color scale: darker blue = more skills, lighter = fewer
+        def _bar_color(v):
+            if v == max_val:
+                return "#002c98"   # primary — darkest blue
+            elif max_val > min_val:
+                ratio = (v - min_val) / (max_val - min_val)
+                if ratio >= 0.6:
+                    return "#1a52c9"   # strong blue
+                elif ratio >= 0.3:
+                    return "#6b8fd6"   # mid blue
+                else:
+                    return "#c2cef0"   # lightest blue
+            return "#c2cef0"
+
+        bar_colors = [_bar_color(v) for v in chart_df["Skills You Have"]]
+
+        # Clean integer display — no .000000
+        skill_vals = chart_df["Skills You Have"].tolist()
+        text_labels = [str(int(v)) if v == int(v) else str(round(v, 1)) for v in skill_vals]
+
+        # Hover tooltip
+        hover_texts = [
+            f"<b>{row['Career Track']}</b><br>"
+            f"Skills: {int(row['Skills You Have']) if row['Skills You Have'] == int(row['Skills You Have']) else round(row['Skills You Have'], 1)}<br>"
+            f"Share: {row['Share of Profile']}<br>"
+            f"Signal: {row['Focus Signal']}"
+            for _, row in chart_df.iterrows()
+        ]
+
+        fig_track = go.Figure(go.Bar(
+            x=skill_vals,
+            y=chart_df["Career Track"].tolist(),
+            orientation="h",
+            marker_color=bar_colors,
+            marker=dict(
+                color=bar_colors,
+                line=dict(color="rgba(0,0,0,0.05)", width=1),
+            ),
+            text=text_labels,
+            textposition="inside",
+            textfont=dict(color="#ffffff", size=12, family="Inter"),
+            hovertext=hover_texts,
+            hoverinfo="text",
+        ))
+        fig_track.update_layout(
+            paper_bgcolor="#FFFFFF",
+            plot_bgcolor="#f8fafc",
+            font=dict(color="#171c1f", size=11, family="Inter"),
+            xaxis=dict(
+                gridcolor="#e2e8f0",
+                title="Skills You Have",
+                color="#515f74",
+                tickformat="d",
+                dtick=1,
+            ),
+            yaxis=dict(
+                gridcolor="#e2e8f0",
+                color="#171c1f",
+                tickfont=dict(size=12),
+            ),
+            margin=dict(l=10, r=20, t=16, b=10),
+            height=max(220, len(chart_df) * 44),
+            showlegend=False,
+            hoverlabel=dict(
+                bgcolor="#171c1f",
+                font_size=12,
+                font_family="Inter",
+                font_color="#ffffff",
+                bordercolor="#002c98",
+            ),
+        )
+        st.plotly_chart(fig_track, use_container_width=True)
 
     def color_focus(val):
         if val == "Primary Track":
