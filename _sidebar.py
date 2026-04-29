@@ -557,9 +557,6 @@ def render_sidebar():
                     <div style="background:#fff;border-radius:16px;padding:40px 36px 32px;
                                 width:420px;max-width:90vw;text-align:center;
                                 box-shadow:0 20px 60px rgba(0,0,0,0.18);">
-                        <div style="width:60px;height:60px;border-radius:50%;background:#fff8e1;
-                                    display:flex;align-items:center;justify-content:center;
-                                    margin:0 auto 20px;font-size:28px;">⚠️</div>
                         <div style="font-size:1.35rem;font-weight:700;color:#171c1f;margin-bottom:12px;
                                     font-family:'Inter',sans-serif;">Log Out?</div>
                         <div style="font-size:0.9rem;color:#515f74;line-height:1.6;margin-bottom:28px;
