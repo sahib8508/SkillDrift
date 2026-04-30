@@ -1,4 +1,4 @@
-# SkillDrift: Data-Driven Skill Drift Analysis for Placements
+# Project Title: "SkillDrift: Data-Driven Skill Drift Analysis for Placements"
 
 **Department of Computer Science and Engineering (CSE-DS&CC)**
 Sarala Birla University, Ranchi | B.Tech Major Project — CSE-801-P3 | Even Sem 2025-26
