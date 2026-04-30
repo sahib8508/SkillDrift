@@ -211,14 +211,27 @@ if sem_int <= 2:
 
     # Motivational message
     skills_needed = 3 - len(skill_names)
-    st.markdown(f"""
+    if skills_needed > 0:
+        st.markdown(f"""
 <div style="background:#f6fafe;border:1px solid #e2e8f0;border-radius:12px;
             padding:20px 24px;margin-top:24px;">
   <div style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;
               color:#171c1f;margin-bottom:6px;">What's Next?</div>
   <div style="font-size:0.9rem;color:#515f74;line-height:1.65;">
-    Add <strong>{max(skills_needed, 1)} more skill(s)</strong> by Semester 3 to unlock your full
+    Add <strong>{skills_needed} more skill(s)</strong> by Semester 3 to unlock your full
     SkillDrift dashboard — including Drift Score, Career Match, Urgency Engine, and your personal Report Card.
+  </div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        st.markdown("""
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;
+            padding:20px 24px;margin-top:24px;">
+  <div style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;
+              color:#14532d;margin-bottom:6px;">You're on track!</div>
+  <div style="font-size:0.9rem;color:#166534;line-height:1.65;">
+    You already have enough skills to unlock the full dashboard in Semester 3.
+    Keep going — your full analysis awaits.
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -381,8 +394,8 @@ drift_color = (
     else "#ba1a1a"
 )
 entropy_color = (
-    "#15803d" if entropy_score < 1.2
-    else "#d97706" if entropy_score < 2.0
+    "#15803d" if entropy_score < 0.9
+    else "#d97706" if entropy_score < 1.8
     else "#ba1a1a"
 )
 
@@ -502,7 +515,6 @@ if track_counts:
         {
             "Career Track":     track,
             "Skills You Have":  int(count) if count == int(count) else round(count, 1),
-            "Share of Profile": f"{round(count / total_skill_count * 100, 1)}%",
             "Focus Signal":     (
                 "Primary Track" if count == max(track_counts.values()) and count > 0
                 else "Secondary" if count > 0
@@ -547,7 +559,6 @@ if track_counts:
         hover_texts = [
             f"<b>{row['Career Track']}</b><br>"
             f"Skills: {int(row['Skills You Have']) if row['Skills You Have'] == int(row['Skills You Have']) else round(row['Skills You Have'], 1)}<br>"
-            f"Share: {row['Share of Profile']}<br>"
             f"Signal: {row['Focus Signal']}"
             for _, row in chart_df.iterrows()
         ]

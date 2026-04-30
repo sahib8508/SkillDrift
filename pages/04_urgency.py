@@ -88,9 +88,15 @@ with c2:
     if semester >= 7:
         countdown_text = "Now"
         countdown_sub  = "Placement season is active — interviews are happening"
+    elif semester >= 5:
+        countdown_text = "Soon"
+        countdown_sub  = "Placement season is imminent — focus on your best track"
+    elif semester >= 3:
+        countdown_text = str(8 - semester)
+        countdown_sub  = "semesters remaining before placements begin"
     else:
-        countdown_text = str(weeks_remaining)
-        countdown_sub  = "weeks left until Semester 7 placements begin"
+        countdown_text = str(8 - semester)
+        countdown_sub  = "semesters remaining — you have time, start building now"
 
     st.markdown(f"""
     <div class="sd-metric">

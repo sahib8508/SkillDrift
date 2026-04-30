@@ -362,19 +362,13 @@ def get_next_skill(missing_skills: list, best_track: str) -> dict:
 # =============================================================
 
 def get_urgency_level(semester: int) -> dict:
-    today = datetime.now()
-    current_year = today.year
-
-    if semester >= 7:
-        days_remaining = 0
-        weeks_remaining = 0
-    else:
-        if today.month < 7:
-            sem7_start = datetime(current_year, 7, 1)
-        else:
-            sem7_start = datetime(current_year + 1, 7, 1)
-        days_remaining = max(0, (sem7_start - today).days)
-        weeks_remaining = days_remaining // 7
+    # We do NOT calculate a day/week countdown because we don't know the
+    # student's college calendar (some colleges start Sem 7 in July, others
+    # in January). An incorrect countdown is worse than no countdown.
+    # days_remaining and weeks_remaining are kept in the return dict for
+    # backwards compatibility but are always 0.
+    days_remaining = 0
+    weeks_remaining = 0
 
     if semester <= 2:
         urgency_level = "Green"
@@ -425,6 +419,17 @@ def calculate_focus_debt(verified_skills: dict, best_track: str) -> dict:
     role_name = TRACK_TO_ROLE.get(best_track, best_track)
     track_skills_df = required_df[required_df["track"] == role_name]
     required_skill_names_lower = [s.lower() for s in track_skills_df["skill"].tolist()]
+
+    # If track is unknown or has no data, return zero debt — do not
+    # mark every student skill as a distraction.
+    if not required_skill_names_lower:
+        return {
+            "focus_debt_hours": 0,
+            "distraction_skills": [],
+            "on_track_skills": list(verified_skills.keys()),
+            "daily_hours": 2,
+            "days_to_recover": 0,
+        }
 
     distraction_skills = []
     on_track_skills = []
@@ -477,9 +482,13 @@ def get_peer_placement_rate(drift_score: float, best_track: str) -> dict:
     student_rate = 18
     student_range = "10–25%"
     for min_d, max_d, rate, range_str in DRIFT_TO_PLACEMENT_RATE:
-        if min_d <= drift_score <= max_d:
+        if min_d <= drift_score < max_d:
             student_rate = rate
             student_range = range_str
+            break
+        elif drift_score >= 80:  # last bracket: 80 <= score <= 100
+            student_rate = 18
+            student_range = "10–25%"
             break
 
     focused_rate = FOCUSED_PLACEMENT_RATES.get(best_track, 70)
