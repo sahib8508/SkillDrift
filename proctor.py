@@ -12,7 +12,7 @@ import time
 
 import av
 import cv2
-
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
 
 
 # =============================================================
@@ -230,15 +230,12 @@ def _video_frame_callback(frame):
 # =============================================================
 
 def render_proctor_camera(key: str = "skilldrift-proctor"):
-    import streamlit as st
+    """Render the WebRTC camera widget.
 
-    try:
-        from streamlit_webrtc import webrtc_streamer, WebRtcMode
-    except Exception as e:
-        st.error("Proctoring module failed to load")
-        st.exception(e)
-        return None
-
+    desired_playing_state=True so the camera starts automatically
+    without any Start button visible to the user.
+    Returns the WebRTC context or None on failure.
+    """
     try:
         return webrtc_streamer(
             key=key,
@@ -251,7 +248,7 @@ def render_proctor_camera(key: str = "skilldrift-proctor"):
                 "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
             },
         )
-    except Exception as e:
-        st.error("Camera failed to start")
-        st.exception(e)
+    except AttributeError:
+        return None
+    except Exception:
         return None
