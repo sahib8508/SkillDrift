@@ -6,14 +6,6 @@
 > Department of Computer Science and Engineering (CSE-DS&CC)
 > Sarala Birla University, Ranchi
 
-**Project Guide:** Dr. Avinash Kumar, Assistant Professor, CSE, SBU
-
-| Name             | Enrollment No. | Section | Batch      |
-| ---------------- | -------------- | ------- | ---------- |
-| Anurag Kumar Roy | SBU221934      | D       | 2022–2026 |
-| Sahib Hussain    | SBU234212      | D       | 2022–2026 |
-| Vikash Kumar     | SBU234067      | D       | 2022–2026 |
-
 ---
 
 ## What is SkillDrift?
@@ -563,21 +555,4 @@ showSidebarNavigation = false
 
 ---
 
-## Academic Details
 
-| Field                  | Value                                                   |
-| ---------------------- | ------------------------------------------------------- |
-| University             | Sarala Birla University, Ranchi, Jharkhand              |
-| Department             | Computer Science and Engineering                        |
-| Program                | B.Tech CSE — Data Science and Cloud Computing (DS&CC)  |
-| Course                 | Project Stage-III (Major Project Work and Dissertation) |
-| Course Code            | CSE-801-P3                                              |
-| Credit Units           | 9                                                       |
-| Batch                  | 2022–2026                                              |
-| Semester               | VIII, Section D                                         |
-| Project Start          | 29th January, 2026                                      |
-| Project End            | 30th April, 2026                                        |
-| Project Guide          | Dr. Avinash Kumar, Assistant Professor, CSE, SBU        |
-| Dean FoECS             | Dr. Pankaj Kr Goswami                                   |
-| Associate Dean and HoD | Dr. Priyanka Srivastava                                 |
-| Program Coordinator    | Dr. Ashish Sinha                                        |
